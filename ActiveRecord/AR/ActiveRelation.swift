@@ -24,12 +24,14 @@ enum SQLAction: String {
 }
 
 public class ActiveRelation<T:ActiveRecord> {
-
+    
     private var klass: T.Type?
     private var model: T?
     private var connection: Connection {
         return Connection.current!
     }
+    
+    private var attributes: [String: Any]?
     
     private var tableName: String {
         return T.tableName
@@ -49,7 +51,7 @@ public class ActiveRelation<T:ActiveRecord> {
     public init(with klass: T.Type) {
         self.klass = klass
     }
-
+    
     public init(model: T) {
         self.klass = model.dynamicType
         self.model = model
@@ -64,6 +66,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     public func `where`(statement: Any) -> Self {
         if let attributes = statement as? Dictionary<String, Any> where attributes.isEmpty == false {
+            self.attributes = attributes
             for key in attributes.keys {
                 if let values = attributes[key] as? Array<CustomStringConvertible> {
                     chain.append(Where(field: key, values: values))
@@ -106,7 +109,7 @@ public class ActiveRelation<T:ActiveRecord> {
     public func update(attributes: [String: Any?]? = nil) throws -> Bool {
         return true
     }
-
+    
     public func updateAll(attrbiutes: [String : Any?]) throws -> Bool {
         self.action = .Update
         let _ = try self.execute()
@@ -121,7 +124,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     //MARK: -
     
-    public func execute() throws -> Array<T> {
+    public func execute(strict: Bool = false) throws -> Array<T> {
         self.chain.sortInPlace { $0.priority < $1.priority }
         let pluck: Pluck!
         if let index = self.chain.indexOf({ $0 is Pluck }) {
@@ -137,6 +140,9 @@ public class ActiveRelation<T:ActiveRecord> {
             let item = T.init(attributes: hash)
             items.append(item)
             ActiveSnapshotStorage.sharedInstance.set(item)
+        }
+        if let attributes = self.attributes where strict && items.isEmpty {
+            ActiveRecordError.RecordNotFound(attributes: attributes)
         }
         return items
     }

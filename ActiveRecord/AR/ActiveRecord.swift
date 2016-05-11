@@ -10,6 +10,7 @@ import InflectorKit
 
 public enum ActiveRecordError: ErrorType {
     case RecordNotValid(record: ActiveRecord)
+    case RecordNotFound(attributes: [String: Any])
     case AttributeMissing(record: ActiveRecord, name: String)
     case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
 }
@@ -18,11 +19,11 @@ public protocol ActiveRecord {
     var id: Any? {set get}
     init()
     init(attributes: [String:Any?])
-
+    
     func setAttrbiutes(attributes: [String: Any?])
     func getAttributes() -> [String: Any?]
     
-//    func getTypes() -> [String: ]
+    //    func getTypes() -> [String: ]
     
     static var tableName: String { get }
     static var resourceName: String { get }
@@ -88,12 +89,12 @@ extension ActiveRecord {
         return record;
     }
     
-    public static func find(identifier:Any) throws -> Self? {
-        return try take().first
+    public static func find(identifier:Any) throws -> Self {
+        return try self.find(["id" : identifier])
     }
     
-    public static func find(attributes:[String:Any]) throws -> Self? {
-        return try ActiveRelation().`where`(attributes).execute().first
+    public static func find(attributes:[String:Any]) throws -> Self {
+        return try ActiveRelation().`where`(attributes).limit(1).execute(true).first!
     }
     
     public static func take(count: Int = 1) throws -> [Self] {
