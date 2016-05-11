@@ -7,7 +7,7 @@
 //
 
 public protocol ActiveRelationPart {
-    public var priority: Int { get }
+    var priority: Int { get }
 }
 
 public struct Where: ActiveRelationPart {

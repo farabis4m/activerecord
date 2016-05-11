@@ -15,7 +15,6 @@
 		EE9180951C46EBCC0038162A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE9180911C46E9D30038162A /* libsqlite3.tbd */; };
 		F543B1F91CE2F8AD000BE1AE /* ActiveRecord.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */; };
 		F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */; };
-		F543B21E1CE2F954000BE1AE /* ActiveRecordRelationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FD1CE2F954000BE1AE /* ActiveRecordRelationProtocol.swift */; };
 		F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */; };
 		F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2001CE2F954000BE1AE /* ActiveSerializer.swift */; };
 		F543B2211CE2F954000BE1AE /* ActiveSnapshotStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */; };
@@ -62,7 +61,6 @@
 		EE9180931C46EA210038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ActiveRecord.podspec; sourceTree = "<group>"; };
 		F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRecord.swift; sourceTree = "<group>"; };
-		F543B1FD1CE2F954000BE1AE /* ActiveRecordRelationProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRecordRelationProtocol.swift; sourceTree = "<group>"; };
 		F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelation.swift; sourceTree = "<group>"; };
 		F543B2001CE2F954000BE1AE /* ActiveSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveSerializer.swift; sourceTree = "<group>"; };
 		F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveSnapshotStorage.swift; sourceTree = "<group>"; };
@@ -261,7 +259,6 @@
 			isa = PBXGroup;
 			children = (
 				F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */,
-				F543B1FD1CE2F954000BE1AE /* ActiveRecordRelationProtocol.swift */,
 				F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */,
 				F543B1FF1CE2F954000BE1AE /* ActiveSerializer */,
 				F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */,
@@ -572,7 +569,6 @@
 				F543B22B1CE2F954000BE1AE /* Table.swift in Sources */,
 				F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */,
 				F543B2221CE2F954000BE1AE /* Adapter.swift in Sources */,
-				F543B21E1CE2F954000BE1AE /* ActiveRecordRelationProtocol.swift in Sources */,
 				F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */,
 				F543B22C1CE2F954000BE1AE /* String+Helpers.swift in Sources */,
 				F543B2231CE2F954000BE1AE /* Connection.swift in Sources */,

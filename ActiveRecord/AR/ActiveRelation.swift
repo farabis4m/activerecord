@@ -43,26 +43,26 @@ public class ActiveRelation<T:ActiveRecord>: ActiveRecordRelationProtocol {
     
     //MARK: - Lifecycle
     
-    init() {
+    public init() {
     }
     
-    init(with klass: T.Type) {
+    public init(with klass: T.Type) {
         self.klass = klass
     }
 
-    init(model: T) {
+    public init(model: T) {
         self.klass = model.dynamicType
         self.model = model
     }
     
     //MARK: - Chaining
     
-    func pluck(fields: Array<String>) -> Self {
+    public func pluck(fields: Array<String>) -> Self {
         self.chain.append(Pluck(fields: fields))
         return self
     }
     
-    func `where`(statement: Any) -> Self {
+    public func `where`(statement: Any) -> Self {
         if let attributes = statement as? Dictionary<String, Any> where attributes.isEmpty == false {
             for key in attributes.keys {
                 if let values = attributes[key] as? Array<CustomStringConvertible> {
@@ -75,45 +75,45 @@ public class ActiveRelation<T:ActiveRecord>: ActiveRecordRelationProtocol {
         return self
     }
     
-    func whereIs(statement: Any) -> Self {
+    public func whereIs(statement: Any) -> Self {
         return self.`where`(statement)
     }
     
-    func order(attributes: [String : String]) -> Self {
+    public func order(attributes: [String : String]) -> Self {
         if let field = attributes.keys.first, let order = attributes[field], let direction = Order.Direction(rawValue: order) {
             chain.append(Order(field: field, direction: direction))
         }
         return self
     }
     
-    func limit(value: Int) -> Self {
+    public func limit(value: Int) -> Self {
         chain.append(Limit(count: value))
         return self
     }
     
-    func offset(value: Int) -> Self {
+    public func offset(value: Int) -> Self {
         chain.append(Offset(count: value))
         return self
     }
     
-    func preload(models: [ActiveRecord.Type]) -> Self {
+    public func preload(models: [ActiveRecord.Type]) -> Self {
         self.preload = models
         return self
     }
     
     //MARK: - ActiveRecordRelationProtocol
     
-    func update(attributes: [String: Any?]? = nil) throws -> Bool {
+    public func update(attributes: [String: Any?]? = nil) throws -> Bool {
         return true
     }
 
-    func updateAll(attrbiutes: [String : Any?]) throws -> Bool {
+    public func updateAll(attrbiutes: [String : Any?]) throws -> Bool {
         self.action = .Update
         let _ = try self.execute()
         return false
     }
     
-    func destroyAll() throws -> Bool {
+    public func destroyAll() throws -> Bool {
         self.action = .Delete
         let _ = try self.execute()
         return false
@@ -121,7 +121,7 @@ public class ActiveRelation<T:ActiveRecord>: ActiveRecordRelationProtocol {
     
     //MARK: -
     
-    func execute() throws -> Array<T> {
+    public func execute() throws -> Array<T> {
         self.chain.sortInPlace { $0.priority < $1.priority }
         let pluck: Pluck!
         if let index = self.chain.indexOf({ $0 is Pluck }) {
