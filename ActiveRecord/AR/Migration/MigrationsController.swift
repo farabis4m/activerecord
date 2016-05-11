@@ -16,7 +16,7 @@ public class MigrationsController {
         class func getTableName() -> String {
             return "schema_migrations"
         }
-        var id: Any? {
+        var id: AnyType? {
             get { return self.name }
             set { self.name = newValue as! String}
         }
