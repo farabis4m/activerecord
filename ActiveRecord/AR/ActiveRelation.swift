@@ -23,7 +23,7 @@ enum SQLAction: String {
     }
 }
 
-class ActiveRelation<T:ActiveRecord>: ActiveRecordRelationProtocol {
+public class ActiveRelation<T:ActiveRecord>: ActiveRecordRelationProtocol {
 
     private var klass: T.Type?
     private var model: T?

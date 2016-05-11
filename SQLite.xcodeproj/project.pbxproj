@@ -266,7 +266,6 @@
 				F543B1FF1CE2F954000BE1AE /* ActiveSerializer */,
 				F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */,
 				F543B2021CE2F954000BE1AE /* Adapters */,
-				F543B2071CE2F954000BE1AE /* Managers */,
 				F543B2081CE2F954000BE1AE /* Migration */,
 				F543B20C1CE2F954000BE1AE /* Relation */,
 				F543B2111CE2F954000BE1AE /* Table */,
@@ -292,13 +291,6 @@
 				F543B2061CE2F954000BE1AE /* SQLiteAdapter.swift */,
 			);
 			path = Adapters;
-			sourceTree = "<group>";
-		};
-		F543B2071CE2F954000BE1AE /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Managers;
 			sourceTree = "<group>";
 		};
 		F543B2081CE2F954000BE1AE /* Migration */ = {

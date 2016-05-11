@@ -8,13 +8,13 @@
 
 import InflectorKit
 
-enum ActiveRecordError: ErrorType {
+public enum ActiveRecordError: ErrorType {
     case RecordNotValid(record: ActiveRecord)
     case AttributeMissing(record: ActiveRecord, name: String)
     case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
 }
 
-protocol ActiveRecord {
+public protocol ActiveRecord {
     var id: Any? {set get}
     init()
     init(attributes: [String:Any?])

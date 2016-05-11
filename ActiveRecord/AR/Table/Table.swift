@@ -6,9 +6,9 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-protocol DBObject {}
+public protocol DBObject {}
 
-class Table: DBObject {
+public class Table: DBObject {
     class Column: DBObject, CustomDebugStringConvertible {
         
         typealias DBType = Type
@@ -95,7 +95,7 @@ class Table: DBObject {
     }
 }
 
-class Function: DBObject {
+public class Function: DBObject {
     //TODO: Future
 }
 

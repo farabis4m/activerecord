@@ -6,7 +6,7 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-class SQLiteAdapter: Adapter {
+public class SQLiteAdapter: Adapter {
 
     override var columnTypes: [String : Table.Column.DBType] {
         return ["text" : .String,

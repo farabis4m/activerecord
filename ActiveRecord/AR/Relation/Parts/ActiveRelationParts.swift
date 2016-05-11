@@ -6,7 +6,7 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-protocol ActiveRelationPart {
+public protocol ActiveRelationPart {
     var priority: Int { get }
 }
 

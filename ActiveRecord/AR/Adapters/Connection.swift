@@ -9,7 +9,7 @@
 import Foundation
 import CSQLite
 
-class Connection {
+public class Connection {
     private var _handle: COpaquePointer = nil
     var handle: COpaquePointer { return _handle }
     

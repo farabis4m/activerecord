@@ -6,7 +6,7 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-protocol ActiveRecordRelationProtocol {
+public protocol ActiveRecordRelationProtocol {
     
     func updateAll(attrbiutes: [String: Any?]) throws -> Bool
     func destroyAll() throws -> Bool

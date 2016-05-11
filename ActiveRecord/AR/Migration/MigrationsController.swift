@@ -7,7 +7,7 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-class MigrationsController {
+public class MigrationsController {
  
     class SchemaMigration: ActiveRecord, Equatable, Hashable {
         class var tableName: String {

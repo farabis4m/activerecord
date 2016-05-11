@@ -11,7 +11,7 @@ func <<<T> (inout left: [T], right: T) -> [T] {
     return left
 }
 
-protocol Migration {
+public protocol Migration {
     var timestamp: Int { get }
     func up()
     func down()

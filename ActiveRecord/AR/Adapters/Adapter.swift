@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DBError: ErrorType {
+public enum DBError: ErrorType {
     case OpenDatabase(message: String)
     case Prepare(message: String)
     case Step(message: String)
@@ -16,7 +16,7 @@ enum DBError: ErrorType {
     case Statement(message: String)
 }
 
-class Adapter {
+public class Adapter {
     
     enum Type: String {
         case SQLite = "SQLite"

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Result {
+public class Result {
 
 //    private static let regex =
     
