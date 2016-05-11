@@ -9,13 +9,13 @@
 public protocol DBObject {}
 
 public class Table: DBObject {
-    class Column: DBObject, CustomDebugStringConvertible {
+    public class Column: DBObject, CustomDebugStringConvertible {
         
         typealias DBType = Type
         typealias BaseInt = Int
         typealias BaseFloat = Float
         typealias BaseString = String
-        enum Type: String {
+        public enum Type: String {
             case String = "text"
             case Int = "int"
             case Decimal = "decimal"
@@ -47,33 +47,33 @@ public class Table: DBObject {
             }
         }
         
-        var `default`: Any?
-        var name: String
-        var type: Type?
-        var PK = false
-        var unique = false
-        var nullable = true
-        var length: Int?
+        public var `default`: Any?
+        public var name: String
+        public var type: Type?
+        public var PK = false
+        public var unique = false
+        public var nullable = true
+        public var length: Int?
         
-        var table: String?
+        public var table: String?
         
-        init(name: String, type: Type, _ block: ((Column) -> (Void))? = nil) {
+        public init(name: String, type: Type, _ block: ((Column) -> (Void))? = nil) {
             self.name = name
             self.type = type
             block?(self)
         }
-        init(name: String, type: Type, table: String) {
+        public init(name: String, type: Type, table: String) {
             self.name = name
             self.type = type
             self.table = table
         }
-        init(name: String, table: String, _ block: ((Column) -> (Void))? = nil) {
+        public init(name: String, table: String, _ block: ((Column) -> (Void))? = nil) {
             self.name = name
             self.table = table
             block?(self)
         }
         
-        var debugDescription: String {
+        public var debugDescription: String {
             return "Column(name: \(self.name), type: \(self.type!.rawValue), primary: \(self.PK), nullable: \(self.nullable))"
         }
     }
@@ -87,10 +87,10 @@ public class Table: DBObject {
         }
     }
     
-    var name: String
-    var columns = Array<Column>()
+    public var name: String
+    public var columns = Array<Column>()
     
-    init(_ name: String) {
+    public init(_ name: String) {
         self.name = name
     }
 }
