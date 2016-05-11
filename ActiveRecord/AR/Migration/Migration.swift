@@ -6,7 +6,7 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-func <<<T> (inout left: [T], right: T) -> [T] {
+public func <<<T> (inout left: [T], right: T) -> [T] {
     left.append(right)
     return left
 }
