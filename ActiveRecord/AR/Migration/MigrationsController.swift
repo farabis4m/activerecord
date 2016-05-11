@@ -34,13 +34,13 @@ public class MigrationsController {
         }
     }
     
-    static var sharedInstance = MigrationsController()
+    public static var sharedInstance = MigrationsController()
     
-    var migrations = Array<Migration>()
+    public var migrations = Array<Migration>()
 
     //MARK: - Lifecycle
     
-    init() {}
+    public init() {}
     
     //MARK: - Setup
     
@@ -50,7 +50,7 @@ public class MigrationsController {
     
     //MARK: - Migration management
     
-    func migrate() {
+    public func migrate() {
         self.migrations.sortInPlace({ $0.timestamp > $1.timestamp })
         let difference = Set(self.migrations.map({ $0.id })).subtract(Set(try! SchemaMigration.all().map({ $0.name })))
         let pending = self.migrations.filter({ difference.contains($0.id) })
@@ -66,11 +66,11 @@ public class MigrationsController {
         let _ = succeed.map({ try? SchemaMigration.create(["name" :$0.id ]) })
     }
     
-    func up(migration: Migration) {
+    public func up(migration: Migration) {
         migration.up()
     }
     
-    func down(migration: Migration) {
+    public func down(migration: Migration) {
         migration.down()
     }
     

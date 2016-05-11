@@ -28,7 +28,7 @@ extension Migration {
 }
 
 extension Migration {
-    func create<T: DBObject>(object: T, block: ((T) -> (Void))? = nil) {
+    public func create<T: DBObject>(object: T, block: ((T) -> (Void))? = nil) {
         block?(object)
         var SQL: String = ""
         if let table = object as? Table {
@@ -41,7 +41,7 @@ extension Migration {
         MigrationsController.sharedInstance.check({ try self.adapter.connection.execute(SQL) })
     }
     
-    func rename<T: DBObject>(object: T, name: String) {
+    public func rename<T: DBObject>(object: T, name: String) {
         var SQL: String = ""
         if let table = object as? Table {
             SQL = Table.Action.Alter.clause(table.name) + " RENAME TO " + name;
@@ -53,7 +53,7 @@ extension Migration {
         MigrationsController.sharedInstance.check({ try self.adapter.connection.execute(SQL) })
     }
     
-    func drop<T: DBObject>(object: T) {
+    public func drop<T: DBObject>(object: T) {
         var SQL: String = ""
         if let table = object as? Table {
             SQL = Table.Action.Drop.clause(table.name)
@@ -65,7 +65,7 @@ extension Migration {
         MigrationsController.sharedInstance.check({ try self.adapter.connection.execute(SQL) })
     }
     
-    func exists<T: DBObject>(object: T) -> Bool {
+    public func exists<T: DBObject>(object: T) -> Bool {
         if let table = object as? Table {
             return self.adapter.tables().contains(table.name)
         } else if let column = object as? Table.Column {
