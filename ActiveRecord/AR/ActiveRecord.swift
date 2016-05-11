@@ -30,7 +30,7 @@ public protocol ActiveRecord {
 }
 
 extension ActiveRecord {
-    static var tableName: String {
+    public static var tableName: String {
         var className = "\(self.dynamicType)"
         if let typeRange = className.rangeOfString(".Type") {
             className.replaceRange(typeRange, with: "")
@@ -38,7 +38,7 @@ extension ActiveRecord {
         return className.lowercaseString.pluralizedString()
     }
     
-    static var resourceName: String {
+    public static var resourceName: String {
         var className = "\(self.dynamicType)"
         if let typeRange = className.rangeOfString(".Type") {
             className.replaceRange(typeRange, with: "")
@@ -46,69 +46,69 @@ extension ActiveRecord {
         return className.lowercaseString
     }
     
-    static func acceptedNestedAttributes() -> [String] { return [] }
+    public static func acceptedNestedAttributes() -> [String] { return [] }
 }
 
 
 extension ActiveRecord {
-    var isValid: Bool {
+    public var isValid: Bool {
         return self.validate()
     }
     
-    func validate() -> Bool {
+    public func validate() -> Bool {
         return true
     }
 }
 
 extension ActiveRecord {
-    func update(attributes: [String: Any?]) throws -> Bool {
+    public func update(attributes: [String: Any?]) throws -> Bool {
         // TODO: get diff between model snapshot and passed attributes
         try ActiveRelation(model: self).update(attributes)
         // TODO: update model attributes
         return false
     }
     
-    func update(attribute: String, value: Any) throws -> Bool {
+    public func update(attribute: String, value: Any) throws -> Bool {
         try ActiveRelation(model: self).update([attribute: value])
         // TODO: update model attributes
         return false
     }
     
-    func destroy() throws -> Bool {
+    public func destroy() throws -> Bool {
         return false
     }
     
-    func save() throws -> Bool {
+    public func save() throws -> Bool {
         return try self.save(false)
     }
     
-    static func create(attributes: [String : Any?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
+    public static func create(attributes: [String : Any?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
         let record = self.init(attributes: attributes)
         try record.save(true)
         return record;
     }
     
-    static func find(identifier:Any) throws -> Self? {
+    public static func find(identifier:Any) throws -> Self? {
         return try take().first
     }
     
-    static func find(attributes:[String:Any]) throws -> Self? {
+    public static func find(attributes:[String:Any]) throws -> Self? {
         return try ActiveRelation().`where`(attributes).execute().first
     }
     
-    static func take(count: Int = 1) throws -> [Self] {
+    public static func take(count: Int = 1) throws -> [Self] {
         return try ActiveRelation().limit(count).execute()
     }
     
-    static func `where`(attributes: [String:Any]) -> ActiveRelation<Self> {
+    public static func `where`(attributes: [String:Any]) -> ActiveRelation<Self> {
         return ActiveRelation().`where`(attributes)
     }
     
-    static func all() throws -> [Self] {
+    public static func all() throws -> [Self] {
         return try ActiveRelation().execute()
     }
     
-    func save(validate: Bool = false) throws -> Bool {
+    public func save(validate: Bool = false) throws -> Bool {
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
         }
@@ -119,14 +119,14 @@ extension ActiveRecord {
 }
 
 extension ActiveRecord {
-    init(attributes: [String:Any?]) {
+    public init(attributes: [String:Any?]) {
         self.init()
         self.attributes = attributes
     }
 }
 
 extension ActiveRecord {
-    var attributes: [String: Any?] {
+    public var attributes: [String: Any?] {
         get {
             return getAttributes()
         }
@@ -135,8 +135,8 @@ extension ActiveRecord {
             ActiveSnapshotStorage.sharedInstance.set(self)
         }
     }
-    func setAttrbiutes(attributes: [String: Any?]) {}
-    func getAttributes() -> [String: Any?] {
+    public func setAttrbiutes(attributes: [String: Any?]) {}
+    public func getAttributes() -> [String: Any?] {
         let reflections = _reflect(self)
         
         var fields = [String: Any?]()
