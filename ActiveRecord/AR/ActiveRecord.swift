@@ -15,11 +15,38 @@ public enum ActiveRecordError: ErrorType {
     case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
 }
 
-public protocol AnyType {}
+// TODO: Find a way make it as Hashable
+public protocol AnyType: Any {
+    func ==(lhs: AnyType?, rhs: AnyType?) -> Bool
+}
 
-extension String: AnyType {}
-extension Int: AnyType {}
-extension Float: AnyType {}
+extension AnyType {
+    var rawType: String {
+        return "\(self)"
+    }
+}
+
+public func ==(lhs: AnyType?, rhs: AnyType?) -> Bool {
+    if lhs?.rawType == rhs?.rawType {
+        switch lhs!.rawType {
+        case "String": return (lhs as! String) == (rhs as! String)
+        case "Int": return (lhs as! Int) == (rhs as! Int)
+        case "Float": return (lhs as! Float) == (rhs as! Float)
+        default: return false
+        }
+    }
+    return false
+}
+
+extension String: AnyType {
+    var rawType: String { return "String" }
+}
+extension Int: AnyType {
+    var rawType: String { return "Int" }
+}
+extension Float: AnyType {
+    var rawType: String { return "Float" }
+}
 
 public protocol ActiveRecord {
     var id: AnyType? {set get}
