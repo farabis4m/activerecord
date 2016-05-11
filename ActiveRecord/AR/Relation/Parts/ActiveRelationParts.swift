@@ -7,13 +7,13 @@
 //
 
 public protocol ActiveRelationPart {
-    var priority: Int { get }
+    public var priority: Int { get }
 }
 
 public struct Where: ActiveRelationPart {
-    var priority: Int { return 1 }
-    var field: String
-    var values: Array<CustomStringConvertible>
+    public var priority: Int { return 1 }
+    public var field: String
+    public var values: Array<CustomStringConvertible>
 }
 
 extension Where: CustomStringConvertible {
@@ -28,8 +28,8 @@ extension Where: CustomStringConvertible {
 }
 
 public struct Offset: ActiveRelationPart {
-    var priority: Int { return 2 }
-    var count: Int
+    public var priority: Int { return 2 }
+    public var count: Int
 }
 
 extension Offset: CustomStringConvertible {
@@ -39,8 +39,8 @@ extension Offset: CustomStringConvertible {
 }
 
 public struct Limit: ActiveRelationPart {
-    var priority: Int { return 3 }
-    var count: Int
+    public var priority: Int { return 3 }
+    public var count: Int
 }
 
 extension Limit: CustomStringConvertible {
@@ -50,15 +50,15 @@ extension Limit: CustomStringConvertible {
 }
 
 public struct Order: ActiveRelationPart {
-    var priority: Int { return 1 }
+    public var priority: Int { return 1 }
     public enum Direction: String {
         case Ascending = "ASC"
         case Descending = "DESC"
         case Random        
     }
     
-    var field: String
-    var direction: Direction
+    public var field: String
+    public var direction: Direction
 }
 
 extension Order: CustomStringConvertible {
@@ -68,7 +68,7 @@ extension Order: CustomStringConvertible {
 }
 
 public struct Pluck: ActiveRelationPart {
-    var priority: Int { return 0 }
+    public var priority: Int { return 0 }
     public var fields: Array<String>
 }
 
