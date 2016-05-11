@@ -100,7 +100,7 @@ public class Function: DBObject {
 }
 
 extension Table.Column: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         var string = "\(name) \(type!)"
         if let length = self.length {
             string += "(\(length))"
