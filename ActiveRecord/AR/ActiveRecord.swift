@@ -15,8 +15,14 @@ public enum ActiveRecordError: ErrorType {
     case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
 }
 
+public protocol AnyType {}
+
+extension String: AnyType {}
+extension Int: AnyType {}
+extension Float: AnyType {}
+
 public protocol ActiveRecord {
-    var id: Any? {set get}
+    var id: AnyType? {set get}
     init()
     init(attributes: [String:Any?])
     
