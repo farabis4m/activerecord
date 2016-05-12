@@ -6,6 +6,8 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
+import InflectorKit
+
 public func <<<T> (inout left: [T], right: T) -> [T] {
     left.append(right)
     return left
@@ -26,6 +28,9 @@ extension Migration {
     func up() {}
     func down() {}
 }
+
+public let foreignKey = "foreignKey"
+public let column = "column"
 
 extension Migration {
     public func create<T: DBObject>(object: T, block: ((T) -> (Void))? = nil) {
@@ -74,5 +79,14 @@ extension Migration {
             // TODO: Add implementation for function
         }
         return false
+    }
+    
+    public func reference(to: String, on: String, options: [String: Any]? = nil) {
+        let columnName = options?["column"] as? String ?? "\(on)_id"
+        self.create(Table.Column(name: columnName, type: .Int, table: to.singularizedString()))
+        if let foreignKey = options?["foreignKey"] as? Bool where foreignKey == true {
+            let SQL = "\(Table.Action.Alter.clause(to)) ADD CONSTRAINT FOREIGN KEY \(columnName) REFERENCES \(on)(id)"
+            MigrationsController.sharedInstance.check({ try self.adapter.connection.execute(SQL) })
+        }
     }
 }
