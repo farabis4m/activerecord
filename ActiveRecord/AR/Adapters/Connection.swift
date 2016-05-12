@@ -35,7 +35,7 @@ public class Connection {
     }
     
     private let location: Location
-    private let isReadOnly = false
+    private let isReadOnly: Bool
     
     init(_ location: Location = .InMemory, readonly: Bool = false) throws {
         self.location = location
