@@ -44,7 +44,7 @@ public class MigrationsController {
     
     //MARK: - Setup
     
-    func setup() {
+    public func setup() {
         SchemasMigration().up()
     }
     
