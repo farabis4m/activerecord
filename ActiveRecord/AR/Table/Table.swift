@@ -15,7 +15,9 @@ public class Table: DBObject {
         typealias BaseInt = Int
         typealias BaseFloat = Float
         typealias BaseString = String
+        typealias BaseBool = Bool
         public enum Type: String {
+            case Bool = "bool"
             case String = "text"
             case Int = "int"
             case Decimal = "decimal"
@@ -29,6 +31,7 @@ public class Table: DBObject {
                 case .String: return BaseString.self
                 case .Date: return NSDate.self
                 case .Raw: return NSData.self
+                case .Bool: return BaseBool.self
                 }
             }
         }
@@ -51,6 +54,7 @@ public class Table: DBObject {
         public var name: String
         public var type: Type?
         public var PK = false
+        public var autoIncrement = true
         public var unique = false
         public var nullable = true
         public var length: Int?
@@ -110,6 +114,9 @@ extension Table.Column: CustomStringConvertible {
         }
         if PK {
             string += " PRIMARY KEY"
+            if autoIncrement {
+                string += " AUTOINCREMENT"
+            }
         }
         return string
     }
