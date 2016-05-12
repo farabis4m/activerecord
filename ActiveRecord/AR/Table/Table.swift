@@ -105,16 +105,16 @@ public class Function: DBObject {
 
 extension Table.Column: CustomStringConvertible {
     public var description: String {
-        var string = "\(name) \(type!)"
+        var string = "\(name) \(Adapter.current.persistedColumnTypes[type!])"
         if let length = self.length {
             string += "(\(length))"
         }
-        if !nullable {
+        if !self.nullable {
             string += " NOT NULL"
         }
-        if PK {
+        if self.PK {
             string += " PRIMARY KEY"
-            if autoIncrement {
+            if self.type == .Int && self.autoIncrement {
                 string += " AUTOINCREMENT"
             }
         }

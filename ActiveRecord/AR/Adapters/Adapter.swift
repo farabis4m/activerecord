@@ -38,6 +38,7 @@ public class Adapter {
                 "blob" : .Raw]
     }
     
+    var persistedColumnTypes = [Table.Column.DBType : String] { return [:] }
     
     public var connection: Connection!
     

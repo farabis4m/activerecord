@@ -16,12 +16,14 @@ public class SQLiteAdapter: Adapter {
                 "blob" : .Raw]
     }
     
-    
-    //    let columnTypes = ["text" : Table.Column.Type.String,
-    //                       "int"  : .Int,
-    //                       "date" : .Date,
-    //                       "real" : .Decimal,
-    //                       "blob" : .Raw]
+    override var persistedColumnTypes: [Table.Column.DBType: String] {
+        return [.Int : "INTEGER",
+                .Decimal : "REAL",
+                .Date : "DATE",
+                .String : "TEXT",
+                .Bool : "INT",
+                .Raw : "BLOB"]
+    }
     
     override public func tables() -> Array<String> {
         do {
