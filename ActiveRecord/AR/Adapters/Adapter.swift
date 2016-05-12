@@ -37,14 +37,14 @@ public class Adapter {
                 "real" : .Decimal,
                 "blob" : .Raw]
     }
-
-
+    
+    
     public var connection: Connection!
     
     private var settings: [String: Any]?
     init(settings: [String: Any]) {
         self.settings = settings
-        self.connection = self.connect(settings)
+        self.connection = self.connect()
     }
     
     public func indexes() -> Array<String> {
@@ -65,7 +65,8 @@ public class Adapter {
     
     public func connect() -> Connection {
         do {
-            return try Connection(self.settings["name"] as! String)
+            let dbName = self.settings?["name"] as! String
+            return try Connection(dbName)
         } catch {
             print(error)
             fatalError("Closing application due to db connection error...")
@@ -74,5 +75,5 @@ public class Adapter {
     
     public func disconnect() {
         self.connection.close()
-    }    
+    }
 }

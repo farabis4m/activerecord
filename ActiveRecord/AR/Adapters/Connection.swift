@@ -38,7 +38,7 @@ public class Connection {
     
     init(_ location: Location = .InMemory, readonly: Bool = false) throws {
         self.location = location
-        self.open()
+        try self.open()
     }
     
     convenience init(_ filename: String, readonly: Bool = false) throws {
@@ -49,7 +49,7 @@ public class Connection {
         self.close()
     }
     
-    public func open() {
+    public func open() throws {
         let flags = readonly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
         try check(sqlite3_open_v2(location.description, &_handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
         dispatch_queue_set_specific(queue, Connection.queueKey, queueContext, nil)
@@ -98,12 +98,12 @@ public class Connection {
         var columnTypes = Array<Int32>()
         var columns = Array<String>()
         let columnsCount = sqlite3_column_count(statement)
-//        for i in 0..<columnsCount {
-//            let columnType = sqlite3_column_type(statement, i)
-//            columnTypes.append(columnType)
-//            let columnName = String.fromCString(UnsafePointer(sqlite3_column_name(statement, i))) ?? ""
-//            columns.append(columnName)
-//        }
+        //        for i in 0..<columnsCount {
+        //            let columnType = sqlite3_column_type(statement, i)
+        //            columnTypes.append(columnType)
+        //            let columnName = String.fromCString(UnsafePointer(sqlite3_column_name(statement, i))) ?? ""
+        //            columns.append(columnName)
+        //        }
         var rows = Array<Array<Any?>>()
         while sqlite3_step(statement) == SQLITE_ROW {
             var row = Array<Any?>()
@@ -189,20 +189,20 @@ public class Connection {
     
     private lazy var queueContext: UnsafeMutablePointer<Void> = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
     
-//    private enum Result : ErrorType {
-//        
-//        private static let successCodes: Set = [SQLITE_OK, SQLITE_ROW, SQLITE_DONE]
-//        
-//        case Error(message: String, code: Int32, statement: String?)
-//        
-//        init?(errorCode: Int32, connection: Connection, statement: String? = nil) {
-//            guard !Result.successCodes.contains(errorCode) else { return nil }
-//            
-//            let message = String.fromCString(sqlite3_errmsg(connection.handle))!
-//            self = Error(message: message, code: errorCode, statement: statement)
-//        }
-//        
-//    }
+    //    private enum Result : ErrorType {
+    //
+    //        private static let successCodes: Set = [SQLITE_OK, SQLITE_ROW, SQLITE_DONE]
+    //
+    //        case Error(message: String, code: Int32, statement: String?)
+    //
+    //        init?(errorCode: Int32, connection: Connection, statement: String? = nil) {
+    //            guard !Result.successCodes.contains(errorCode) else { return nil }
+    //
+    //            let message = String.fromCString(sqlite3_errmsg(connection.handle))!
+    //            self = Error(message: message, code: errorCode, statement: statement)
+    //        }
+    //
+    //    }
 }
 
 extension Connection.Location : CustomStringConvertible {

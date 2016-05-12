@@ -7,7 +7,7 @@
 //
 
 public class SQLiteAdapter: Adapter {
-
+    
     override var columnTypes: [String : Table.Column.DBType] {
         return ["text" : .String,
                 "int"  : .Int,
@@ -15,15 +15,15 @@ public class SQLiteAdapter: Adapter {
                 "real" : .Decimal,
                 "blob" : .Raw]
     }
-
     
-//    let columnTypes = ["text" : Table.Column.Type.String,
-//                       "int"  : .Int,
-//                       "date" : .Date,
-//                       "real" : .Decimal,
-//                       "blob" : .Raw]
     
-    override func tables() -> Array<String> {
+    //    let columnTypes = ["text" : Table.Column.Type.String,
+    //                       "int"  : .Int,
+    //                       "date" : .Date,
+    //                       "real" : .Decimal,
+    //                       "blob" : .Raw]
+    
+    override public func tables() -> Array<String> {
         do {
             let result = try self.connection.execute_query("SELECT name FROM sqlite_master WHERE (type = 'table' OR type == 'view' AND NOT name = 'sqlite_sequence')")
             return result.hashes.map({ $0["name"] as! String })
@@ -33,7 +33,7 @@ public class SQLiteAdapter: Adapter {
         return super.tables()
     }
     
-    override func structure(table: String) -> Dictionary<String, Table.Column> {
+    override public func structure(table: String) -> Dictionary<String, Table.Column> {
         do {
             let result = try self.connection.execute_query("PRAGMA table_info(\(table.quoted))")
             var structure = Dictionary<String, Table.Column>()
