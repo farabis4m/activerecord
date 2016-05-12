@@ -34,11 +34,11 @@ public class Connection {
         case URI(String)
     }
     
+    private let location: Location
+    
     init(_ location: Location = .InMemory, readonly: Bool = false) throws {
-        let flags = readonly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
-        try check(sqlite3_open_v2(location.description, &_handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
-        dispatch_queue_set_specific(queue, Connection.queueKey, queueContext, nil)
-        Connection.current = self
+        self.location = location
+        self.open()
     }
     
     convenience init(_ filename: String, readonly: Bool = false) throws {
@@ -46,10 +46,18 @@ public class Connection {
     }
     
     deinit {
-        sqlite3_close(handle)
+        self.close()
     }
     
-    static var current: Connection?
+    public func open() {
+        let flags = readonly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
+        try check(sqlite3_open_v2(location.description, &_handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
+        dispatch_queue_set_specific(queue, Connection.queueKey, queueContext, nil)
+    }
+    
+    public func close() {
+        sqlite3_close(handle)
+    }
     
     var readonly: Bool { return sqlite3_db_readonly(handle, nil) == 1 }
     
