@@ -35,9 +35,11 @@ public class Connection {
     }
     
     private let location: Location
+    private let isReadOnly = false
     
     init(_ location: Location = .InMemory, readonly: Bool = false) throws {
         self.location = location
+        self.isReadOnly = readonly
         try self.open()
     }
     
@@ -50,7 +52,7 @@ public class Connection {
     }
     
     public func open() throws {
-        let flags = readonly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
+        let flags = self.isReadOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
         try check(sqlite3_open_v2(location.description, &_handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
         dispatch_queue_set_specific(queue, Connection.queueKey, queueContext, nil)
     }
