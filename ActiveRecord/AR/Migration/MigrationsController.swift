@@ -38,6 +38,8 @@ public class MigrationsController {
     
     public var migrations = Array<Migration>()
 
+    public var tables = Array<Table>()
+    
     //MARK: - Lifecycle
     
     public init() {}
@@ -51,7 +53,7 @@ public class MigrationsController {
     //MARK: - Migration management
     
     public func migrate() {
-        self.migrations.sortInPlace({ $0.timestamp > $1.timestamp })
+        self.migrations.sortInPlace({ $0.timestamp < $1.timestamp })
         let difference = Set(self.migrations.map({ $0.id })).subtract(Set(try! SchemaMigration.all().map({ $0.name })))
         let pending = self.migrations.filter({ difference.contains($0.id) })
         var succeed = Array<Migration>()

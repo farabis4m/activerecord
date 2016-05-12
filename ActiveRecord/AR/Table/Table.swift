@@ -105,7 +105,7 @@ public class Function: DBObject {
 
 extension Table.Column: CustomStringConvertible {
     public var description: String {
-        var string = "\(name) \(Adapter.current.persistedColumnTypes[type!])"
+        var string = "\(name) \(Adapter.current.persistedColumnTypes[type!]!)"
         if let length = self.length {
             string += "(\(length))"
         }

@@ -38,6 +38,7 @@ extension Migration {
         var SQL: String = ""
         if let table = object as? Table {
             SQL = Table.Action.Create.clause(table.name) + "(" + table.columns.map({ $0.description }).joinWithSeparator(", ") + ")"
+            MigrationsController.sharedInstance.tables << table
         } else if let column = object as? Table.Column {
             SQL = Table.Action.Alter.clause(column.table!) + " ADD COLUMN " + column.description
         } else if object is Function {
@@ -82,10 +83,10 @@ extension Migration {
     }
     
     public func reference(to: String, on: String, options: [String: Any]? = nil) {
-        let columnName = options?["column"] as? String ?? "\(on)_id"
-        self.create(Table.Column(name: columnName, type: .Int, table: to.singularizedString()))
-        if let foreignKey = options?["foreignKey"] as? Bool where foreignKey == true {
-            let SQL = "\(Table.Action.Alter.clause(to)) ADD CONSTRAINT FOREIGN KEY \(columnName) REFERENCES \(on)(id)"
+        let columnName = options?["column"] as? String ?? "\(on.singularizedString())_id"
+        self.create(Table.Column(name: columnName, type: .Int, table: to))
+        if let foreignKey = options?["foreignKey"] as? Bool where foreignKey == true && adapter is SQLiteAdapter == false {
+            let SQL = "\(Table.Action.Alter.clause(to)) ADD CONSTRAINT \(to)_\(columnName) FOREIGN KEY (\(columnName)) REFERENCES \(on)(id);"
             MigrationsController.sharedInstance.check({ try self.adapter.connection.execute(SQL) })
         }
     }
