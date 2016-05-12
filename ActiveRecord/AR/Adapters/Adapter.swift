@@ -18,11 +18,11 @@ public enum DBError: ErrorType {
 
 public class Adapter {
     
-    enum Type: String {
+    public enum Type: String {
         case SQLite = "SQLite"
     }
-    static var current: Adapter!
-    static func adapter(settings: [String: Any]) -> Adapter {
+    public static var current: Adapter!
+    public static func adapter(settings: [String: Any]) -> Adapter {
         let type = Type(rawValue: settings["adapter"] as! String)!
         switch type {
         case .SQLite: Adapter.current = SQLiteAdapter(settings: settings)
@@ -39,7 +39,7 @@ public class Adapter {
     }
 
 
-    var connection: Connection!
+    public var connection: Connection!
     
     private var settings: [String: Any]?
     init(settings: [String: Any]) {
@@ -47,31 +47,32 @@ public class Adapter {
         self.connection = self.connect(settings)
     }
     
-    func indexes() -> Array<String> {
+    public func indexes() -> Array<String> {
         return Array<String>()
     }
     
     //MARK: - Tables
     
-    func tables() -> Array<String> {
+    public func tables() -> Array<String> {
         return Array<String>()
     }
     
-    func structure(table: String) -> Dictionary<String, Table.Column> {
+    public func structure(table: String) -> Dictionary<String, Table.Column> {
         return [:]
     }
     
     //MARK: - Utils
     
-    func connect(settings: [String: Any]) -> Connection {
+    public func connect() -> Connection {
         do {
-            return try Connection(settings["name"] as! String)
+            return try Connection(self.settings["name"] as! String)
         } catch {
             print(error)
             fatalError("Closing application due to db connection error...")
         }
     }
     
-    func disconnect() {
+    public func disconnect() {
+        self.connection.close()
     }    
 }
