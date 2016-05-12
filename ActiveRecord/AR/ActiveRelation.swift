@@ -27,9 +27,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     private var klass: T.Type?
     private var model: T?
-    private var connection: Connection {
-        return Connection.current!
-    }
+    private var connection: Connection { return Adapter.current.connection }
     
     private var attributes: [String: Any]?
     
