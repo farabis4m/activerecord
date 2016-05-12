@@ -56,8 +56,6 @@ public protocol ActiveRecord {
     func setAttrbiutes(attributes: [String: Any?])
     func getAttributes() -> [String: Any?]
     
-    //    func getTypes() -> [String: ]
-    
     static var tableName: String { get }
     static var resourceName: String { get }
     static func acceptedNestedAttributes() -> [String]
@@ -142,7 +140,7 @@ extension ActiveRecord {
         return try ActiveRelation().execute()
     }
     
-    public func save(validate: Bool = false) throws -> Bool {
+    public func save(validate: Bool) throws -> Bool {
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
         }
