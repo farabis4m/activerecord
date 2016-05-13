@@ -7,7 +7,7 @@
 //
 
 public protocol Validator {
-    public func validate(value: Any) -> Bool
+    func validate(value: Any) -> Bool
 }
 
 extension Validator {
@@ -17,16 +17,19 @@ extension Validator {
 }
 
 public struct LengthValidator: Validator {
-    public var min: Int.min
-    public var max: Int.max
+    public var min = Int.min
+    public var max = Int.max
     
     // TOOD: Add implementation for strict. Make type independent
     public func validate(value: Any) -> Bool {
-        if let countable = value as? CollectionType {
+        if let countable = value as? [Any] {
+            return countable.count >= self.min && countable.count <= self.max
+        } else if let countable = value as? Dictionary<String, Any> {
             return countable.count >= self.min && countable.count <= self.max
         } else if let string = value as? String {
             return string.characters.count >= self.min && string.characters.count <= self.max
         }
+        return false
     }
 }
 
