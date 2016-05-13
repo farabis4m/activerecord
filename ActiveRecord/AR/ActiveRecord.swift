@@ -60,7 +60,7 @@ public protocol ActiveRecord {
     static var resourceName: String { get }
     static func acceptedNestedAttributes() -> [String]
     
-    func validate() -> Bool
+    func validate() -> Errors
     func validators() -> [String: Validator]
 }
 
@@ -90,10 +90,18 @@ extension ActiveRecord {
 
 
 extension ActiveRecord {
-    public var isValid: Bool { return self.validate() }
+    public var errors: Errors { return self.validate() }
+    public var isValid: Bool { return self.validate().isEmpty }
     
-    public func validate() -> Bool {
-        return true
+    public func validate() -> Errors {
+        var errors = Errors(model: self)
+        let validators = self.validators()
+        for (attribute, value) in self.attributes {
+            if let validator = validators[attribute] {
+                validator.validate(self, attribute: attribute, value: value, errors: &errors)
+            }
+        }
+        return errors
     }
     
     public func validators() -> [String: Validator] {

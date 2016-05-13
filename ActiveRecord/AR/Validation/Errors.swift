@@ -6,19 +6,34 @@
 //
 //
 
-enum Error: String {
-    case Blank = "blank"
-    case Absent = "present"
-    case TooShort = "too_short"
-    case TooLong = "too_long"
-    case WrongLength = "wrong_length"
-    case Taken = "taken"
-    case Invalid = "invalid"
+public enum Error: ErrorType {
+    case Blank
+    case Absent
+    case TooShort(length: Int)
+    case TooLong(length: Int)
+    case WrongLength(length: Int)
+    case Taken
+    case Invalid
     
-    case NotANumber = "not_a_number"
+    case NotANumber
+    
+    var rawValue: String {
+        switch self {
+        case Blank: return "blank"
+        case Absent: return "present"
+        case TooShort: return "too_short"
+        case TooLong: return "too_long"
+        case WrongLength: return "wrong_length"
+        case Taken: return"taken"
+        case Invalid: return "invalid"
+            
+        case NotANumber: return "not_a_number"
+        default: return "empty_error"
+        }
+    }
 }
 
-struct Errors {
+public struct Errors {
     
     var model: ActiveRecord
     
@@ -33,7 +48,7 @@ struct Errors {
     }
     
     public var base = Array<String>()
-    
+    public var isEmpty: Bool { return self._messages.isEmpty && self.base.isEmpty }
     
     public func contains(attribute: String) -> Bool {
         return self.attributes[attribute] != nil
