@@ -13,6 +13,8 @@
 		EE9180901C46E8980038162A /* usr/include/sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = EE91808B1C46E34A0038162A /* usr/include/sqlite3.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE9180941C46EA210038162A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE9180931C46EA210038162A /* libsqlite3.tbd */; };
 		EE9180951C46EBCC0038162A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE9180911C46E9D30038162A /* libsqlite3.tbd */; };
+		F51BE6941CE4B1A000605652 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51BE6931CE4B1A000605652 /* Validator.swift */; };
+		F51BE6961CE4B48400605652 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51BE6951CE4B48400605652 /* Errors.swift */; };
 		F543B1F91CE2F8AD000BE1AE /* ActiveRecord.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */; };
 		F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */; };
 		F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */; };
@@ -59,6 +61,8 @@
 		EE91808B1C46E34A0038162A /* usr/include/sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usr/include/sqlite3.h; sourceTree = SDKROOT; };
 		EE9180911C46E9D30038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		EE9180931C46EA210038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		F51BE6931CE4B1A000605652 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		F51BE6951CE4B48400605652 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ActiveRecord.podspec; sourceTree = "<group>"; };
 		F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRecord.swift; sourceTree = "<group>"; };
 		F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelation.swift; sourceTree = "<group>"; };
@@ -243,6 +247,15 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		F51BE6921CE4B19900605652 /* Validation */ = {
+			isa = PBXGroup;
+			children = (
+				F51BE6931CE4B1A000605652 /* Validator.swift */,
+				F51BE6951CE4B48400605652 /* Errors.swift */,
+			);
+			path = Validation;
+			sourceTree = "<group>";
+		};
 		F543B1FA1CE2F954000BE1AE /* ActiveRecord */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +271,7 @@
 		F543B1FB1CE2F954000BE1AE /* AR */ = {
 			isa = PBXGroup;
 			children = (
+				F51BE6921CE4B19900605652 /* Validation */,
 				F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */,
 				F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */,
 				F543B1FF1CE2F954000BE1AE /* ActiveSerializer */,
@@ -571,9 +585,11 @@
 				F543B2221CE2F954000BE1AE /* Adapter.swift in Sources */,
 				F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */,
 				F543B22C1CE2F954000BE1AE /* String+Helpers.swift in Sources */,
+				F51BE6941CE4B1A000605652 /* Validator.swift in Sources */,
 				F543B2231CE2F954000BE1AE /* Connection.swift in Sources */,
 				F543B2251CE2F954000BE1AE /* SQLiteAdapter.swift in Sources */,
 				F543B2271CE2F954000BE1AE /* MigrationsController.swift in Sources */,
+				F51BE6961CE4B48400605652 /* Errors.swift in Sources */,
 				F543B2261CE2F954000BE1AE /* Migration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

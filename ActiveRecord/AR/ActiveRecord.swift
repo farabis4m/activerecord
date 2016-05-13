@@ -59,6 +59,9 @@ public protocol ActiveRecord {
     static var tableName: String { get }
     static var resourceName: String { get }
     static func acceptedNestedAttributes() -> [String]
+    
+    public func validate() -> Bool
+    public func validators() -> [String: Validator]
 }
 
 extension ActiveRecord {
@@ -71,6 +74,10 @@ extension ActiveRecord {
     }
     
     public static var resourceName: String {
+        return self.modelName
+    }
+    
+    public final static var modelName: String {
         var className = "\(self.dynamicType)"
         if let typeRange = className.rangeOfString(".Type") {
             className.replaceRange(typeRange, with: "")
@@ -83,12 +90,14 @@ extension ActiveRecord {
 
 
 extension ActiveRecord {
-    public var isValid: Bool {
-        return self.validate()
-    }
+    public var isValid: Bool { return self.validate() }
     
     public func validate() -> Bool {
         return true
+    }
+    
+    public func validators() -> [String: Validator] {
+        return [:]
     }
 }
 
