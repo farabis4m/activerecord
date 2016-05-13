@@ -6,7 +6,7 @@
 //
 //
 
-enum Errors: String {
+enum Error: String {
     case Blank = "blank"
     case Absent = "present"
     case TooShort = "too_short"
@@ -17,33 +17,29 @@ enum Errors: String {
     
     case NotANumber = "not_a_number"
 }
-typealias ValidationErrors = Errors
 
-extension ActiveRecord {
-    struct Errors {
-        
-        var model: ActiveRecord
-        
-        var attributes = Dictionary<String, ValidationErrors>()
-        public func add(attribute: String, message: ValidationErrors) {
-            self.attributes[attribute] = message
-            _messages << "self.model"message.rawValue
-        }
-        private var _messages = Array<String>()
-        public var messages: [String] {
-            return base + _messages
-        }
-        
-        public var base = Array<String>()
-        
-        
-        public func contains(attribute: String) -> Bool {
-            return self.attributes[attribute] != nil
-        }
-        
-        public init(model: ActiveRecord) {
-            self.model = model
-        }
+struct Errors {
+    
+    var model: ActiveRecord
+    
+    var attributes = Dictionary<String, Error>()
+    public mutating func add(attribute: String, message: Error) {
+        self.attributes[attribute] = message
+        self._messages << (self.model.dynamicType.modelName + "." + message.rawValue)
     }
-
+    private var _messages = Array<String>()
+    public var messages: [String] {
+        return base + _messages
+    }
+    
+    public var base = Array<String>()
+    
+    
+    public func contains(attribute: String) -> Bool {
+        return self.attributes[attribute] != nil
+    }
+    
+    public init(model: ActiveRecord) {
+        self.model = model
+    }
 }

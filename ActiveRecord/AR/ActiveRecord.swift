@@ -60,8 +60,8 @@ public protocol ActiveRecord {
     static var resourceName: String { get }
     static func acceptedNestedAttributes() -> [String]
     
-    public func validate() -> Bool
-    public func validators() -> [String: Validator]
+    func validate() -> Bool
+    func validators() -> [String: Validator]
 }
 
 extension ActiveRecord {
