@@ -14,7 +14,7 @@ class ActiveSnapshotStorage {
     init() { }
     
     func set(model: ActiveRecord) {
-        if var modelStorage = self.items["\(model.self)_\(model.id)"] {
+        if var modelStorage = self.items[self.hash(model)] {
             modelStorage.append(model.attributes)
         } else {
             self.clear(model)
@@ -22,12 +22,29 @@ class ActiveSnapshotStorage {
     }
     
     func get(model: ActiveRecord) -> [String: Any?]? {
-        return self.items["\(model.self)_\(model.id)"]?.last
+        return self.items[self.hash(model)]?.last
     }
     
     func clear(model: ActiveRecord) {
         var modelStorage = Array<Dictionary<String, Any?>>()
         modelStorage.append(model.attributes)
-        self.items["\(model.self)_\(model.id)"] = modelStorage
+        self.items[self.hash(model)] = modelStorage
+    }
+    
+    func merge(model: ActiveRecord) -> [String: Any?] {
+        if let timeline = self.items[self.hash(model)] {
+            var result = Dictionary<String, Any?>()
+            for item in timeline {
+                for key in item.keys {
+                    result[key] = item[key]
+                }
+            }
+            return result
+        }
+        return model.attributes
+    }
+    
+    func hash(model: ActiveRecord) -> String {
+        return "\(model.self)_\(model.id)"
     }
 }

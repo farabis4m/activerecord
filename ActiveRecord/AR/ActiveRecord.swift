@@ -13,16 +13,23 @@ public enum ActiveRecordError: ErrorType {
     case RecordNotFound(attributes: [String: Any])
     case AttributeMissing(record: ActiveRecord, name: String)
     case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
+    case ParametersMissing(record: ActiveRecord)
 }
 
 // TODO: Find a way make it as Hashable
 public protocol AnyType: Any {
+    var dbValue: AnyType { get }
+    var rawType: String { get }
     func ==(lhs: AnyType?, rhs: AnyType?) -> Bool
 }
 
 extension AnyType {
-    var rawType: String {
+    public var rawType: String {
         return "\(self)"
+    }
+    
+    public var dbValue: AnyType {
+        return self
     }
 }
 
@@ -44,13 +51,14 @@ public func ==(lhs: AnyType?, rhs: AnyType?) -> Bool {
 }
 
 extension String: AnyType {
-    var rawType: String { return "String" }
+    public var rawType: String { return "String" }
+    public var dbValue: AnyType { return "'\(self)'" }
 }
 extension Int: AnyType {
-    var rawType: String { return "Int" }
+    public var rawType: String { return "Int" }
 }
 extension Float: AnyType {
-    var rawType: String { return "Float" }
+    public var rawType: String { return "Float" }
 }
 
 public enum ActiveRecrodAction {
@@ -229,17 +237,7 @@ extension ActiveRecord {
         }
     }
     public var dirty: [String: Any?] {
-        if let snapshot = ActiveSnapshotStorage.sharedInstance.get(self) {
-            let attributes = self.attributes
-            var dirty = Dictionary<String, Any?>()
-            for (k,v) in snapshot {
-                if let was = snapshot[k] as? AnyType, let now = attributes[k] as? AnyType where (was == now) == false {
-                    dirty[k] = v
-                }
-            }
-            return dirty
-        }
-        return self.attributes
+        return ActiveSnapshotStorage.sharedInstance.merge(self)
     }
     public func setAttrbiutes(attributes: [String: Any?]) {}
     public func getAttributes() -> [String: Any?] {

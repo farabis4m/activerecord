@@ -27,16 +27,26 @@ class InsertManager {
                 if let activeRecord = value as? ActiveRecord {
                     columns << "\(key)_id"
                     // TODO: How to check that related object has id
-                    values << activeRecord.id!
+                    values << activeRecord.id!.dbValue
                 } else {
                     columns << key
-                    values << value
+                    values << value.dbValue
                 }
             }
         }
         print(columns)
         print(values)
-        let _ = try? Adapter.current.connection.execute("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
+        do {
+            if !columns.isEmpty && !values.isEmpty {
+                if columns.count != values.count {
+                    throw ActiveRecordError.ParametersMissing(record: self.model)
+                }
+                try Adapter.current.connection.execute("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
+            }
+            
+        } catch {
+            print("ERORR: \(error)")
+        }
     }
     
 }
