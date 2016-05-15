@@ -15,6 +15,7 @@
 		EE9180951C46EBCC0038162A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE9180911C46E9D30038162A /* libsqlite3.tbd */; };
 		F51BE6941CE4B1A000605652 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51BE6931CE4B1A000605652 /* Validator.swift */; };
 		F51BE6961CE4B48400605652 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51BE6951CE4B48400605652 /* Errors.swift */; };
+		F540F5AB1CE8A01E00564DAA /* DeleteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */; };
 		F543B1F91CE2F8AD000BE1AE /* ActiveRecord.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */; };
 		F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */; };
 		F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */; };
@@ -63,6 +64,7 @@
 		EE9180931C46EA210038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F51BE6931CE4B1A000605652 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		F51BE6951CE4B48400605652 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteManager.swift; sourceTree = "<group>"; };
 		F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ActiveRecord.podspec; sourceTree = "<group>"; };
 		F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRecord.swift; sourceTree = "<group>"; };
 		F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelation.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 			isa = PBXGroup;
 			children = (
 				F543B20E1CE2F954000BE1AE /* InsertManager.swift */,
+				F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -579,6 +582,7 @@
 				F543B2291CE2F954000BE1AE /* InsertManager.swift in Sources */,
 				F543B2241CE2F954000BE1AE /* Result.swift in Sources */,
 				F543B2211CE2F954000BE1AE /* ActiveSnapshotStorage.swift in Sources */,
+				F540F5AB1CE8A01E00564DAA /* DeleteManager.swift in Sources */,
 				F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */,
 				F543B22B1CE2F954000BE1AE /* Table.swift in Sources */,
 				F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */,
