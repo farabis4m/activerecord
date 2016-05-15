@@ -21,3 +21,16 @@ extension String {
     }
     
 }
+
+extension String {
+    
+    func camelString() -> String {
+        return self
+    }
+    
+    func sneakyString() -> String {
+        return self
+    }
+    
+}
+

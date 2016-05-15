@@ -53,6 +53,14 @@ extension Float: AnyType {
     var rawType: String { return "Float" }
 }
 
+public enum ActiveRecrodAction {
+    case Initialize
+    case Create
+    case Update
+    case Destroy
+    case Save
+}
+
 public protocol ActiveRecord: AnyType {
     var id: AnyType? {set get}
     init()
@@ -65,8 +73,13 @@ public protocol ActiveRecord: AnyType {
     static var resourceName: String { get }
     static func acceptedNestedAttributes() -> [String]
     
+    // Validators
     func validate() -> Errors
     func validators() -> [String: Validator]
+    
+    // Callbackcs
+    func after(action: ActiveRecrodAction)
+    func before(action: ActiveRecrodAction)
 }
 
 extension ActiveRecord {
@@ -78,6 +91,11 @@ extension ActiveRecord {
     var hashValue: AnyType? {
         return self.id
     }
+}
+
+extension ActiveRecord {
+    public func after(action: ActiveRecrodAction) { }
+    public func before(action: ActiveRecrodAction) { }
 }
 
 extension ActiveRecord {
@@ -126,20 +144,26 @@ extension ActiveRecord {
 }
 
 extension ActiveRecord {
-    public func update(attributes: [String: Any?]) throws -> Bool {
+    public func update(attributes: [String: Any?]? = nil) throws -> Bool {
+        self.before(.Update)
         // TODO: get diff between model snapshot and passed attributes
         try ActiveRelation(model: self).update(attributes)
         // TODO: update model attributes
+        self.after(.Update)
         return false
     }
     
     public func update(attribute: String, value: Any) throws -> Bool {
+        self.before(.Update)
         try ActiveRelation(model: self).update([attribute: value])
         // TODO: update model attributes
+        self.after(.Update)
         return false
     }
     
     public func destroy() throws -> Bool {
+        self.before(.Destroy)
+        self.after(.Destroy)
         return false
     }
     
@@ -149,7 +173,9 @@ extension ActiveRecord {
     
     public static func create(attributes: [String : Any?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
         let record = self.init(attributes: attributes)
+        record.before(.Create)
         try record.save(true)
+        record.after(.Create)
         return record;
     }
     
@@ -174,12 +200,14 @@ extension ActiveRecord {
     }
     
     public func save(validate: Bool) throws -> Bool {
+        self.before(.Save)
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
         }
-        let result = try ActiveRelation(model: self).update()
+        try InsertManager.init(model: self).execute()
         ActiveSnapshotStorage.sharedInstance.set(self)
-        return result
+        self.after(.Save)
+        return true
     }
 }
 
