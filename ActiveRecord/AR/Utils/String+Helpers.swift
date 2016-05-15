@@ -24,19 +24,23 @@ extension String {
     
 }
 
-extension String {
+public extension String {
     
     func camelString() -> String {
-        let regex = NSRegularExpression(pattern: "([a-z])_([A-Z])", options: NSRegularExpressionOptions.CaseInsensitive)
-        value = regex.stringByReplacingMatchesInString(self, options: .ReportCompletion, range: NSRange(location: 0, length: self.characters.count), withTemplate: "$1$2.capitalizedString")
-        return self
+        return self.characters.split("_").map({ item in return String(item).capitalizedString }).joinWithSeparator("").lowercaseFirst
     }
     
     func sneakyString() -> String {
-        let regex = NSRegularExpression(pattern: "([a-z])([A-Z])", options: NSRegularExpressionOptions.CaseInsensitive)
-        value = regex.stringByReplacingMatchesInString(self, options: .ReportCompletion, range: NSRange(location: 0, length: self.characters.count), withTemplate: "$1_$2")
-        return self
+        let regex = try? NSRegularExpression(pattern: "([a-z])([A-Z])", options: NSRegularExpressionOptions.AllowCommentsAndWhitespace)
+        let value = regex?.stringByReplacingMatchesInString(self, options: .ReportCompletion, range: NSRange(location: 0, length: self.characters.count), withTemplate: "$1_$2")
+        return value?.lowercaseString ?? self
     }
+    
+    var first: String { return String(characters.prefix(1)) }
+    var last: String { return String(characters.suffix(1)) }
+    
+    var uppercaseFirst: String { return first.uppercaseString + String(characters.dropFirst()) }
+    var lowercaseFirst: String { return first.lowercaseString + String(characters.dropFirst()) }
     
 }
 
