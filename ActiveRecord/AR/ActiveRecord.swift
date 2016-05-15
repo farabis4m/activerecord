@@ -27,15 +27,20 @@ extension AnyType {
 }
 
 public func ==(lhs: AnyType?, rhs: AnyType?) -> Bool {
-    if lhs?.rawType == rhs?.rawType {
-        switch lhs!.rawType {
-        case "String": return (lhs as! String) == (rhs as! String)
-        case "Int": return (lhs as! Int) == (rhs as! Int)
-        case "Float": return (lhs as! Float) == (rhs as! Float)
-        default: return false
+    if let left = lhs {
+        if let right = rhs {
+            if left.rawType != right.rawType { return false }
+            switch left.rawType {
+            case "String": return (left as! String) == (right as! String)
+            case "Int": return (left as! Int) == (right as! Int)
+            case "Float": return (left as! Float) == (right as! Float)
+            case "ActiveRecord": return (left as! ActiveRecord).hashValue == (right as! ActiveRecord).hashValue
+            default: return false
+            }
         }
+        return false
     }
-    return false
+    return true
 }
 
 extension String: AnyType {
@@ -48,7 +53,7 @@ extension Float: AnyType {
     var rawType: String { return "Float" }
 }
 
-public protocol ActiveRecord {
+public protocol ActiveRecord: AnyType {
     var id: AnyType? {set get}
     init()
     init(attributes: [String:Any?])
@@ -62,6 +67,17 @@ public protocol ActiveRecord {
     
     func validate() -> Errors
     func validators() -> [String: Validator]
+}
+
+extension ActiveRecord {
+    var rawType: String { return "ActiveRecord" }
+}
+
+extension ActiveRecord {
+    // TODO: Don't have any other opportunities to compare hashes
+    var hashValue: AnyType? {
+        return self.id
+    }
 }
 
 extension ActiveRecord {
@@ -183,6 +199,19 @@ extension ActiveRecord {
             self.setAttrbiutes(newValue)
             ActiveSnapshotStorage.sharedInstance.set(self)
         }
+    }
+    public var dirty: [String: Any?] {
+        if let snapshot = ActiveSnapshotStorage.sharedInstance.get(self) {
+            let attributes = self.attributes
+            var dirty = Dictionary<String, Any?>()
+            for (k,v) in snapshot {
+                if let was = snapshot[k] as? AnyType, let now = attributes[k] as? AnyType where (was == now) == false {
+                    dirty[k] = v
+                }
+            }
+            return dirty
+        }
+        return self.attributes
     }
     public func setAttrbiutes(attributes: [String: Any?]) {}
     public func getAttributes() -> [String: Any?] {
