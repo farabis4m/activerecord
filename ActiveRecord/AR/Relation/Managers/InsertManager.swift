@@ -8,7 +8,7 @@
 
 class InsertManager {
     
-    let model: ActiveRecord
+    var model: ActiveRecord
     
     init(model: ActiveRecord) {
         self.model = model
@@ -19,11 +19,13 @@ class InsertManager {
         print("\(klass)" + " " + klass.tableName)
         let attributes = self.model.dirty
         let structure = Adapter.current.structure(klass.tableName)
+        
         var columns = Array<String>()
         var values = Array<AnyType>()
         print(structure.keys)
         for key in structure.keys {
-            if let value = attributes[key.camelString()] as? AnyType {
+            let b = attributes[key.camelString()]
+            if case let value?? = attributes[key.camelString()] {
                 if let activeRecord = value as? ActiveRecord {
                     columns << "\(key)_id"
                     // TODO: How to check that related object has id
@@ -41,7 +43,10 @@ class InsertManager {
                 if columns.count != values.count {
                     throw ActiveRecordError.ParametersMissing(record: self.model)
                 }
-                try Adapter.current.connection.execute("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
+                let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
+                if let id = Adapter.current.connection.lastInsertRowid {
+                    self.model.id = Int(id)
+                }
             }
             
         } catch {

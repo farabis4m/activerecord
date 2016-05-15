@@ -7,7 +7,7 @@
 //
 
 class DeleteManager {
-
+    
     let model: ActiveRecord
     
     init(model: ActiveRecord) {
@@ -18,7 +18,9 @@ class DeleteManager {
         let klass = self.model.dynamicType
         let structure = Adapter.current.structure(klass.tableName)
         if let PK = structure.values.filter({ return $0.PK }).first {
-            try Adapter.current.connection.execute("DELETE FORM \(klass.tableName) WHERE \(PK.name) = \(self.model.attributes[PK.name]!)")
+            if case let value?? = self.model.attributes[PK.name] {
+                try Adapter.current.connection.execute("DELETE FORM \(klass.tableName) WHERE \(PK.name) = \(value.dbValue)")
+            }
         }
     }
     

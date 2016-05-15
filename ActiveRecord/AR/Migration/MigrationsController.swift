@@ -8,8 +8,8 @@
 //
 
 public class MigrationsController {
- 
-    class SchemaMigration: ActiveRecord, Equatable, Hashable {
+    
+    class SchemaMigration: ActiveRecord {
         class var tableName: String {
             return "schema_migrations"
         }
@@ -23,21 +23,15 @@ public class MigrationsController {
         var name: String!
         required init() {}
         
-        func setAttrbiutes(attributes: [String: Any?]) {
+        func setAttrbiutes(attributes: [String: AnyType?]) {
             self.name = attributes["name"] as! String
-        }
-        
-        //MARK: - Hashable
-        
-        var hashValue: Int {
-            return self.name.hashValue
         }
     }
     
     public static var sharedInstance = MigrationsController()
     
     public var migrations = Array<Migration>()
-
+    
     public var tables = Array<Table>()
     
     //MARK: - Lifecycle

@@ -104,11 +104,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     //MARK: - ActiveRecordRelationProtocol
     
-    public func update(attributes: [String: Any?]? = nil) throws -> Bool {
-        return true
-    }
-    
-    public func updateAll(attrbiutes: [String : Any?]) throws -> Bool {
+    public func updateAll(attrbiutes: [String : AnyType?]) throws -> Bool {
         self.action = .Update
         let _ = try self.execute()
         return false

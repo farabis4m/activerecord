@@ -9,7 +9,7 @@
 class ActiveSnapshotStorage {
     static let sharedInstance = ActiveSnapshotStorage()
     
-    private var items = Dictionary<String, Array<Dictionary<String, Any?>>>()
+    private var items = Dictionary<String, Array<Dictionary<String, AnyType?>>>()
     
     init() { }
     
@@ -21,19 +21,19 @@ class ActiveSnapshotStorage {
         }
     }
     
-    func get(model: ActiveRecord) -> [String: Any?]? {
+    func get(model: ActiveRecord) -> [String: AnyType?]? {
         return self.items[self.hash(model)]?.last
     }
     
     func clear(model: ActiveRecord) {
-        var modelStorage = Array<Dictionary<String, Any?>>()
+        var modelStorage = Array<Dictionary<String, AnyType?>>()
         modelStorage.append(model.attributes)
         self.items[self.hash(model)] = modelStorage
     }
     
-    func merge(model: ActiveRecord) -> [String: Any?] {
+    func merge(model: ActiveRecord) -> [String: AnyType?] {
         if let timeline = self.items[self.hash(model)] {
-            var result = Dictionary<String, Any?>()
+            var result = Dictionary<String, AnyType?>()
             for item in timeline {
                 for key in item.keys {
                     result[key] = item[key]

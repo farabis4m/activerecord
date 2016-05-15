@@ -41,6 +41,7 @@ public func ==(lhs: AnyType?, rhs: AnyType?) -> Bool {
             case "String": return (left as! String) == (right as! String)
             case "Int": return (left as! Int) == (right as! Int)
             case "Float": return (left as! Float) == (right as! Float)
+            case "Bool": return (left as! Bool) == (right as! Bool)
             case "ActiveRecord": return (left as! ActiveRecord).hashValue == (right as! ActiveRecord).hashValue
             default: return false
             }
@@ -60,6 +61,9 @@ extension Int: AnyType {
 extension Float: AnyType {
     public var rawType: String { return "Float" }
 }
+extension Bool: AnyType {
+    public var rawType: String { return "Bool" }
+}
 
 public enum ActiveRecrodAction {
     case Initialize
@@ -72,10 +76,10 @@ public enum ActiveRecrodAction {
 public protocol ActiveRecord: AnyType {
     var id: AnyType? {set get}
     init()
-    init(attributes: [String:Any?])
+    init(attributes: [String:AnyType?])
     
-    func setAttrbiutes(attributes: [String: Any?])
-    func getAttributes() -> [String: Any?]
+    func setAttrbiutes(attributes: [String: AnyType?])
+    func getAttributes() -> [String: AnyType?]
     
     static var tableName: String { get }
     static var resourceName: String { get }
@@ -152,18 +156,16 @@ extension ActiveRecord {
 }
 
 extension ActiveRecord {
-    public func update(attributes: [String: Any?]? = nil) throws -> Bool {
+    public func update(attributes: [String: AnyType?]? = nil) throws -> Bool {
         self.before(.Update)
         // TODO: get diff between model snapshot and passed attributes
-        try ActiveRelation(model: self).update(attributes)
         // TODO: update model attributes
         self.after(.Update)
         return false
     }
     
-    public func update(attribute: String, value: Any) throws -> Bool {
+    public func update(attribute: String, value: AnyType) throws -> Bool {
         self.before(.Update)
-        try ActiveRelation(model: self).update([attribute: value])
         // TODO: update model attributes
         self.after(.Update)
         return false
@@ -171,15 +173,16 @@ extension ActiveRecord {
     
     public func destroy() throws -> Bool {
         self.before(.Destroy)
+        let deleteManager = try DeleteManager(model: self).execute()
         self.after(.Destroy)
-        return false
+        return true
     }
     
     public func save() throws -> Bool {
         return try self.save(false)
     }
     
-    public static func create(attributes: [String : Any?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
+    public static func create(attributes: [String : AnyType?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
         let record = self.init(attributes: attributes)
         record.before(.Create)
         try record.save(true)
@@ -187,11 +190,11 @@ extension ActiveRecord {
         return record;
     }
     
-    public static func find(identifier:Any) throws -> Self {
+    public static func find(identifier:AnyType) throws -> Self {
         return try self.find(["id" : identifier])
     }
     
-    public static func find(attributes:[String:Any]) throws -> Self {
+    public static func find(attributes:[String:AnyType]) throws -> Self {
         return try ActiveRelation().`where`(attributes).limit(1).execute(true).first!
     }
     
@@ -199,7 +202,7 @@ extension ActiveRecord {
         return try ActiveRelation().limit(count).execute()
     }
     
-    public static func `where`(attributes: [String:Any]) -> ActiveRelation<Self> {
+    public static func `where`(attributes: [String:AnyType]) -> ActiveRelation<Self> {
         return ActiveRelation().`where`(attributes)
     }
     
@@ -220,14 +223,14 @@ extension ActiveRecord {
 }
 
 extension ActiveRecord {
-    public init(attributes: [String:Any?]) {
+    public init(attributes: [String:AnyType?]) {
         self.init()
         self.attributes = attributes
     }
 }
 
 extension ActiveRecord {
-    public var attributes: [String: Any?] {
+    public var attributes: [String: AnyType?] {
         get {
             return getAttributes()
         }
@@ -236,17 +239,17 @@ extension ActiveRecord {
             ActiveSnapshotStorage.sharedInstance.set(self)
         }
     }
-    public var dirty: [String: Any?] {
+    public var dirty: [String: AnyType?] {
         return ActiveSnapshotStorage.sharedInstance.merge(self)
     }
-    public func setAttrbiutes(attributes: [String: Any?]) {}
-    public func getAttributes() -> [String: Any?] {
+    public func setAttrbiutes(attributes: [String: AnyType?]) {}
+    public func getAttributes() -> [String: AnyType?] {
         let reflections = _reflect(self)
         
-        var fields = [String: Any?]()
+        var fields = [String: AnyType?]()
         for index in 0.stride(to: reflections.count, by: 1) {
             let reflection = reflections[index]
-            fields[reflection.0] = reflection.1.value
+            fields[reflection.0] = reflection.1.value as? AnyType
         }
         return fields
     }
