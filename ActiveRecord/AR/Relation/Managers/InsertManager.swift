@@ -16,13 +16,10 @@ class InsertManager {
     
     func execute() throws {
         let klass = self.model.dynamicType
-        print("\(klass)" + " " + klass.tableName)
         let attributes = self.model.dirty
         let structure = Adapter.current.structure(klass.tableName)
-        
         var columns = Array<String>()
         var values = Array<AnyType>()
-        print(structure.keys)
         for key in structure.keys {
             let b = attributes[key.camelString()]
             if case let value?? = attributes[key.camelString()] {
@@ -36,8 +33,6 @@ class InsertManager {
                 }
             }
         }
-        print(columns)
-        print(values)
         do {
             if !columns.isEmpty && !values.isEmpty {
                 if columns.count != values.count {

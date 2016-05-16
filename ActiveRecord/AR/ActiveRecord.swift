@@ -16,8 +16,21 @@ public enum ActiveRecordError: ErrorType {
     case ParametersMissing(record: ActiveRecord)
 }
 
+func unwrap(any:Any) -> Any {
+    
+    let mi = Mirror(reflecting: any)
+    if mi.displayStyle != .Optional {
+        return any
+    }
+    
+    if mi.children.count == 0 { return any }
+    let (_, some) = mi.children.first!
+    return some
+    
+}
+
 // TODO: Find a way make it as Hashable
-public protocol AnyType: Any {
+public protocol AnyType {
     var dbValue: AnyType { get }
     var rawType: String { get }
     func ==(lhs: AnyType?, rhs: AnyType?) -> Bool
@@ -202,6 +215,10 @@ extension ActiveRecord {
         return try ActiveRelation().limit(count).execute()
     }
     
+    public static func first() -> Self? {
+        return (try? self.take())?.first
+    }
+    
     public static func `where`(attributes: [String:AnyType]) -> ActiveRelation<Self> {
         return ActiveRelation().`where`(attributes)
     }
@@ -225,7 +242,7 @@ extension ActiveRecord {
 extension ActiveRecord {
     public init(attributes: [String:AnyType?]) {
         self.init()
-        self.attributes = attributes
+        self.setAttrbiutes(attributes)
     }
 }
 
@@ -240,16 +257,27 @@ extension ActiveRecord {
         }
     }
     public var dirty: [String: AnyType?] {
-        return ActiveSnapshotStorage.sharedInstance.merge(self)
+        let snapshot = ActiveSnapshotStorage.sharedInstance.merge(self)
+        var dirty = Dictionary<String, AnyType?>()
+        print(snapshot)
+        let attributes = self.attributes
+        for (k, v) in attributes {
+            print("\(k): \(snapshot[k]) v: \(v)")
+            if let value = snapshot[k] where (value == v) == false {
+                dirty[k] = v
+            } else if snapshot[k] == nil && v != nil {
+                dirty[k] = v
+            }
+        }
+        return dirty
     }
     public func setAttrbiutes(attributes: [String: AnyType?]) {}
     public func getAttributes() -> [String: AnyType?] {
         let reflections = _reflect(self)
-        
         var fields = [String: AnyType?]()
         for index in 0.stride(to: reflections.count, by: 1) {
             let reflection = reflections[index]
-            fields[reflection.0] = reflection.1.value as? AnyType
+            fields[reflection.0] = unwrap(reflection.1.value) as? AnyType
         }
         return fields
     }
