@@ -13,6 +13,10 @@ public func <<<T> (inout left: [T], right: T) -> [T] {
     return left
 }
 
+public func <<<T> (inout left: [T], right: [T]) -> [T] {
+    return left + right
+}
+
 public protocol Migration {
     var timestamp: Int { get }
     func up()
