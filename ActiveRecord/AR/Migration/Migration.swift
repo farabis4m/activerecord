@@ -8,13 +8,14 @@
 
 import InflectorKit
 
-public func <<<T> (inout left: [T], right: T) -> [T] {
-    left.append(right)
+public func <<<T> (inout left: [T], right: [T]) -> [T] {
+    left.appendContentsOf(right)
     return left
 }
 
-public func <<<T> (inout left: [T], right: [T]) -> [T] {
-    return left + right
+public func <<<T> (inout left: [T], right: T) -> [T] {
+    left.append(right)
+    return left
 }
 
 public protocol Migration {
