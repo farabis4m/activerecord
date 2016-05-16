@@ -29,6 +29,37 @@ func unwrap(any:Any) -> Any {
     
 }
 
+public typealias ForwardBlock = ((AnyType) -> Any?)
+public typealias BacwardBlock = ((Any) -> AnyType?)
+public struct Transformer {
+    public var forward: ForwardBlock?
+    public var backward: BacwardBlock?
+    
+    public init(forward: ForwardBlock?, backward: BacwardBlock? = nil) {
+        self.forward = forward
+        self.backward = backward
+    }
+    public init(backward: BacwardBlock?) {
+        self.backward = backward
+    }
+}
+
+let NSURLTransformer = Transformer(forward: { (value) -> Any? in
+    if let url = value as? String {
+        return NSURL(string: url)
+    }
+    return nil
+    }, backward: { (value) -> AnyType? in
+        if let url = value as? NSURL {
+            return url.absoluteString
+        }
+        return nil
+})
+
+public protocol Transformable {
+    static func transformers() -> [String: Transformer]
+}
+
 // TODO: Find a way make it as Hashable
 public protocol AnyType {
     var dbValue: AnyType { get }
@@ -78,6 +109,11 @@ extension Bool: AnyType {
     public var rawType: String { return "Bool" }
 }
 
+public typealias Date = NSDate
+extension Date: AnyType {
+    public var rawType: String { return "Date" }
+}
+
 public enum ActiveRecrodAction {
     case Initialize
     case Create
@@ -86,7 +122,7 @@ public enum ActiveRecrodAction {
     case Save
 }
 
-public protocol ActiveRecord: AnyType {
+public protocol ActiveRecord: AnyType, Transformable {
     var id: AnyType? {set get}
     init()
     init(attributes: [String:AnyType?])
@@ -105,6 +141,12 @@ public protocol ActiveRecord: AnyType {
     // Callbackcs
     func after(action: ActiveRecrodAction)
     func before(action: ActiveRecrodAction)
+}
+
+extension ActiveRecord {
+    public static func transformers() -> [String: Transformer] {
+        return [:]
+    }
 }
 
 extension ActiveRecord {
@@ -275,9 +317,21 @@ extension ActiveRecord {
     public func getAttributes() -> [String: AnyType?] {
         let reflections = _reflect(self)
         var fields = [String: AnyType?]()
+        let transformers = self.dynamicType.transformers()
         for index in 0.stride(to: reflections.count, by: 1) {
             let reflection = reflections[index]
-            fields[reflection.0] = unwrap(reflection.1.value) as? AnyType
+            var result: AnyType?
+            var value = unwrap(reflection.1.value)
+            if let url = value as? NSURL {
+                result = NSURLTransformer.backward?(value)
+            } else {
+                if let transformer = transformers[reflection.0] {
+                    result = transformer.backward?(value)
+                } else {
+                    result = value as? AnyType
+                }
+            }
+            fields[reflection.0] = result
         }
         return fields
     }

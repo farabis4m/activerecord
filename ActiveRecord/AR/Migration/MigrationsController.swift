@@ -48,7 +48,8 @@ public class MigrationsController {
     
     public func migrate() {
         self.migrations.sortInPlace({ $0.timestamp < $1.timestamp })
-        let difference = Set(self.migrations.map({ $0.id })).subtract(Set(try! SchemaMigration.all().map({ $0.name })))
+        let passed = try! SchemaMigration.all()
+        let difference = Set(self.migrations.map({ $0.id })).subtract(Set(passed.map({ $0.name })))
         let pending = self.migrations.filter({ difference.contains($0.id) })
         var succeed = Array<Migration>()
         for migration in pending {

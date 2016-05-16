@@ -10,12 +10,8 @@ import Foundation
 
 public class Result {
     
-    //    private static let regex =
-    
-    //    [NSRegularExpression regularExpressionWithPattern:@"([a-z])([A-Z])" options:0 error:&error];
     var columns: Array<String>
     var rows: Array<Array<Any?>>
-    //    var columnTypes: Array<>
     
     init() {
         self.columns = Array<String>()
@@ -46,8 +42,8 @@ public class Result {
         var hashes = Array<Dictionary<String, AnyType?>>()
         for i in 0..<self.rows.count {
             var hash = Dictionary<String, AnyType?>()
-            for j in 0..<self.camelizedColumns.count {
-                hash[self.camelizedColumns[j]] = self.rows[i][j] as? AnyType
+            for j in 0..<self.columns.count {
+                hash[self.columns[j]] = self.rows[i][j] as? AnyType
             }
             hashes.append(hash)
         }

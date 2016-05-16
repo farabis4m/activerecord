@@ -131,6 +131,7 @@ public class ActiveRelation<T:ActiveRecord> {
         let result = try self.connection.execute_query(SQLStatement)
         var items = Array<T>()
         for hash in result.hashes {
+            print(hash)
             let item = T.init(attributes: hash)
             items.append(item)
             ActiveSnapshotStorage.sharedInstance.set(item)

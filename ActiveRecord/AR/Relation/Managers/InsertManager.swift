@@ -16,6 +16,8 @@ class InsertManager {
     
     func execute() throws {
         let klass = self.model.dynamicType
+        print(self.model.attributes)
+        print(self.model.dirty)
         let attributes = self.model.dirty
         let structure = Adapter.current.structure(klass.tableName)
         var columns = Array<String>()
@@ -39,7 +41,7 @@ class InsertManager {
                     throw ActiveRecordError.ParametersMissing(record: self.model)
                 }
                 let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
-                if let id = Adapter.current.connection.lastInsertRowid {
+                if let id = Adapter.current.connection.lastInsertRowid where self.model.id?.rawType == "Int"{
                     self.model.id = Int(id)
                 }
             }
