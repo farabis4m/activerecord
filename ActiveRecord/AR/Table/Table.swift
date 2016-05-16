@@ -78,7 +78,7 @@ public class Table: DBObject {
         }
         
         public var debugDescription: String {
-            return "Column(name: \(self.name), type: \(self.type!.rawValue), primary: \(self.PK), nullable: \(self.nullable))"
+            return "Column(name: \(self.name), type: \(self.type?.rawValue), primary: \(self.PK), nullable: \(self.nullable))"
         }
     }
     enum Action: String {
