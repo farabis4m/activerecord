@@ -41,7 +41,7 @@ class ActiveSnapshotStorage {
             }
             return result
         }
-        return model.attributes
+        return [:]
     }
     
     func hash(model: ActiveRecord) -> String {
