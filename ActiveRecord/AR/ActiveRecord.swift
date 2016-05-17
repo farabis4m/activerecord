@@ -262,6 +262,14 @@ extension ActiveRecord {
         return record;
     }
     
+    public static func create() throws -> Self {
+        let record = self.init()
+        record.before(.Create)
+        try record.save(true)
+        record.after(.Create)
+        return record;
+    }
+    
     public static func find(identifier:AnyType) throws -> Self {
         return try self.find(["id" : identifier])
     }
@@ -328,6 +336,9 @@ extension ActiveRecord {
             } else {
                 // TODO: Simplify it
                 if let sn = snapshot[k], let ssn = sn {
+                    if valueEmpty {
+                        dirty[k] = ssn
+                    }
                 } else {
                     if !valueEmpty {
                         dirty[k] = v
