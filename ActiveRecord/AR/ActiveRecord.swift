@@ -71,7 +71,7 @@ extension AnyType {
     public var rawType: String {
         return "\(self)"
     }
-    
+    // TODO: Extract as protocol DatabaseRepresatable
     public var dbValue: AnyType {
         return self
     }
@@ -107,6 +107,7 @@ extension Float: AnyType {
 }
 extension Bool: AnyType {
     public var rawType: String { return "Bool" }
+    public var dbValue: AnyType { return Int(self) }
 }
 
 public typealias Date = NSDate
