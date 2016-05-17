@@ -38,6 +38,8 @@
 		F543B2311CE2F954000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
 		F543B2321CE2FA1C000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
 		F543B2331CE2FA1D000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
+		F5C4AC7A1CEAE2A90017F1B6 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */; };
+		F5C4AC7C1CEAE2C90017F1B6 /* ActionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +88,8 @@
 		F543B2181CE2F954000BE1AE /* SQLite-Bridging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SQLite-Bridging.m"; sourceTree = "<group>"; };
 		F543B21A1CE2F954000BE1AE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F543B21B1CE2F954000BE1AE /* SQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLite.h; sourceTree = "<group>"; };
+		F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
+		F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -330,6 +334,8 @@
 			children = (
 				F543B20E1CE2F954000BE1AE /* InsertManager.swift */,
 				F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */,
+				F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */,
+				F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -578,12 +584,14 @@
 			files = (
 				F543B22A1CE2F954000BE1AE /* ActiveRelationParts.swift in Sources */,
 				F543B2281CE2F954000BE1AE /* SchemaMigration.swift in Sources */,
+				F5C4AC7C1CEAE2C90017F1B6 /* ActionManager.swift in Sources */,
 				F543B22F1CE2F954000BE1AE /* SQLite-Bridging.m in Sources */,
 				F543B2291CE2F954000BE1AE /* InsertManager.swift in Sources */,
 				F543B2241CE2F954000BE1AE /* Result.swift in Sources */,
 				F543B2211CE2F954000BE1AE /* ActiveSnapshotStorage.swift in Sources */,
 				F540F5AB1CE8A01E00564DAA /* DeleteManager.swift in Sources */,
 				F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */,
+				F5C4AC7A1CEAE2A90017F1B6 /* UpdateManager.swift in Sources */,
 				F543B22B1CE2F954000BE1AE /* Table.swift in Sources */,
 				F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */,
 				F543B2221CE2F954000BE1AE /* Adapter.swift in Sources */,

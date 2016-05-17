@@ -6,13 +6,9 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-class InsertManager {
+class InsertManager: ActionManager {
     
-    var model: ActiveRecord
-    
-    init(model: ActiveRecord) {
-        self.model = model
-    }
+    let record: ActiveRecord
     
     func execute() throws {
         let klass = self.model.dynamicType

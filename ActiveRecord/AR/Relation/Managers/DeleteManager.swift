@@ -6,13 +6,9 @@
 //
 //
 
-class DeleteManager {
+class DeleteManager: ActionManager {
     
-    let model: ActiveRecord
-    
-    init(model: ActiveRecord) {
-        self.model = model
-    }
+    let record: ActiveRecord
     
     func execute() throws {
         let klass = self.model.dynamicType
