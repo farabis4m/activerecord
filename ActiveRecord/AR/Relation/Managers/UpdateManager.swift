@@ -16,14 +16,18 @@ class UpdateManager: ActionManager {
         let structure = Adapter.current.structure(klass.tableName)
         
         var values = Dictionary<String, AnyType>()
-        for key in structure.keys {
-            let b = attributes[key.camelString()]
-            if case let value?? = attributes[key.camelString()] {
+        for key in attributes.keys {
+            if case let value?? = attributes[key] {
                 if let activeRecord = value as? ActiveRecord {
                     // TODO: How to check that related object has id
-                    values["\(key)_id"] = activeRecord.id!.dbValue
+                    let columnName = "\(key)_id"
+                    if structure.keys.contains(columnName) {
+                        values[columnName] = activeRecord.id!.dbValue
+                    }
                 } else {
-                    values[key] = value.dbValue
+                    if structure.keys.contains(key) {
+                        values[key] = value.dbValue
+                    }
                 }
             }
         }

@@ -89,7 +89,7 @@ public class Connection {
     ///   statements.
     ///
     /// - Throws: `Result.Error` if query execution fails.
-    func execute(SQL: String) throws {
+    public func execute(SQL: String) throws {
         print("SQL: \(SQL)")
         try self.check(sqlite3_exec(self.handle, SQL, nil, nil, nil))
     }

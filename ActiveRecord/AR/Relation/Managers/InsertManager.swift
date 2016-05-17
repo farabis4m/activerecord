@@ -16,17 +16,23 @@ class InsertManager: ActionManager {
         let structure = Adapter.current.structure(klass.tableName)
         var columns = Array<String>()
         var values = Array<AnyType>()
-        for key in structure.keys {
-            let b = attributes[key.camelString()]
-            if case let value?? = attributes[key.camelString()] {
+        for key in attributes.keys {
+            if case let value?? = attributes[key] {
                 if let activeRecord = value as? ActiveRecord {
-                    columns << "\(key)_id"
-                    // TODO: How to check that related object has id
-                    values << activeRecord.id!.dbValue
+                    let columnName = "\(key)_id"
+                    if structure.keys.contains(columnName) {
+                        columns << columnName
+                        // TODO: How to check that related object has id
+                        values << activeRecord.id!.dbValue
+                    }
                 } else {
-                    columns << key
-                    values << value.dbValue
+                    if structure.keys.contains(key) {
+                        columns << key
+                        values << value.dbValue
+                    }
                 }
+            } else {
+                // TODO: Update to nil value
             }
         }
         do {
@@ -34,7 +40,7 @@ class InsertManager: ActionManager {
                 if columns.count != values.count {
                     throw ActiveRecordError.ParametersMissing(record: self.record)
                 }
-                let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
+                let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(", "))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(", ")));")
                 if let id = Adapter.current.connection.lastInsertRowid where self.record.id?.rawType == "Int"{
                     self.record.id = Int(id)
                 }

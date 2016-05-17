@@ -109,6 +109,9 @@ extension Bool: AnyType {
     public var rawType: String { return "Bool" }
     public var dbValue: AnyType { return Int(self) }
 }
+extension Double: AnyType {
+    public var rawType: String { return "Double" }
+}
 
 public typealias Date = NSDate
 extension Date: AnyType {
@@ -299,9 +302,20 @@ extension ActiveRecord {
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
         }
-        try InsertManager.init(record: self).execute()
+        if self.newRecord {
+            try InsertManager(record: self).execute()
+        } else {
+            try UpdateManager(record: self).execute()
+        }
         ActiveSnapshotStorage.sharedInstance.set(self)
         self.after(.Save)
+        return true
+    }
+    
+    var newRecord: Bool {
+        if let id = self.id, let record = try? self.dynamicType.find(["id" : id]) {
+            return false
+        }
         return true
     }
 }
@@ -309,7 +323,15 @@ extension ActiveRecord {
 extension ActiveRecord {
     public init(attributes: [String:AnyType?]) {
         self.init()
-        self.setAttrbiutes(attributes)
+        var merged = self.defaultValues
+        for key in attributes.keys {
+            if let value = attributes[key] {
+                merged[key] = attributes[key]
+            }
+        }
+        print("merged : \(merged)")
+        self.setAttrbiutes(merged)
+        self.after(.Initialize)
     }
 }
 
@@ -322,6 +344,18 @@ extension ActiveRecord {
             self.setAttrbiutes(newValue)
             ActiveSnapshotStorage.sharedInstance.set(self)
         }
+    }
+    public var defaultValues: [String: AnyType?] {
+        let attributes = self.attributes
+        print("all: \(attributes)")
+        var defaultValues = Dictionary<String, AnyType?>()
+        for (k, v) in attributes {
+            if let value = v {
+                defaultValues[k] = value
+            }
+        }
+        print("all: \(defaultValues)")
+        return defaultValues
     }
     public var dirty: [String: AnyType?] {
         let snapshot = ActiveSnapshotStorage.sharedInstance.merge(self)
@@ -353,10 +387,13 @@ extension ActiveRecord {
         let reflections = _reflect(self)
         var fields = [String: AnyType?]()
         let transformers = self.dynamicType.transformers()
+        print(transformers)
         for index in 0.stride(to: reflections.count, by: 1) {
             let reflection = reflections[index]
             var result: AnyType?
+            
             var value = unwrap(reflection.1.value)
+            print(reflection.0 + " value: \(value)")
             if let url = value as? NSURL {
                 result = NSURLTransformer.backward?(value)
             } else {
@@ -366,7 +403,7 @@ extension ActiveRecord {
                     result = value as? AnyType
                 }
             }
-            fields[reflection.0] = result
+            fields[reflection.0.sneakyString()] = result
         }
         return fields
     }

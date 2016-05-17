@@ -33,7 +33,10 @@ public extension String {
     func sneakyString() -> String {
         let regex = try? NSRegularExpression(pattern: "([a-z])([A-Z])", options: NSRegularExpressionOptions.AllowCommentsAndWhitespace)
         let value = regex?.stringByReplacingMatchesInString(self, options: .ReportCompletion, range: NSRange(location: 0, length: self.characters.count), withTemplate: "$1_$2")
-        return value?.lowercaseString ?? self
+        if let result = value where result.isEmpty == false {
+            return result.lowercaseString
+        }
+        return self
     }
     
     var first: String { return String(characters.prefix(1)) }
