@@ -235,6 +235,21 @@ extension ActiveRecord {
         return true
     }
     
+    public static func destroy(records: [ActiveRecord]) throws {
+        if let first = records.first {
+            let tableName = first.dynamicType.tableName
+            let structure = Adapter.current.structure(tableName)
+            if let PK = structure.values.filter({ return $0.PK }).first {
+                let values = records.map({ "\($0.attributes[PK.name]!!.dbValue)" }).joinWithSeparator(", ")
+                try Adapter.current.connection.execute("DELETE FROM \(tableName) WHERE \(PK.name) IN (\(values));")
+            }
+        }
+    }
+    
+    public static func destroy(record: ActiveRecord) throws {
+        try self.destroy([record])
+    }
+    
     public func save() throws -> Bool {
         return try self.save(false)
     }
