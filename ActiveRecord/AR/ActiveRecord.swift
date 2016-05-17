@@ -214,15 +214,16 @@ extension ActiveRecord {
 extension ActiveRecord {
     public func update(attributes: [String: AnyType?]? = nil) throws -> Bool {
         self.before(.Update)
-        // TODO: get diff between model snapshot and passed attributes
-        // TODO: update model attributes
+        // TODO: Add updatable specific attributes
+        try UpdateManager(record: self).execute()
         self.after(.Update)
         return false
     }
     
     public func update(attribute: String, value: AnyType) throws -> Bool {
         self.before(.Update)
-        // TODO: update model attributes
+        // TODO: Add updatable specific attributes
+        try UpdateManager(record: self).execute()
         self.after(.Update)
         return false
     }
@@ -302,14 +303,21 @@ extension ActiveRecord {
     public var dirty: [String: AnyType?] {
         let snapshot = ActiveSnapshotStorage.sharedInstance.merge(self)
         var dirty = Dictionary<String, AnyType?>()
-        print(snapshot)
         let attributes = self.attributes
         for (k, v) in attributes {
-            print("\(k): \(snapshot[k]) v: \(v)")
+            let snapshotEmpty = snapshot[k] == nil
+            let valueEmpty = v == nil
+            print("\(k): \(snapshot[k]) v: \(v) se: \(snapshotEmpty) ve: \(valueEmpty)")
             if let value = snapshot[k] where (value == v) == false {
                 dirty[k] = v
-            } else if snapshot[k] == nil && v != nil {
-                dirty[k] = v
+            } else {
+                // TODO: Simplify it
+                if let sn = snapshot[k], let ssn = sn {
+                } else {
+                    if !valueEmpty {
+                        dirty[k] = v
+                    }
+                }
             }
         }
         return dirty
