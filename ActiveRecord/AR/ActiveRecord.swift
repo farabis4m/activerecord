@@ -229,7 +229,7 @@ extension ActiveRecord {
     
     public func destroy() throws -> Bool {
         self.before(.Destroy)
-        let deleteManager = try DeleteManager(model: self).execute()
+        let deleteManager = try DeleteManager(record: self).execute()
         self.after(.Destroy)
         return true
     }
@@ -275,7 +275,7 @@ extension ActiveRecord {
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
         }
-        try InsertManager.init(model: self).execute()
+        try InsertManager.init(record: self).execute()
         ActiveSnapshotStorage.sharedInstance.set(self)
         self.after(.Save)
         return true

@@ -8,13 +8,11 @@
 
 class DeleteManager: ActionManager {
     
-    let record: ActiveRecord
-    
-    func execute() throws {
-        let klass = self.model.dynamicType
+    override func execute() throws {
+        let klass = self.record.dynamicType
         let structure = Adapter.current.structure(klass.tableName)
         if let PK = structure.values.filter({ return $0.PK }).first {
-            if case let value?? = self.model.attributes[PK.name] {
+            if case let value?? = self.record.attributes[PK.name] {
                 try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(PK.name) = \(value.dbValue)")
             }
         }

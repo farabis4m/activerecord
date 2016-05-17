@@ -8,13 +8,11 @@
 
 class InsertManager: ActionManager {
     
-    let record: ActiveRecord
-    
-    func execute() throws {
-        let klass = self.model.dynamicType
-        print(self.model.attributes)
-        print(self.model.dirty)
-        let attributes = self.model.dirty
+    override func execute() throws {
+        let klass = self.record.dynamicType
+        print(self.record.attributes)
+        print(self.record.dirty)
+        let attributes = self.record.dirty
         let structure = Adapter.current.structure(klass.tableName)
         var columns = Array<String>()
         var values = Array<AnyType>()
@@ -34,11 +32,11 @@ class InsertManager: ActionManager {
         do {
             if !columns.isEmpty && !values.isEmpty {
                 if columns.count != values.count {
-                    throw ActiveRecordError.ParametersMissing(record: self.model)
+                    throw ActiveRecordError.ParametersMissing(record: self.record)
                 }
                 let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(","))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(",")));")
-                if let id = Adapter.current.connection.lastInsertRowid where self.model.id?.rawType == "Int"{
-                    self.model.id = Int(id)
+                if let id = Adapter.current.connection.lastInsertRowid where self.record.id?.rawType == "Int"{
+                    self.record.id = Int(id)
                 }
             }
             

@@ -8,9 +8,7 @@
 
 class UpdateManager: ActionManager {
     
-    let record: ActiveRecord
-    
-    func execute() throws {
+    override func execute() throws {
         
     }
     

@@ -7,22 +7,16 @@
 //
 
 protocol Executable {
-    public func execute() throws
+    func execute() throws
 }
 
-protocol ActionManager: Executable {
+class ActionManager: Executable {
     
-    let record: ActiveRecord
+    var record: ActiveRecord
     
-    init(record: ActiveRecord)
-}
-
-extension ActionManager {
     init(record: ActiveRecord) {
         self.record = record
     }
-}
-
-extension ActionManager {
-    public func execute() throws {}
+    
+    func execute() throws { }
 }
