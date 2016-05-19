@@ -274,6 +274,14 @@ extension ActiveRecord {
         try self.destroy([record])
     }
     
+    public static func destroy(identifier: AnyType?) throws {
+        if let id = identifier {
+            let record = self.init()
+            record.id = identifier
+            try self.destroy(record)
+        }
+    }
+    
     public func save() throws -> Bool {
         return try self.save(false)
     }
