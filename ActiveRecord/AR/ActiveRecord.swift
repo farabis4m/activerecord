@@ -86,13 +86,17 @@ public func ==(lhs: AnyType?, rhs: AnyType?) -> Bool {
             case "Int": return (left as! Int) == (right as! Int)
             case "Float": return (left as! Float) == (right as! Float)
             case "Bool": return (left as! Bool) == (right as! Bool)
-            case "ActiveRecord": return (left as! ActiveRecord).hashValue == (right as! ActiveRecord).hashValue
+            case "ActiveRecord": return (left as? ActiveRecord) == (right as? ActiveRecord)
             default: return false
             }
         }
         return false
     }
     return true
+}
+
+public func ==(l: ActiveRecord?, r: ActiveRecord?) -> Bool {
+    return l?.hashValue == r?.hashValue
 }
 
 extension String: AnyType {
@@ -126,7 +130,13 @@ public enum ActiveRecrodAction {
     case Save
 }
 
-public protocol ActiveRecord: AnyType, Transformable {
+public enum Action {
+    case Create
+    case Update
+    case Delete
+}
+
+public protocol ActiveRecord: class, AnyType, Transformable {
     var id: AnyType? {set get}
     init()
     init(attributes: [String:AnyType?])
@@ -139,8 +149,8 @@ public protocol ActiveRecord: AnyType, Transformable {
     static func acceptedNestedAttributes() -> [String]
     
     // Validators
-    func validate() -> Errors
-    func validators() -> [String: Validator]
+    func validate(action: Action) -> Errors
+    func validators(action: Action) -> [String: Validator]
     
     // Callbackcs
     func after(action: ActiveRecrodAction)
@@ -171,11 +181,16 @@ extension ActiveRecord {
 
 extension ActiveRecord {
     public static var tableName: String {
-        var className = "\(self.dynamicType)"
-        if let typeRange = className.rangeOfString(".Type") {
-            className.replaceRange(typeRange, with: "")
+        let reflect = _reflect(self)
+        let projectPackageName = NSBundle.mainBundle() .objectForInfoDictionaryKey("CFBundleExecutable") as! String
+        let components = reflect.summary.characters.split(".").map({ String($0) }).filter({ $0 != projectPackageName })
+        if let first = components.first {
+            if let last = components.last where components.count > 1 {
+                return "\(first.lowercaseString)_\(last.lowercaseString.pluralizedString())"
+            }
+            return first.lowercaseString.pluralizedString()
         }
-        return className.lowercaseString.pluralizedString()
+        return "active_records"
     }
     
     public static var resourceName: String {
@@ -195,12 +210,19 @@ extension ActiveRecord {
 
 
 extension ActiveRecord {
-    public var errors: Errors { return self.validate() }
-    public var isValid: Bool { return self.validate().isEmpty }
+    public var errors: Errors {
+        if self.isNewRecord {
+            return self.validate(.Create)
+        } else if self.isDirty {
+            return self.validate(.Update)
+        }
+        return Errors(model: self)
+    }
+    public var isValid: Bool { return self.errors.isEmpty }
     
-    public func validate() -> Errors {
+    public func validate(action: Action) -> Errors {
         var errors = Errors(model: self)
-        let validators = self.validators()
+        let validators = self.validators(action)
         for (attribute, value) in self.attributes {
             if let validator = validators[attribute] {
                 validator.validate(self, attribute: attribute, value: value, errors: &errors)
@@ -208,8 +230,7 @@ extension ActiveRecord {
         }
         return errors
     }
-    
-    public func validators() -> [String: Validator] {
+    public func validators(action: Action) -> [String: Validator] {
         return [:]
     }
 }
@@ -302,7 +323,7 @@ extension ActiveRecord {
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
         }
-        if self.newRecord {
+        if self.isNewRecord {
             try InsertManager(record: self).execute()
         } else {
             try UpdateManager(record: self).execute()
@@ -312,11 +333,15 @@ extension ActiveRecord {
         return true
     }
     
-    var newRecord: Bool {
+    var isNewRecord: Bool {
         if let id = self.id, let record = try? self.dynamicType.find(["id" : id]) {
             return false
         }
         return true
+    }
+    
+    var isDirty: Bool {
+        return !self.dirty.isEmpty
     }
 }
 
