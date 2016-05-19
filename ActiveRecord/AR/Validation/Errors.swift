@@ -17,6 +17,12 @@ public enum Error: ErrorType {
     
     case NotANumber
     
+    case LessThanOrEqual(value: AnyType)
+    case LessThan(value: AnyType)
+    case GreaterThanOrEqual(value: AnyType)
+    case GreaterThan(value: AnyType)
+    case EqualTo(value: AnyType)
+    
     var rawValue: String {
         switch self {
         case Blank: return "blank"
@@ -28,6 +34,13 @@ public enum Error: ErrorType {
         case Invalid: return "invalid"
             
         case NotANumber: return "not_a_number"
+            
+        case LessThanOrEqual: return "less_than_or_equal_to"
+        case LessThan: return "less_than"
+        case GreaterThanOrEqual: return "greater_than"
+        case GreaterThan: return "greater_than_or_equal_to"
+        case EqualTo: return "equal_to"
+            
         default: return "empty_error"
         }
     }
