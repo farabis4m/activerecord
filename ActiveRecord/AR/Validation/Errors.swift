@@ -53,7 +53,7 @@ public struct Errors {
     var attributes = Dictionary<String, Error>()
     public mutating func add(attribute: String, message: Error) {
         self.attributes[attribute] = message
-        self._messages << (self.model.dynamicType.modelName + "." + message.rawValue)
+        self._messages << (self.model.dynamicType.modelName + "." + attribute + "." + message.rawValue)
     }
     private var _messages = Array<String>()
     public var messages: [String] {
