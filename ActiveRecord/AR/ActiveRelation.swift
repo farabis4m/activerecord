@@ -136,8 +136,8 @@ public class ActiveRelation<T:ActiveRecord> {
             items.append(item)
             ActiveSnapshotStorage.sharedInstance.set(item)
         }
-        if let attributes = self.attributes where strict && items.isEmpty {
-            ActiveRecordError.RecordNotFound(attributes: attributes)
+        if strict && items.isEmpty {
+            throw ActiveRecordError.RecordNotFound(attributes: self.attributes ?? [:])
         }
         return items
     }
