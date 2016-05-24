@@ -16,10 +16,7 @@ public class MigrationsController {
         class func getTableName() -> String {
             return "schema_migrations"
         }
-        var id: AnyType? {
-            get { return self.name }
-            set { self.name = newValue as! String}
-        }
+        var id: AnyType?
         var name: String!
         required init() {}
         
@@ -51,16 +48,19 @@ public class MigrationsController {
         let passed = try! SchemaMigration.all()
         let difference = Set(self.migrations.map({ $0.id })).subtract(Set(passed.map({ $0.name })))
         let pending = self.migrations.filter({ difference.contains($0.id) })
-        var succeed = Array<Migration>()
         for migration in pending {
             if self.isFailed == false {
                 migration.up()
                 if self.isFailed == false {
-                    succeed.append(migration)
+                    let shemaMigration = SchemaMigration(attributes: ["name" : migration.id ])
+                    do {
+                        try shemaMigration.save()
+                    } catch {
+                        print("MIGRATION: \(migration) IS NOT SAVED: \(error)")
+                    }
                 }
             }
         }
-        let _ = succeed.map({ try? SchemaMigration.create(["name" :$0.id ]) })
     }
     
     public func up(migration: Migration) {
