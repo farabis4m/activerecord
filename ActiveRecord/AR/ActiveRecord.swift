@@ -120,6 +120,7 @@ extension Double: AnyType {
 public typealias Date = NSDate
 extension Date: AnyType {
     public var rawType: String { return "Date" }
+    public var dbValue: AnyType { return "'\(self)'" }
 }
 
 public enum ActiveRecrodAction {
