@@ -13,17 +13,29 @@ public protocol ActiveRelationPart {
 public struct Where: ActiveRelationPart {
     public var priority: Int { return 1 }
     public var field: String
-    public var values: Array<CustomStringConvertible>
+    public var values: Array<AnyType>
 }
 
 extension Where: CustomStringConvertible {
     public var description: String {
         if values.count == 1 {
-            return "WHERE \(field) = \(values[0])"
+            if let record = values[0] as? ActiveRecord {
+                if let value = record.id {
+                    return "WHERE \(field) = \(value.dbValue)"
+                }
+            } else {
+                return "WHERE \(field) = \(values[0].dbValue)"
+            }
         } else {
-            let statememnt = values.map({ $0.description }).joinWithSeparator(",")
-            return "WHERE \(field) IN (\(statememnt))"
+            var statement = ""
+            if let records = values as? [ActiveRecord] {
+                statement = records.map({ $0.id?.dbValue }).flatMap({$0}).map({ "\($0)" }).joinWithSeparator(", ")
+            } else {
+                statement = values.map({ "\($0.dbValue)" }).joinWithSeparator(", ")
+            }
+            return "WHERE \(field) IN (\(statement))"
         }
+        return ""
     }
 }
 
@@ -54,7 +66,7 @@ public struct Order: ActiveRelationPart {
     public enum Direction: String {
         case Ascending = "ASC"
         case Descending = "DESC"
-        case Random        
+        case Random
     }
     
     public var field: String

@@ -29,7 +29,7 @@ public class ActiveRelation<T:ActiveRecord> {
     private var model: T?
     private var connection: Connection { return Adapter.current.connection }
     
-    private var attributes: [String: Any]?
+    private var attributes: [String: AnyType]?
     
     private var tableName: String {
         return T.tableName
@@ -62,21 +62,19 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func `where`(statement: Any) -> Self {
-        if let attributes = statement as? Dictionary<String, Any> where attributes.isEmpty == false {
-            self.attributes = attributes
-            for key in attributes.keys {
-                if let values = attributes[key] as? Array<CustomStringConvertible> {
-                    chain.append(Where(field: key, values: values))
-                } else if let value = attributes[key] as? CustomStringConvertible {
-                    chain.append(Where(field: key, values: [value]))
-                }
+    public func `where`(statement: [String: AnyType]) -> Self {
+        self.attributes = statement
+        for key in statement.keys {
+            if let values = statement[key] as? Array<AnyType> {
+                chain.append(Where(field: key, values: values))
+            } else if let value = statement[key] {
+                chain.append(Where(field: key, values: [value]))
             }
         }
         return self
     }
     
-    public func whereIs(statement: Any) -> Self {
+    public func whereIs(statement: [String: AnyType]) -> Self {
         return self.`where`(statement)
     }
     
@@ -120,6 +118,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     public func execute(strict: Bool = false) throws -> Array<T> {
         self.chain.sortInPlace { $0.priority < $1.priority }
+        print(self.chain)
         let pluck: Pluck!
         if let index = self.chain.indexOf({ $0 is Pluck }) {
             pluck = self.chain[index] as! Pluck

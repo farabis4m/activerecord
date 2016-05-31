@@ -10,7 +10,7 @@ import InflectorKit
 
 public enum ActiveRecordError: ErrorType {
     case RecordNotValid(record: ActiveRecord)
-    case RecordNotFound(attributes: [String: Any])
+    case RecordNotFound(attributes: [String: AnyType])
     case AttributeMissing(record: ActiveRecord, name: String)
     case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
     case ParametersMissing(record: ActiveRecord)
@@ -307,7 +307,7 @@ extension ActiveRecord {
         return try self.find(["id" : identifier])
     }
     
-    public static func find(attributes:[String:AnyType]) throws -> Self {
+    public static func find(attributes:[String: AnyType]) throws -> Self {
         return try ActiveRelation().`where`(attributes).limit(1).execute(true).first!
     }
     

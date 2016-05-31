@@ -95,8 +95,8 @@ public class Connection {
     }
     
     func execute_query(SQL: String) throws -> Result {
-        let statement = try self.prepare(SQL)
         print("SQL: \(SQL)")
+        let statement = try self.prepare(SQL)
         var columnTypes = Array<Int32>()
         var columns = Array<String>()
         let columnsCount = sqlite3_column_count(statement)
