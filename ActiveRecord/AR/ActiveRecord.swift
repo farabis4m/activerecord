@@ -91,6 +91,8 @@ public func ==(lhs: AnyType?, rhs: AnyType?) -> Bool {
             }
         }
         return false
+    } else if let right = rhs {
+        return false
     }
     return true
 }
