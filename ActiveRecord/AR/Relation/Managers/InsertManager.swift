@@ -41,7 +41,8 @@ class InsertManager: ActionManager {
                     throw ActiveRecordError.ParametersMissing(record: self.record)
                 }
                 let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(", "))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(", ")));")
-                if let id = Adapter.current.connection.lastInsertRowid where self.record.id?.rawType == "Int"{
+                let PK = structure.values.filter({ return $0.PK }).first
+                if let id = Adapter.current.connection.lastInsertRowid where PK?.type == .Int {
                     self.record.id = Int(id)
                 }
             }

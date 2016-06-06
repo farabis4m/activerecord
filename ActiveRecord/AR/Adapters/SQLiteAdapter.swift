@@ -25,6 +25,15 @@ public class SQLiteAdapter: Adapter {
                 .Raw : "BLOB"]
     }
     
+    private var reversedColumnTypes: [String: Table.Column.DBType] {
+        return ["INTEGER": .Int,
+                "REAL": .Decimal,
+                "DATE": .Date,
+                "TEXT": .String,
+                "INT": .Bool,
+                "BLOB": .Raw]
+    }
+    
     override public func tables() -> Array<String> {
         do {
             let result = try self.connection.execute_query("SELECT name FROM sqlite_master WHERE (type = 'table' OR type == 'view' AND NOT name = 'sqlite_sequence')")
@@ -45,7 +54,7 @@ public class SQLiteAdapter: Adapter {
                     column.`default` = row["dfltValue"]
                     column.PK = row["pk"] as? Int == 1
                     column.nullable = row["notnull"] as? Int == 1
-                    column.type = self.columnTypes[row["type"] as! String]
+                    column.type = self.reversedColumnTypes[row["type"] as! String]
                 }
                 structure[columnName] = column
             }
