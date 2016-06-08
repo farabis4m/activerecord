@@ -39,7 +39,8 @@ public class ActiveRelation<T:ActiveRecord> {
     
     private var chain = Array<ActiveRelationPart>()
     
-    private var preload: [ActiveRecord.Type]?
+    private var preload: [ActiveRecord.Type] = []
+    private var include: [ActiveRecord.Type] = []
     
     //MARK: - Lifecycle
     
@@ -56,6 +57,21 @@ public class ActiveRelation<T:ActiveRecord> {
     }
     
     //MARK: - Chaining
+    
+    public func includes(record: ActiveRecord.Type) -> Self {
+        self.include << record
+        return self
+    }
+    
+    public func includes(records: [ActiveRecord.Type]) -> Self {
+        self.include << records
+        return self
+    }
+    
+    public func preload(record: ActiveRecord.Type) -> Self {
+        self.preload << record
+        return self
+    }
     
     public func pluck(fields: Array<String>) -> Self {
         self.chain.append(Pluck(fields: fields))
@@ -92,11 +108,6 @@ public class ActiveRelation<T:ActiveRecord> {
     
     public func offset(value: Int) -> Self {
         chain.append(Offset(count: value))
-        return self
-    }
-    
-    public func preload(models: [ActiveRecord.Type]) -> Self {
-        self.preload = models
         return self
     }
     
