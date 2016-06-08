@@ -39,7 +39,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     private var chain = Array<ActiveRelationPart>()
     
-    private var preload: [ActiveRecord.Type] = []
+//    private var preload: [ActiveRecord.Type] = []
     private var include: [ActiveRecord.Type] = []
     
     //MARK: - Lifecycle
@@ -68,10 +68,10 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func preload(record: ActiveRecord.Type) -> Self {
-        self.preload << record
-        return self
-    }
+//    public func preload(record: ActiveRecord.Type) -> Self {
+//        self.preload << record
+//        return self
+//    }
     
     public func pluck(fields: Array<String>) -> Self {
         self.chain.append(Pluck(fields: fields))
@@ -140,6 +140,11 @@ public class ActiveRelation<T:ActiveRecord> {
         let SQLStatement = String(format: self.action.clause(self.tableName), pluck.description) + " " + self.chain.map({ "\($0)" }).joinWithSeparator(" ") + ";"
         let result = try self.connection.execute_query(SQLStatement)
         var items = Array<T>()
+        var includes: [ActiveRecrod.Type: Result] = []
+        for include in self.include {
+            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 })
+            includes[include] = try include.`where`(["\(T.modelName)_id" : ids]).execute()
+        }
         for hash in result.hashes {
             print(hash)
             let item = T.init(attributes: hash)
