@@ -325,6 +325,10 @@ extension ActiveRecord {
         return ActiveRelation().`where`(attributes)
     }
     
+    public static func includes(records: ActiveRecord.Type...) -> ActiveRelation<Self> {
+        return ActiveRelation().includes(records)
+    }
+    
     public static func all() throws -> [Self] {
         return try ActiveRelation().execute()
     }
