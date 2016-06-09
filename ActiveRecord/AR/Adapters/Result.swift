@@ -38,10 +38,10 @@ public class Result {
         return names
     }()
     
-    lazy var hashes: Array<Dictionary<String, AnyType?>> = {
-        var hashes = Array<Dictionary<String, AnyType?>>()
+    lazy var hashes: Array<RawRecord> = {
+        var hashes = Array<RawRecord>()
         for i in 0..<self.rows.count {
-            var hash = Dictionary<String, AnyType?>()
+            var hash = RawRecord()
             for j in 0..<self.columns.count {
                 hash[self.columns[j]] = self.rows[i][j] as? AnyType
             }

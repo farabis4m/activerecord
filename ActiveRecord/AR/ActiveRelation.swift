@@ -23,6 +23,8 @@ enum SQLAction: String {
     }
 }
 
+public typealias RawRecord = Dictionary<String, AnyType?>
+
 public class ActiveRelation<T:ActiveRecord> {
     
     private var klass: T.Type?
@@ -137,32 +139,41 @@ public class ActiveRelation<T:ActiveRecord> {
         let result = try self.connection.execute_query(SQLStatement)
         var items = Array<T>()
         var includes: [Result] = []
-        var relations: [String: Dictionary<String, Array<Dictionary<String, AnyType?>>>] = [:]
+        var relations: [String: [String: [RawRecord]]] = [:]
         for include in self.include {
-            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ String($0) }).joinWithSeparator(", ")
-            let result = try self.connection.execute_query("SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN \(ids);")
+            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
+            let result = try self.connection.execute_query("SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));")
             includes << result
             for hash in result.hashes {
-                let key = "\(T.modelName)_id)"
-                var items: Array<Dictionary<String, AnyType?>> = []
-                if var bindings = relations[key] {
-                    if let rows = bindings["\(include.tableName)"] {
-                        items = rows
+                print("\(T.modelName)_id")
+                print(hash)
+                if case let id?? = hash["\(T.modelName)_id"] {
+                    let key = String(id)
+                    var items: Array<RawRecord> = []
+                    if var bindings = relations[key] {
+                        if let rows = bindings["\(include.tableName)"] {
+                            items = rows
+                        } else {
+                            items = Array<RawRecord>()
+                            bindings["\(include.tableName)"] = items
+                        }
                     } else {
-                        items = Array<Dictionary<String, AnyType?>>()
-                        bindings["\(include.tableName)"] = items
+                        items = Array<RawRecord>()
+                        relations[key] = ["\(include.tableName)" : items]
                     }
-                } else {
-                    items = Array<Dictionary<String, AnyType?>>()
+                    items.append(hash)
                     relations[key] = ["\(include.tableName)" : items]
                 }
-                items.append(hash)
+                print(relations)
+                
             }
         }
         for hash in result.hashes {
             var attrbiutes = hash
-            let id = String(hash["id"])
-            if let relation = relations[id] {
+            print(relations)
+            print(hash["id"])
+            if case let id?? = hash["id"], let relation = relations[String(id)] {
+                print(relation)
                 attrbiutes.merge(relation)
             }
             let item = T.init(attributes: attrbiutes)
@@ -184,3 +195,6 @@ extension Dictionary {
         }
     }
 }
+
+extension Array: AnyType {}
+extension Dictionary: AnyType {}

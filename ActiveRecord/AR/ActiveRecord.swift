@@ -48,12 +48,12 @@ let NSURLTransformer = Transformer(forward: { (value) -> Any? in
     if let url = value as? String {
         return NSURL(string: url)
     }
-    return nil
+    return value
     }, backward: { (value) -> AnyType? in
         if let url = value as? NSURL {
             return url.absoluteString
         }
-        return nil
+        return value as? AnyType
 })
 
 public protocol Transformable {
@@ -262,7 +262,16 @@ extension ActiveRecord {
         return true
     }
     
+    public static func destroy(scope identifier: AnyType?) throws {
+        if let id = identifier {
+            let record = self.init()
+            record.id = identifier
+            try self.destroy(record)
+        }
+    }
+    
     public static func destroy(records: [ActiveRecord]) throws {
+        print("record: \(records)")
         if let first = records.first {
             let tableName = first.dynamicType.tableName
             let structure = Adapter.current.structure(tableName)
@@ -274,15 +283,8 @@ extension ActiveRecord {
     }
     
     public static func destroy(record: ActiveRecord) throws {
+        print("record: \(record)")
         try self.destroy([record])
-    }
-    
-    public static func destroy(identifier: AnyType?) throws {
-        if let id = identifier {
-            let record = self.init()
-            record.id = identifier
-            try self.destroy(record)
-        }
     }
     
     public func save() throws -> Bool {
