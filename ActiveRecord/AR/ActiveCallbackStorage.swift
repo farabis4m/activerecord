@@ -8,22 +8,27 @@
 
 import Foundation
 
-typealias ActiveRecordCallback = ((ActiveRecord, ActiveRecrodAction) -> (Void))
+public typealias ActiveRecordCallback = ((ActiveRecord, ActiveRecrodAction) -> (Void))
 
 class ActiveCallbackStorage {
     static let sharedInstance = ActiveCallbackStorage()
     
-    private var items = Dictionary<String, Array<RawRecord>>()
+    private var items: [String: [ActiveRecrodAction: [ActiveRecordCallback]]] = [:]
     
-    func set(klass: ActiveRecord.Type, callback: ActiveRecordCallback) {
+    func set(klass: ActiveRecord.Type, action: ActiveRecrodAction, callback: ActiveRecordCallback) {
         let key = "\(klass)"
-        var callbacks: [ActiveRecordCallback] = items[key] ?? []
+        var actions = items[key] ?? [:]
+        var callbacks = actions[action] ?? []
         callbacks << callback
-        items[key] = callbacks
+        actions[action] = callbacks
+        items[key] = actions
     }
     
-    func get(klass: ActiveRecord) -> [ActiveRecordCallback] {
+    func get(klass: ActiveRecord, action: ActiveRecrodAction) -> [ActiveRecordCallback] {
         let key = "\(klass)"
-        return items[key] ?? []
+        if let actions = items[key], callbacks = actions[action] {
+            return callbacks
+        }
+        return []
     }
 }
