@@ -256,24 +256,30 @@ extension ActiveRecord {
 
 extension ActiveRecord {
     public func update(attributes: [String: AnyType?]? = nil) throws -> Bool {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
         self.before(.Update)
         // TODO: Add updatable specific attributes
         try UpdateManager(record: self).execute()
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Update).execute(self)
         self.after(.Update)
         return false
     }
     
     public func update(attribute: String, value: AnyType) throws -> Bool {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
         self.before(.Update)
         // TODO: Add updatable specific attributes
         try UpdateManager(record: self).execute()
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Update).execute(self)
         self.after(.Update)
         return false
     }
     
     public func destroy() throws -> Bool {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.before(.Destroy)
         let deleteManager = try DeleteManager(record: self).execute()
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.after(.Destroy)
         return true
     }
@@ -282,12 +288,13 @@ extension ActiveRecord {
         if let id = identifier {
             let record = self.init()
             record.id = identifier
+            ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
             try self.destroy(record)
+            ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
         }
     }
     
     public static func destroy(records: [ActiveRecord]) throws {
-        print("record: \(records)")
         if let first = records.first {
             let tableName = first.dynamicType.tableName
             let structure = Adapter.current.structure(tableName)
@@ -299,8 +306,9 @@ extension ActiveRecord {
     }
     
     public static func destroy(record: ActiveRecord) throws {
-        print("record: \(record)")
+        ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
         try self.destroy([record])
+        ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
     }
     
     public func save() throws -> Bool {
@@ -309,18 +317,22 @@ extension ActiveRecord {
     
     public static func create(attributes: [String : AnyType?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
         let record = self.init(attributes: attributes)
+        ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
         record.before(.Create)
         try record.save(true)
+        ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
         record.after(.Create)
-        return record;
+        return record
     }
     
     public static func create() throws -> Self {
         let record = self.init()
+        ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
         record.before(.Create)
         try record.save(true)
+        ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
         record.after(.Create)
-        return record;
+        return record
     }
     
     public static func find(identifier:AnyType) throws -> Self {
@@ -352,6 +364,7 @@ extension ActiveRecord {
     }
     
     public func save(validate: Bool) throws -> Bool {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
         self.before(.Save)
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
@@ -362,6 +375,7 @@ extension ActiveRecord {
             try UpdateManager(record: self).execute()
         }
         ActiveSnapshotStorage.sharedInstance.set(self)
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
         self.after(.Save)
         return true
     }
