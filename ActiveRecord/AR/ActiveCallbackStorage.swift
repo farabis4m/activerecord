@@ -11,7 +11,8 @@ import Foundation
 public typealias ActiveRecordCallback = ((ActiveRecord, ActiveRecrodAction) -> (Void))
 
 class ActiveCallbackStorage {
-    static let sharedInstance = ActiveCallbackStorage()
+    static let afterStorage = ActiveCallbackStorage()
+    static let beforeStorage = ActiveCallbackStorage()
     
     private var items: [String: [ActiveRecrodAction: [ActiveRecordCallback]]] = [:]
     

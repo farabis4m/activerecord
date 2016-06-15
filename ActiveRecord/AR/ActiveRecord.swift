@@ -169,10 +169,10 @@ public protocol ActiveRecord: class, AnyType, Transformable {
 
 extension ActiveRecord {
     static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
-        ActiveCallbackStorage.sharedInstance.set(self, callback: callback)
+        ActiveCallbackStorage.afterStorage.set(self, action: action, callback: callback)
     }
     static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
-        ActiveCallbackStorage.sharedInstance.set(self, callback: callback)
+        ActiveCallbackStorage.beforeStorage.set(self, action: action, callback: callback)
     }
 }
 
