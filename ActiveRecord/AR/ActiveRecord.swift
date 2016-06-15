@@ -160,19 +160,19 @@ public protocol ActiveRecord: class, AnyType, Transformable {
     func validators(action: Action) -> [String: Validator]
     
     // Callbackcs
-    func after(action: ActiveRecrodAction)
     func before(action: ActiveRecrodAction)
+    func after(action: ActiveRecrodAction)
     
-    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback)
     static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback)
+    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback)
 }
 
 extension ActiveRecord {
-    public static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
-        ActiveCallbackStorage.sharedInstance.set(self, action: action, callback: callback)
-    }
     public static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
-        ActiveCallbackStorage.sharedInstance.set(self, action: action, callback: callback)
+        ActiveCallbackStorage.beforeStorage.set(self, action: action, callback: callback)
+    }
+    public static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
+        ActiveCallbackStorage.afterStorage.set(self, action: action, callback: callback)
     }
 }
 
