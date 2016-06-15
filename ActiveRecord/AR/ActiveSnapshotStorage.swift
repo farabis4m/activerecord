@@ -9,7 +9,7 @@
 class ActiveSnapshotStorage {
     static let sharedInstance = ActiveSnapshotStorage()
     
-    private var items = Dictionary<String, Array<Dictionary<String, AnyType?>>>()
+    private var items = Dictionary<String, Array<RawRecord>>()
     
     init() { }
     
@@ -26,7 +26,7 @@ class ActiveSnapshotStorage {
     }
     
     func clear(model: ActiveRecord) {
-        var modelStorage = Array<Dictionary<String, AnyType?>>()
+        var modelStorage = Array<RawRecord>()
         modelStorage.append(model.attributes)
         self.items[self.hash(model)] = modelStorage
     }
