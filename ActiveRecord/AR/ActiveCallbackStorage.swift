@@ -25,11 +25,21 @@ class ActiveCallbackStorage {
         items[key] = actions
     }
     
-    func get(klass: ActiveRecord, action: ActiveRecrodAction) -> [ActiveRecordCallback] {
+    func get(klass: ActiveRecord, action: ActiveRecrodAction) -> Bucket {
         let key = "\(klass)"
         if let actions = items[key], callbacks = actions[action] {
-            return callbacks
+            return Bucket(callbacks: callbacks)
         }
-        return []
+        return Bucket(callbacks: [])
+    }
+    
+    struct Bucket {
+        var callbacks: [ActiveRecordCallback]
+        
+        func execute(record: ActiveRecord, action: ActiveRecrodAction) {
+            for callback in self.callbacks {
+                callback(record, action)
+            }
+        }
     }
 }
