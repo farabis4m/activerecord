@@ -125,14 +125,14 @@ extension Date: AnyType {
     public var dbValue: AnyType { return "'\(self)'" }
 }
 
-public enum ActiveRecrodAction: Hashable {
+public enum ActiveRecrodAction: Int, Hashable {
     case Initialize
     case Create
     case Update
     case Destroy
     case Save
     
-    var hashValue: Int {
+    public var hashValue: Int {
         return self.rawValue
     }
 }
@@ -168,11 +168,11 @@ public protocol ActiveRecord: class, AnyType, Transformable {
 }
 
 extension ActiveRecord {
-    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
-        ActiveCallbackStorage.afterStorage.set(self, action: action, callback: callback)
+    public static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
+        ActiveCallbackStorage.sharedInstance.set(self, action: action, callback: callback)
     }
-    static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
-        ActiveCallbackStorage.beforeStorage.set(self, action: action, callback: callback)
+    public static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
+        ActiveCallbackStorage.sharedInstance.set(self, action: action, callback: callback)
     }
 }
 
