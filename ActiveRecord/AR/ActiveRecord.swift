@@ -455,17 +455,15 @@ extension ActiveRecord {
         return dirty
     }
     public func setAttrbiutes(attributes: [String: AnyType?]) {}
-    public func getAttributes() -> [String: AnyType?] {
+    public func getAttributes() -> [String: AnyType?] { return self.transformedAttributes() }
+    public func transformedAttributes() -> [String: AnyType?] {
         let reflections = _reflect(self)
         var fields = [String: AnyType?]()
         let transformers = self.dynamicType.transformers()
-        print(transformers)
         for index in 0.stride(to: reflections.count, by: 1) {
             let reflection = reflections[index]
             var result: AnyType?
-            
             var value = unwrap(reflection.1.value)
-            print(reflection.0 + " value: \(value)")
             if let url = value as? NSURL {
                 result = NSURLTransformer.backward?(value)
             } else {
