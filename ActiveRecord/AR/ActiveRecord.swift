@@ -377,7 +377,6 @@ extension ActiveRecord {
         ActiveSnapshotStorage.sharedInstance.set(self)
         ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
         self.after(.Save)
-        return true
     }
     
     var isNewRecord: Bool {
