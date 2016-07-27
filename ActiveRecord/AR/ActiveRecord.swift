@@ -275,13 +275,12 @@ extension ActiveRecord {
         return false
     }
     
-    public func destroy() throws -> Bool {
+    public func destroy() throws {
         ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.before(.Destroy)
         let deleteManager = try DeleteManager(record: self).execute()
         ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.after(.Destroy)
-        return true
     }
     
     public static func destroy(scope identifier: AnyType?) throws {
