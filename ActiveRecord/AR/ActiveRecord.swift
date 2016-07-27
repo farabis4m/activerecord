@@ -311,7 +311,7 @@ extension ActiveRecord {
         ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
     }
     
-    public func save() throws -> Bool {
+    public func save() throws {
         return try self.save(false)
     }
     
@@ -363,7 +363,7 @@ extension ActiveRecord {
         return try ActiveRelation().execute()
     }
     
-    public func save(validate: Bool) throws -> Bool {
+    public func save(validate: Bool) throws {
         ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
         self.before(.Save)
         if validate && !self.isValid {
