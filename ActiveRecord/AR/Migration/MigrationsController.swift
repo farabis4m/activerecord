@@ -16,11 +16,11 @@ public class MigrationsController {
         class func getTableName() -> String {
             return "schema_migrations"
         }
-        var id: AnyType?
+        var id: Any!
         var name: String!
         required init() {}
         
-        func setAttrbiutes(attributes: [String: AnyType?]) {
+        func setAttrbiutes(attributes: [String: Any]) {
             self.name = attributes["name"] as! String
         }
     }

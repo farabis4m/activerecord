@@ -6,6 +6,8 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
+import ApplicationSupport
+
 class InsertManager: ActionManager {
     
     override func execute() throws {
@@ -15,25 +17,32 @@ class InsertManager: ActionManager {
         let attributes = self.record.dirty
         let structure = Adapter.current.structure(klass.tableName)
         var columns = Array<String>()
-        var values = Array<AnyType>()
+        var values = Array<Any>()
         for key in attributes.keys {
-            if case let value?? = attributes[key] {
+            let value = attributes[key]
+            // TODO: Change for optional checking
+//            if  {
                 if let activeRecord = value as? ActiveRecord {
                     let columnName = "\(key)_id"
                     if structure.keys.contains(columnName) {
-                        columns << columnName
                         // TODO: How to check that related object has id
-                        values << activeRecord.id!.dbValue
+                        if let id = activeRecord.id as? DatabaseRepresetable {
+                            columns << columnName
+                            values << id.dbValue
+                        }
                     }
                 } else {
                     if structure.keys.contains(key) {
-                        columns << key
-                        values << value.dbValue
+                        if let v = value as? DatabaseRepresetable {
+                            columns << key
+                            values << v.dbValue
+                        }
+                        
                     }
                 }
-            } else {
-                // TODO: Update to nil value
-            }
+//            } else {
+//                // TODO: Update to nil value
+//            }
         }
         do {
             if !columns.isEmpty && !values.isEmpty {

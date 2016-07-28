@@ -12,7 +12,7 @@ class DeleteManager: ActionManager {
         let klass = self.record.dynamicType
         let structure = Adapter.current.structure(klass.tableName)
         if let PK = structure.values.filter({ return $0.PK }).first {
-            if case let value?? = self.record.attributes[PK.name] {
+            if let value = self.record.attributes[PK.name] as? DatabaseRepresetable {
                 try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(PK.name) = \(value.dbValue)")
             }
         }

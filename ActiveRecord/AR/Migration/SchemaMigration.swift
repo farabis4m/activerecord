@@ -6,6 +6,8 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
+import ApplicationSupport
+
 class SchemasMigration: Migration {
     
     func up() {

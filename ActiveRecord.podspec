@@ -38,5 +38,5 @@ Pod::Spec.new do |s|
   s.libraries = 'sqlite3'
   s.source_files = 'ActiveRecord/**/*.{c,h,m,swift}'
   s.private_header_files = 'ActiveRecord/Core/fts3_tokenizer.h'
-  s.dependency 'InflectorKit'
+  s.dependency 'ApplicationSupport'
 end

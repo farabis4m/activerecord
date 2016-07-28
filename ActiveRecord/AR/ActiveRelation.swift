@@ -6,6 +6,8 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
+import ApplicationSupport
+
 enum SQLAction: String {
     case Select = "SELECT"
     case Insert = "INSERT"
@@ -23,7 +25,8 @@ enum SQLAction: String {
     }
 }
 
-public typealias RawRecord = Dictionary<String, AnyType?>
+public typealias RawRecord = [String: Any]
+public typealias RawRecords = [RawRecord]
 
 public class ActiveRelation<T:ActiveRecord> {
     
@@ -31,7 +34,7 @@ public class ActiveRelation<T:ActiveRecord> {
     private var model: T?
     private var connection: Connection { return Adapter.current.connection }
     
-    private var attributes: [String: AnyType]?
+    private var attributes: [String: Any]?
     
     public var tableName: String {
         return T.tableName
@@ -76,10 +79,10 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func `where`(statement: [String: AnyType]) -> Self {
+    public func `where`(statement: [String: Any]) -> Self {
         self.attributes = statement
         for key in statement.keys {
-            if let values = statement[key] as? Array<AnyType> {
+            if let values = statement[key] as? [DatabaseRepresetable] {
                 chain.append(Where(field: key, values: values))
             } else if let value = statement[key] {
                 chain.append(Where(field: key, values: [value]))
@@ -88,7 +91,7 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func whereIs(statement: [String: AnyType]) -> Self {
+    public func whereIs(statement: [String: Any]) -> Self {
         return self.`where`(statement)
     }
     
@@ -111,7 +114,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     //MARK: - ActiveRecordRelationProtocol
     
-    public func updateAll(attrbiutes: [String : AnyType?]) throws -> Bool {
+    public func updateAll(attrbiutes: [String : Any]) throws -> Bool {
         self.action = .Update
         let _ = try self.execute()
         return false
@@ -147,7 +150,7 @@ public class ActiveRelation<T:ActiveRecord> {
             for hash in result.hashes {
                 print("\(T.modelName)_id")
                 print(hash)
-                if case let id?? = hash["\(T.modelName)_id"] {
+                if let id = hash["\(T.modelName)_id"] as? DatabaseRepresetable {
                     let key = String(id)
                     var items: Array<RawRecord> = []
                     if var bindings = relations[key] {
@@ -172,7 +175,7 @@ public class ActiveRelation<T:ActiveRecord> {
             var attrbiutes = hash
             print(relations)
             print(hash["id"])
-            if case let id?? = hash["id"], let relation = relations[String(id)] {
+            if let id = hash["id"] as? DatabaseRepresetable, let relation = relations[String(id)] {
                 print(relation)
                 attrbiutes.merge(relation)
             }
@@ -188,13 +191,6 @@ public class ActiveRelation<T:ActiveRecord> {
     
 }
 
-extension Dictionary {
-    mutating func merge<K, V>(dict: [K: V]){
-        for (k, v) in dict {
-            self.updateValue(v as! Value, forKey: k as! Key)
-        }
-    }
-}
-
-extension Array: AnyType {}
-extension Dictionary: AnyType {}
+// TODO: Add json serialization into String field for SQLite
+//extension Array: DatabaseRepresetable {}
+//extension Dictionary: DatabaseRepresetable {}

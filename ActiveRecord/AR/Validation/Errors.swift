@@ -6,6 +6,8 @@
 //
 //
 
+import ApplicationSupport
+
 public enum Error: ErrorType {
     case Blank
     case Absent
@@ -17,11 +19,11 @@ public enum Error: ErrorType {
     
     case NotANumber
     
-    case LessThanOrEqual(value: AnyType)
-    case LessThan(value: AnyType)
-    case GreaterThanOrEqual(value: AnyType)
-    case GreaterThan(value: AnyType)
-    case EqualTo(value: AnyType)
+    case LessThanOrEqual(value: Any)
+    case LessThan(value: Any)
+    case GreaterThanOrEqual(value: Any)
+    case GreaterThan(value: Any)
+    case EqualTo(value: Any)
     
     var rawValue: String {
         switch self {

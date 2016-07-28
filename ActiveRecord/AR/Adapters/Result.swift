@@ -43,7 +43,7 @@ public class Result {
         for i in 0..<self.rows.count {
             var hash = RawRecord()
             for j in 0..<self.columns.count {
-                hash[self.columns[j]] = self.rows[i][j] as? AnyType
+                hash[self.columns[j]] = self.rows[i][j]
             }
             hashes.append(hash)
         }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ApplicationSupport
 
 public typealias ActiveRecordCallback = ((ActiveRecord, ActiveRecrodAction) -> (Void))
 

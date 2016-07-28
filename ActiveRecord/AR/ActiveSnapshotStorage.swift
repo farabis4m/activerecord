@@ -21,7 +21,7 @@ class ActiveSnapshotStorage {
         }
     }
     
-    func get(model: ActiveRecord) -> [String: AnyType?]? {
+    func get(model: ActiveRecord) -> RawRecord? {
         return self.items[self.hash(model)]?.last
     }
     
@@ -31,9 +31,9 @@ class ActiveSnapshotStorage {
         self.items[self.hash(model)] = modelStorage
     }
     
-    func merge(model: ActiveRecord) -> [String: AnyType?] {
+    func merge(model: ActiveRecord) -> RawRecord {
         if let timeline = self.items[self.hash(model)] {
-            var result = Dictionary<String, AnyType?>()
+            var result: RawRecord = [:]
             for item in timeline {
                 for key in item.keys {
                     result[key] = item[key]

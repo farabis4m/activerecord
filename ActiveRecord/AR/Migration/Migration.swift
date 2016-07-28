@@ -6,17 +6,7 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
-import InflectorKit
-
-public func <<<T> (inout left: [T], right: [T]) -> [T] {
-    left.appendContentsOf(right)
-    return left
-}
-
-public func <<<T> (inout left: [T], right: T) -> [T] {
-    left.append(right)
-    return left
-}
+import ApplicationSupport
 
 public protocol Migration {
     var timestamp: Int { get }
@@ -88,7 +78,7 @@ extension Migration {
     }
     
     public func reference(to: String, on: String, options: [String: Any]? = nil) {
-        let columnName = options?["column"] as? String ?? "\(on.singularizedString())_id"
+        let columnName = options?["column"] as? String ?? "\(on.singularized)_id"
         self.create(Table.Column(name: columnName, type: .Int, table: to))
         if let foreignKey = options?["foreignKey"] as? Bool where foreignKey == true && adapter is SQLiteAdapter == false {
             let SQL = "\(Table.Action.Alter.clause(to)) ADD CONSTRAINT \(to)_\(columnName) FOREIGN KEY (\(columnName)) REFERENCES \(on)(id);"

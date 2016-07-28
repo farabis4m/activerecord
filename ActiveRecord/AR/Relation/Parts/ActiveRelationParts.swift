@@ -13,14 +13,14 @@ public protocol ActiveRelationPart {
 public struct Where: ActiveRelationPart {
     public var priority: Int { return 1 }
     public var field: String
-    public var values: Array<AnyType>
+    public var values: Array<DatabaseRepresetable>
 }
 
 extension Where: CustomStringConvertible {
     public var description: String {
         if values.count == 1 {
             if let record = values[0] as? ActiveRecord {
-                if let value = record.id {
+                if let value = record.id as? DatabaseRepresetable {
                     return "WHERE \(field) = \(value.dbValue)"
                 }
             } else {
@@ -29,7 +29,7 @@ extension Where: CustomStringConvertible {
         } else {
             var statement = ""
             if let records = values as? [ActiveRecord] {
-                statement = records.map({ $0.id?.dbValue }).flatMap({$0}).map({ "\($0)" }).joinWithSeparator(", ")
+                statement = records.map({ ($0.id as! DatabaseRepresetable).dbValue }).flatMap({$0}).map({ "\($0)" }).joinWithSeparator(", ")
             } else {
                 statement = values.map({ "\($0.dbValue)" }).joinWithSeparator(", ")
             }

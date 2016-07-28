@@ -15,26 +15,29 @@ class UpdateManager: ActionManager {
         print("DIRTY: \(attributes)")
         let structure = Adapter.current.structure(klass.tableName)
         
-        var values = Dictionary<String, AnyType>()
+        var values = Dictionary<String, Any>()
         for key in attributes.keys {
-            if case let value?? = attributes[key] {
+            let value = attributes[key]
+//            if let value = attributes[key] as? DatabaseRepresetable {
                 if let activeRecord = value as? ActiveRecord {
                     // TODO: How to check that related object has id
                     let columnName = "\(key)_id"
                     if structure.keys.contains(columnName) {
-                        values[columnName] = activeRecord.id!.dbValue
+                        values[columnName] = (activeRecord.id as! DatabaseRepresetable).dbValue
                     }
                 } else {
                     if structure.keys.contains(key) {
-                        values[key] = value.dbValue
+                        if let v = value as? DatabaseRepresetable {
+                            values[key] = v.dbValue
+                        }
                     }
                 }
-            }
+//            }
         }
         do {
             if !values.isEmpty {
                 if let PK = structure.values.filter({ return $0.PK }).first {
-                    if case let value?? = self.record.attributes[PK.name] {
+                    if let value = self.record.attributes[PK.name] as? DatabaseRepresetable {
                         try Adapter.current.connection.execute_query("UPDATE \(klass.tableName) SET \(values.map({ "\($0) = \($1)" }).joinWithSeparator(", ")) WHERE \(PK.name) = \(value.dbValue)")
                     }
                 }
