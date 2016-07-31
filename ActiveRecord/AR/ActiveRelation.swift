@@ -82,9 +82,9 @@ public class ActiveRelation<T:ActiveRecord> {
     public func `where`(statement: [String: Any]) -> Self {
         self.attributes = statement
         for key in statement.keys {
-            if let values = statement[key] as? [DatabaseRepresetable] {
+            if let values = statement[key] as? [DatabaseRepresentable] {
                 chain.append(Where(field: key, values: values))
-            } else if let value = statement[key] {
+            } else if let value = statement[key] as? DatabaseRepresentable {
                 chain.append(Where(field: key, values: [value]))
             }
         }
@@ -150,7 +150,7 @@ public class ActiveRelation<T:ActiveRecord> {
             for hash in result.hashes {
                 print("\(T.modelName)_id")
                 print(hash)
-                if let id = hash["\(T.modelName)_id"] as? DatabaseRepresetable {
+                if let id = hash["\(T.modelName)_id"] as? DatabaseRepresentable {
                     let key = String(id)
                     var items: Array<RawRecord> = []
                     if var bindings = relations[key] {
@@ -175,13 +175,12 @@ public class ActiveRelation<T:ActiveRecord> {
             var attrbiutes = hash
             print(relations)
             print(hash["id"])
-            if let id = hash["id"] as? DatabaseRepresetable, let relation = relations[String(id)] {
+            if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(id)] {
                 print(relation)
                 attrbiutes.merge(relation)
             }
             let item = T.init(attributes: attrbiutes)
             items.append(item)
-            ActiveSnapshotStorage.sharedInstance.set(item)
         }
         if strict && items.isEmpty {
             throw ActiveRecordError.RecordNotFound(attributes: self.attributes ?? [:])

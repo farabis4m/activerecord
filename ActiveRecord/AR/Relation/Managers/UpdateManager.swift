@@ -6,6 +6,8 @@
 //
 //
 
+import ApplicationSupport
+
 class UpdateManager: ActionManager {
     
     override func execute() throws {
@@ -23,11 +25,11 @@ class UpdateManager: ActionManager {
                     // TODO: How to check that related object has id
                     let columnName = "\(key)_id"
                     if structure.keys.contains(columnName) {
-                        values[columnName] = (activeRecord.id as! DatabaseRepresetable).dbValue
+                        values[columnName] = (activeRecord.attributes["id"] as! DatabaseRepresentable).dbValue
                     }
                 } else {
                     if structure.keys.contains(key) {
-                        if let v = value as? DatabaseRepresetable {
+                        if let v = value as? DatabaseRepresentable {
                             values[key] = v.dbValue
                         }
                     }
@@ -37,7 +39,7 @@ class UpdateManager: ActionManager {
         do {
             if !values.isEmpty {
                 if let PK = structure.values.filter({ return $0.PK }).first {
-                    if let value = self.record.attributes[PK.name] as? DatabaseRepresetable {
+                    if let value = self.record.attributes[PK.name] as? DatabaseRepresentable {
                         try Adapter.current.connection.execute_query("UPDATE \(klass.tableName) SET \(values.map({ "\($0) = \($1)" }).joinWithSeparator(", ")) WHERE \(PK.name) = \(value.dbValue)")
                     }
                 }

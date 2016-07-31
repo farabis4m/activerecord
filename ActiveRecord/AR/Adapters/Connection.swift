@@ -7,7 +7,7 @@
 //
 
 import Foundation
-//import CSQLite
+import CSQLite
 
 public class Connection {
     private var _handle: COpaquePointer = nil

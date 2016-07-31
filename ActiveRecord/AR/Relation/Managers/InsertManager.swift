@@ -26,14 +26,15 @@ class InsertManager: ActionManager {
                     let columnName = "\(key)_id"
                     if structure.keys.contains(columnName) {
                         // TODO: How to check that related object has id
-                        if let id = activeRecord.id as? DatabaseRepresetable {
+                        // TODO: Use confirg for id objects
+                        if let id = activeRecord.attributes["id"] as? DatabaseRepresentable {
                             columns << columnName
                             values << id.dbValue
                         }
                     }
                 } else {
                     if structure.keys.contains(key) {
-                        if let v = value as? DatabaseRepresetable {
+                        if let v = value as? DatabaseRepresentable {
                             columns << key
                             values << v.dbValue
                         }
@@ -52,7 +53,8 @@ class InsertManager: ActionManager {
                 let result = try Adapter.current.connection.execute_query("INSERT INTO \(klass.tableName) (\(columns.joinWithSeparator(", "))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(", ")));")
                 let PK = structure.values.filter({ return $0.PK }).first
                 if let id = Adapter.current.connection.lastInsertRowid where PK?.type == .Int {
-                    self.record.id = Int(id)
+                    // TODO: To do user confirg
+                    self.record.setAttributes(["id" : Int(id)])
                 }
             }
             

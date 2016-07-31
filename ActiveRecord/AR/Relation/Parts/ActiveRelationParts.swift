@@ -6,6 +6,8 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
+import ApplicationSupport
+
 public protocol ActiveRelationPart {
     var priority: Int { get }
 }
@@ -13,14 +15,15 @@ public protocol ActiveRelationPart {
 public struct Where: ActiveRelationPart {
     public var priority: Int { return 1 }
     public var field: String
-    public var values: Array<DatabaseRepresetable>
+    public var values: Array<DatabaseRepresentable>
 }
 
 extension Where: CustomStringConvertible {
     public var description: String {
         if values.count == 1 {
             if let record = values[0] as? ActiveRecord {
-                if let value = record.id as? DatabaseRepresetable {
+                // TODO: Use PK
+                if let value = record.attributes["id"] as? DatabaseRepresentable {
                     return "WHERE \(field) = \(value.dbValue)"
                 }
             } else {
@@ -29,7 +32,7 @@ extension Where: CustomStringConvertible {
         } else {
             var statement = ""
             if let records = values as? [ActiveRecord] {
-                statement = records.map({ ($0.id as! DatabaseRepresetable).dbValue }).flatMap({$0}).map({ "\($0)" }).joinWithSeparator(", ")
+                statement = records.map({ ($0.attributes["id"] as! DatabaseRepresentable).dbValue }).flatMap({$0}).map({ "\($0)" }).joinWithSeparator(", ")
             } else {
                 statement = values.map({ "\($0.dbValue)" }).joinWithSeparator(", ")
             }

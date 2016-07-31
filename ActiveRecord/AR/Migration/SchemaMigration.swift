@@ -13,7 +13,7 @@ class SchemasMigration: Migration {
     func up() {
         if self.exists(Table(MigrationsController.SchemaMigration.tableName)) == false {
             self.create(Table(MigrationsController.SchemaMigration.tableName)) { (table) -> (Void) in
-                table.columns << Table.Column(name: "name", type: .String) { (column) in column.PK = true }
+                table.columns << Table.Column(name: "id", type: .String) { (column) in column.PK = true }
             }
         }
     }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ApplicationSupport
 
 extension ActiveRecord {
     public func update(attributes: [String: Any]? = nil) throws -> Bool {
@@ -38,8 +39,8 @@ extension ActiveRecord {
     }
     
     public static func destroy(scope identifier: Any) throws {
-        let record = self.init()
-        record.id = identifier
+        var record = self.init()
+        record.setAttributes(["id": identifier])
         ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
         try self.destroy(record)
         ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
@@ -50,7 +51,7 @@ extension ActiveRecord {
             let tableName = first.dynamicType.tableName
             let structure = Adapter.current.structure(tableName)
             if let PK = structure.values.filter({ return $0.PK }).first {
-                let values = records.map({ "\(($0.attributes[PK.name] as! DatabaseRepresetable).dbValue)" }).joinWithSeparator(", ")
+                let values = records.map({ "\(($0.attributes[PK.name] as! DatabaseRepresentable).dbValue)" }).joinWithSeparator(", ")
                 try Adapter.current.connection.execute("DELETE FROM \(tableName) WHERE \(PK.name) IN (\(values));")
             }
         }
@@ -125,13 +126,13 @@ extension ActiveRecord {
         } else {
             try UpdateManager(record: self).execute()
         }
-        ActiveSnapshotStorage.sharedInstance.set(self)
+        self.timeline.reset(self.attributes)
         ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
         self.after(.Save)
     }
     
     var isNewRecord: Bool {
-        if let id = self.id, let record = try? self.dynamicType.find(["id" : id]) {
+        if let id = self.attributes["id"], let record = try? self.dynamicType.find(["id" : id]) {
             return false
         }
         return true

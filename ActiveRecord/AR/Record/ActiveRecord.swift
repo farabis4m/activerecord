@@ -16,16 +16,8 @@ public enum ActiveRecordError: ErrorType {
     case ParametersMissing(record: ActiveRecord)
 }
 
-public protocol ActiveRecord: class, Transformable, DatabaseRepresetable {
-    var id: Any! { set get }
-    init()
-    init(attributes: [String:Any?])
-    
-    func setAttrbiutes(attributes: [String: Any])
-    func getAttributes() -> [String: Any]
-    
+public protocol ActiveRecord: Record, Transformable, DatabaseRepresentable {
     static var tableName: String { get }
-    static var resourceName1: String { get }
     static func acceptedNestedAttributes() -> [String]
     
     // Validators
@@ -41,17 +33,25 @@ public protocol ActiveRecord: class, Transformable, DatabaseRepresetable {
 }
 
 extension ActiveRecord {
+    var rawType: String { return "ActiveRecord" }
+}
+
+extension ActiveRecord {
     // Returns sanitized id
     // DB will not allow to insert a record with nil PK
     var identifier: Any {
-        return self.id ?? Optional<Int>()
+//        return self.id ?? Optional<Int>()
+        // TODO: Compare PK values
+        return Optional<Int>()
     }
 }
 
 extension ActiveRecord {
     // TODO: Don't have any other opportunities to compare hashes
-    var hashValue: DatabaseRepresetable? {
-        return self.id as? DatabaseRepresetable
+    var hashValue: DatabaseRepresentable? {
+        // TODO: Compare PK values
+        return 0
+//        return self.id as? DatabaseRepresentable
     }
 }
 
@@ -64,33 +64,13 @@ extension ActiveRecord {
 }
 
 extension ActiveRecord {
-    public init(attributes: [String: Any]) {
+    public init(attributes: RawRecord) {
         self.init()
         var merged = self.defaultValues
         merged.merge(attributes)
-        self.setAttrbiutes(merged)
+        self.setAttributes(merged)
         self.after(.Initialize)
     }
-}
-
-public func ==(lhs: DatabaseRepresetable?, rhs: DatabaseRepresetable?) -> Bool {
-    if let left = lhs {
-        if let right = rhs {
-            if left.rawType != right.rawType { return false }
-            switch left.rawType {
-            case "String": return (left as! String) == (right as! String)
-            case "Int": return (left as! Int) == (right as! Int)
-            case "Float": return (left as! Float) == (right as! Float)
-            case "Bool": return (left as! Bool) == (right as! Bool)
-            case "ActiveRecord": return (left as? ActiveRecord) == (right as? ActiveRecord)
-            default: return false
-            }
-        }
-        return false
-    } else if let right = rhs {
-        return false
-    }
-    return true
 }
 
 public func ==(l: ActiveRecord?, r: ActiveRecord?) -> Bool {

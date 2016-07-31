@@ -5,6 +5,7 @@
 //  Created by Vlad Gorbenko on 5/15/16.
 //
 //
+import ApplicationSupport
 
 class DeleteManager: ActionManager {
     
@@ -12,7 +13,7 @@ class DeleteManager: ActionManager {
         let klass = self.record.dynamicType
         let structure = Adapter.current.structure(klass.tableName)
         if let PK = structure.values.filter({ return $0.PK }).first {
-            if let value = self.record.attributes[PK.name] as? DatabaseRepresetable {
+            if let value = self.record.attributes[PK.name] as? DatabaseRepresentable {
                 try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(PK.name) = \(value.dbValue)")
             }
         }

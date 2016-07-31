@@ -7,16 +7,22 @@
 //  Copyright © 2016 Vlad Gorbenko. All rights reserved.
 //
 
+import ApplicationSupport
+
 public class MigrationsController {
     
     class SchemaMigration: ActiveRecord {
+        var timeline: Timeline = Timeline()
         class var tableName: String {
             return "schema_migrations"
         }
         class func getTableName() -> String {
             return "schema_migrations"
         }
-        var id: Any!
+        var id: Any {
+            get { return self.name }
+            set { self.name = newValue as! String }
+        }
         var name: String!
         required init() {}
         
