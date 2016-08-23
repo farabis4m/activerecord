@@ -34,7 +34,3 @@ let NSURLTransformer = Transformer(forward: { (value) -> Any? in
         }
         return value as? Any
 })
-
-public protocol Transformable {
-    static func transformers() -> [String: Transformer]
-}

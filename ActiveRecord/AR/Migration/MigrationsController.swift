@@ -8,6 +8,7 @@
 //
 
 import ApplicationSupport
+import ObjectMapper
 
 public class MigrationsController {
     
@@ -25,9 +26,10 @@ public class MigrationsController {
         }
         var name: String!
         required init() {}
+        required init?(_ map: Map) {}
         
-        func setAttrbiutes(attributes: [String: Any]) {
-            self.name = attributes["name"] as! String
+        func mapping(map: Map) {
+            self.name <- map["name"]
         }
     }
     

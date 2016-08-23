@@ -8,6 +8,7 @@
 
 import Foundation
 import CSQLite
+import SwiftyBeaver
 
 public class Connection {
     private var _handle: COpaquePointer = nil
@@ -90,22 +91,16 @@ public class Connection {
     ///
     /// - Throws: `Result.Error` if query execution fails.
     public func execute(SQL: String) throws {
-        print("SQL: \(SQL)")
+        SQLLog.info(SQL)
         try self.check(sqlite3_exec(self.handle, SQL, nil, nil, nil))
     }
     
     func execute_query(SQL: String) throws -> Result {
-        print("SQL: \(SQL)")
+        SQLLog.info(SQL)
         let statement = try self.prepare(SQL)
         var columnTypes = Array<Int32>()
         var columns = Array<String>()
         let columnsCount = sqlite3_column_count(statement)
-        //        for i in 0..<columnsCount {
-        //            let columnType = sqlite3_column_type(statement, i)
-        //            columnTypes.append(columnType)
-        //            let columnName = String.fromCString(UnsafePointer(sqlite3_column_name(statement, i))) ?? ""
-        //            columns.append(columnName)
-        //        }
         var rows = Array<Array<Any?>>()
         while sqlite3_step(statement) == SQLITE_ROW {
             var row = Array<Any?>()
@@ -180,6 +175,7 @@ public class Connection {
     func check(resultCode: Int32, statement: String? = nil) throws -> Int32 {
         let successCodes: Set = [SQLITE_OK, SQLITE_ROW, SQLITE_DONE]
         if !successCodes.contains(resultCode) {
+            SQLLog.info(self.errorMessage)
             throw DBError.Statement(message: self.errorMessage)
         }
         return resultCode

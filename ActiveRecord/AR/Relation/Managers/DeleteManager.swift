@@ -11,11 +11,9 @@ class DeleteManager: ActionManager {
     
     override func execute() throws {
         let klass = self.record.dynamicType
-        let structure = Adapter.current.structure(klass.tableName)
-        if let PK = structure.values.filter({ return $0.PK }).first {
-            if let value = self.record.attributes[PK.name] as? DatabaseRepresentable {
-                try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(PK.name) = \(value.dbValue)")
-            }
+        let table = Adapter.current.structure(klass.tableName)
+        if let value = self.record.attributes[table.PKColumn.name] as? DatabaseRepresentable {
+            try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(table.name) = \(value.dbValue)")
         }
     }
 }

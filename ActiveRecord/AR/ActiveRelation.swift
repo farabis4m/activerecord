@@ -174,7 +174,6 @@ public class ActiveRelation<T:ActiveRecord> {
         for hash in result.hashes {
             var attrbiutes = hash
             print(relations)
-            print(hash["id"])
             if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(id)] {
                 print(relation)
                 attrbiutes.merge(relation)

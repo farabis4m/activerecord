@@ -7,6 +7,7 @@
 //
 
 import ApplicationSupport
+import ObjectMapper
 
 public enum ActiveRecordError: ErrorType {
     case RecordNotValid(record: ActiveRecord)
@@ -16,7 +17,7 @@ public enum ActiveRecordError: ErrorType {
     case ParametersMissing(record: ActiveRecord)
 }
 
-public protocol ActiveRecord: Record, Transformable, DatabaseRepresentable {
+public protocol ActiveRecord: Record, DatabaseRepresentable {
     static var tableName: String { get }
     static func acceptedNestedAttributes() -> [String]
     
@@ -59,8 +60,6 @@ extension ActiveRecord {
 extension ActiveRecord {
     // Nested attributes
     public static func acceptedNestedAttributes() -> [String] { return [] }
-    // Transformable
-    public static func transformers() -> [String: Transformer] { return [:] }
 }
 
 extension ActiveRecord {
@@ -68,13 +67,17 @@ extension ActiveRecord {
         self.init()
         var merged = self.defaultValues
         merged.merge(attributes)
-        self.setAttributes(merged)
+        let map = Map(mappingType: .FromJSON, JSONDictionary: attributes, toObject: true, context: nil)
+        self.mapping(map)
         self.after(.Initialize)
     }
 }
 
 public func ==(l: ActiveRecord?, r: ActiveRecord?) -> Bool {
-    return l?.hashValue == r?.hashValue
+    if let right = r {
+        return l?.equals(right) ?? false
+    }
+    return false
 }
 
 public enum ActiveRecrodAction: Int, Hashable {

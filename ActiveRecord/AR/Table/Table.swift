@@ -16,6 +16,7 @@ public class Table: DBObject {
         typealias BaseFloat = Float
         typealias BaseString = String
         typealias BaseBool = Bool
+        typealias BaseDouble = Double
         public enum Type: String {
             case Bool = "bool"
             case String = "text"
@@ -23,6 +24,7 @@ public class Table: DBObject {
             case Decimal = "decimal"
             case Date = "date"
             case Raw = "blob"
+            case Double = "double"
             
             var type: Any {
                 switch self {
@@ -32,6 +34,7 @@ public class Table: DBObject {
                 case .Date: return NSDate.self
                 case .Raw: return NSData.self
                 case .Bool: return BaseBool.self
+                case .Double: return BaseDouble.self
                 }
             }
         }
@@ -58,6 +61,7 @@ public class Table: DBObject {
         public var unique = false
         public var nullable = true
         public var length: Int?
+        public var foreignTable: Table?
         
         public var table: String?
         
@@ -93,9 +97,16 @@ public class Table: DBObject {
     
     public var name: String
     public var columns = Array<Column>()
+    public var PKColumn: Column {
+        return self.columns.find({ $0.PK })!
+    }
     
     public init(_ name: String) {
         self.name = name
+    }
+    
+    func column(name: String) -> Column? {
+        return self.columns.find({ $0.name == name })
     }
 }
 

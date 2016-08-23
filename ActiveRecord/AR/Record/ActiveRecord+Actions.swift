@@ -8,6 +8,7 @@
 
 import Foundation
 import ApplicationSupport
+import SwiftyBeaver
 
 extension ActiveRecord {
     public func update(attributes: [String: Any]? = nil) throws -> Bool {
@@ -40,7 +41,8 @@ extension ActiveRecord {
     
     public static func destroy(scope identifier: Any) throws {
         var record = self.init()
-        record.setAttributes(["id": identifier])
+        // TODO destroy without callbacls
+        // Probably requires destroy without model
         ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
         try self.destroy(record)
         ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
@@ -49,11 +51,10 @@ extension ActiveRecord {
     public static func destroy(records: [ActiveRecord]) throws {
         if let first = records.first {
             let tableName = first.dynamicType.tableName
+            // TODO: Use cached Adapter.tables
             let structure = Adapter.current.structure(tableName)
-            if let PK = structure.values.filter({ return $0.PK }).first {
-                let values = records.map({ "\(($0.attributes[PK.name] as! DatabaseRepresentable).dbValue)" }).joinWithSeparator(", ")
-                try Adapter.current.connection.execute("DELETE FROM \(tableName) WHERE \(PK.name) IN (\(values));")
-            }
+            let values = records.map({ "\(($0.attributes[structure.PKColumn.name] as! DatabaseRepresentable).dbValue)" }).joinWithSeparator(", ")
+            try Adapter.current.connection.execute("DELETE FROM \(tableName) WHERE \(structure.PKColumn.name) IN (\(values));")
         }
     }
     
@@ -118,7 +119,9 @@ extension ActiveRecord {
     public func save(validate: Bool) throws {
         ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
         self.before(.Save)
-        if validate && !self.isValid {
+        let errors = self.errors
+        if validate && !errors.isEmpty {
+            SQLLog.error("RecordNotValid not found \(self) \(errors)")
             throw ActiveRecordError.RecordNotValid(record: self)
         }
         if self.isNewRecord {
