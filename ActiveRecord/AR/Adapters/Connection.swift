@@ -132,6 +132,7 @@ public class Connection {
     func prepare(SQL: String) throws -> COpaquePointer {
         var statement: COpaquePointer = nil
         guard sqlite3_prepare(self.handle, SQL, -1, &statement, nil) == SQLITE_OK else {
+            SQLLog.error("\(self.errorMessage) in \(SQL)")
             throw DBError.Prepare(message: self.errorMessage)
         }
         return statement

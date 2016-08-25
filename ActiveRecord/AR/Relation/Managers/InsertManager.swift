@@ -9,35 +9,29 @@
 import ApplicationSupport
 import ObjectMapper
 
+extension Dictionary where Key: StringLiteralConvertible, Value: Any {
+    
+}
+
 class InsertManager: ActionManager {
     
     override func execute() throws {
         let attributes = self.record.dirty
         let table = Adapter.current.structure(self.record.dynamicType.tableName)
-        
-//        var columns: [String] = []
-//        var values: [DatabaseRepresentable] = []
-//        for column in table.columns {
-//            if let rawValue = attributes[column.name] {
-//                if let type = column.type {
-//                    if let foreignTable = column.foreignTable {
-//                        let key = foreignTable.name.singularized
-//                        let value = (attributes[key] as? [String: Any])?[foreignTable.PKColumn.name]
-//                        
-//                    } else {
-//                        
-//                    }
-//                }
-//                columns << column.name
-////                values << value
-//            }
-//        }
-        
         var columns = Array<String>()
         var values = Array<Any>()
         for key in attributes.keys {
             let value = attributes[key]
-            if let activeRecord = value as? ActiveRecord {
+            if let _ = table.column(key) {
+                if let rawValue = value as? DatabaseRepresentable {
+                    columns << key
+                    values << rawValue.dbValue
+                } else if let rawValue = value as? [String: Any] {
+                    columns << key
+                    values << rawValue.json(false).dbValue
+                }
+                
+            } else if let activeRecord = value as? ActiveRecord {
                 let columnName = "\(key)_id"
                 if let _ = table.column(key) {
                     // TODO: How to check that related object has id
@@ -47,15 +41,10 @@ class InsertManager: ActionManager {
                         values << id.dbValue
                     }
                 }
-            } else {
-                if let _ = table.column(key), value = value as? DatabaseRepresentable {
-                    columns << key
-                    values << value.dbValue
-                }
             }
-//            } else {
-//                // TODO: Update to nil value
-//            }
+//          else {
+//              // TODO: Update to nil value
+//          }
         }
         if !columns.isEmpty && !values.isEmpty {
             if columns.count != values.count {
@@ -68,6 +57,8 @@ class InsertManager: ActionManager {
                 let map = Map(mappingType: .FromJSON, JSONDictionary: ["id" : Int(id)], toObject: true, context: nil)
                 self.record.mapping(map)
             }
+        } else {
+            SQLLog.warning("Empty values: \(columns) \(values)")
         }
     }
 }

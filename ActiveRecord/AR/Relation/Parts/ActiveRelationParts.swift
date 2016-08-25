@@ -16,18 +16,20 @@ public struct Where: ActiveRelationPart {
     public var priority: Int { return 1 }
     public var field: String
     public var values: Array<DatabaseRepresentable>
+    public var negative = false
 }
 
 extension Where: CustomStringConvertible {
     public var description: String {
         if values.count == 1 {
+            let expression = self.negative ? "!=" : "="
             if let record = values[0] as? ActiveRecord {
                 // TODO: Use PK
                 if let value = record.attributes["id"] as? DatabaseRepresentable {
-                    return "WHERE \(field) = \(value.dbValue)"
+                    return "WHERE \(field) \(expression) \(value.dbValue)"
                 }
             } else {
-                return "WHERE \(field) = \(values[0].dbValue)"
+                return "WHERE \(field) \(expression) \(values[0].dbValue)"
             }
         } else {
             var statement = ""
@@ -36,7 +38,8 @@ extension Where: CustomStringConvertible {
             } else {
                 statement = values.map({ "\($0.dbValue)" }).joinWithSeparator(", ")
             }
-            return "WHERE \(field) IN (\(statement))"
+            let expresssion = self.negative ? "NOT IN" : "IN"
+            return "WHERE \(field) \(expresssion) (\(statement))"
         }
         return ""
     }

@@ -83,9 +83,21 @@ public class ActiveRelation<T:ActiveRecord> {
         self.attributes = statement
         for key in statement.keys {
             if let values = statement[key] as? [DatabaseRepresentable] {
-                chain.append(Where(field: key, values: values))
+                chain.append(Where(field: key, values: values, negative: false))
             } else if let value = statement[key] as? DatabaseRepresentable {
-                chain.append(Where(field: key, values: [value]))
+                chain.append(Where(field: key, values: [value], negative: false))
+            }
+        }
+        return self
+    }
+    
+    public func `whereNot`(statement: [String: Any]) -> Self {
+        self.attributes = statement
+        for key in statement.keys {
+            if let values = statement[key] as? [DatabaseRepresentable] {
+                chain.append(Where(field: key, values: values, negative: true))
+            } else if let value = statement[key] as? DatabaseRepresentable {
+                chain.append(Where(field: key, values: [value], negative: true))
             }
         }
         return self
@@ -148,8 +160,6 @@ public class ActiveRelation<T:ActiveRecord> {
             let result = try self.connection.execute_query("SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));")
             includes << result
             for hash in result.hashes {
-                print("\(T.modelName)_id")
-                print(hash)
                 if let id = hash["\(T.modelName)_id"] as? DatabaseRepresentable {
                     let key = String(id)
                     var items: Array<RawRecord> = []
@@ -167,15 +177,11 @@ public class ActiveRelation<T:ActiveRecord> {
                     items.append(hash)
                     relations[key] = ["\(include.tableName)" : items]
                 }
-                print(relations)
-                
             }
         }
         for hash in result.hashes {
             var attrbiutes = hash
-            print(relations)
             if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(id)] {
-                print(relation)
                 attrbiutes.merge(relation)
             }
             let item = T.init(attributes: attrbiutes)

@@ -17,6 +17,23 @@ public enum ActiveRecordError: ErrorType {
     case ParametersMissing(record: ActiveRecord)
 }
 
+func ==(lhs: ActiveRecord?, rhs: ActiveRecord?) -> Bool {
+    if let r = rhs?.getAttributes()["id"] as? DatabaseRepresentable {
+        return (lhs?.getAttributes()["id"] as? DatabaseRepresentable)?.equals(r) ?? false
+    }
+    return false
+}
+
+func ==(lhs: ActiveRecord, rhs: ActiveRecord) -> Bool {
+    let leftPK = Adapter.current.structure(lhs.dynamicType.tableName).PKColumn
+    let rightPK = Adapter.current.structure(rhs.dynamicType.tableName).PKColumn
+    if let right = rhs.getAttributes()[rightPK.name] as? DatabaseRepresentable {
+        let left = lhs.getAttributes()[leftPK.name] as? DatabaseRepresentable
+        return left?.equals(right) ?? false
+    }
+    return false
+}
+
 public protocol ActiveRecord: Record, DatabaseRepresentable {
     static var tableName: String { get }
     static func acceptedNestedAttributes() -> [String]
@@ -65,19 +82,11 @@ extension ActiveRecord {
 extension ActiveRecord {
     public init(attributes: RawRecord) {
         self.init()
-        var merged = self.defaultValues
-        merged.merge(attributes)
         let map = Map(mappingType: .FromJSON, JSONDictionary: attributes, toObject: true, context: nil)
         self.mapping(map)
+        self.timeline.enqueue(attributes)
         self.after(.Initialize)
     }
-}
-
-public func ==(l: ActiveRecord?, r: ActiveRecord?) -> Bool {
-    if let right = r {
-        return l?.equals(right) ?? false
-    }
-    return false
 }
 
 public enum ActiveRecrodAction: Int, Hashable {

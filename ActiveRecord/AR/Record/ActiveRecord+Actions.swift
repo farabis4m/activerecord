@@ -21,6 +21,7 @@ extension ActiveRecord {
         return false
     }
     
+    @warn_unused_result
     public func update(attribute: String, value: Any) throws -> Bool {
         ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
         self.before(.Update)
@@ -31,6 +32,7 @@ extension ActiveRecord {
         return false
     }
     
+    @warn_unused_result
     public func destroy() throws {
         ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.before(.Destroy)
@@ -39,6 +41,7 @@ extension ActiveRecord {
         self.after(.Destroy)
     }
     
+    @warn_unused_result
     public static func destroy(scope identifier: Any) throws {
         var record = self.init()
         // TODO destroy without callbacls
