@@ -43,11 +43,11 @@ public protocol ActiveRecord: Record, DatabaseRepresentable {
     func validators(action: Action) -> [String: Validator]
     
     // Callbackcs
-    func before(action: ActiveRecrodAction)
-    func after(action: ActiveRecrodAction)
+    func before(action: ActiveRecrodAction) throws
+    func after(action: ActiveRecrodAction) throws
     
-    static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback)
-    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback)
+    static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) throws
+    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) throws
 }
 
 extension ActiveRecord {
@@ -85,7 +85,7 @@ extension ActiveRecord {
         let map = Map(mappingType: .FromJSON, JSONDictionary: attributes, toObject: true, context: nil)
         self.mapping(map)
         self.timeline.enqueue(attributes)
-        self.after(.Initialize)
+        try? self.after(.Initialize)
     }
 }
 
