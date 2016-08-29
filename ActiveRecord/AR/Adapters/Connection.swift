@@ -56,6 +56,7 @@ public class Connection {
         let flags = self.isReadOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
         try check(sqlite3_open_v2(location.description, &_handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
         dispatch_queue_set_specific(queue, Connection.queueKey, queueContext, nil)
+        try self.execute("PRAGMA foreign_keys = ON;")
     }
     
     public func close() {

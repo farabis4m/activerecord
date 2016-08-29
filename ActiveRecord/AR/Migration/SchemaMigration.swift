@@ -10,16 +10,16 @@ import ApplicationSupport
 
 class SchemasMigration: Migration {
     
-    func up() {
+    func up() throws {
         if self.exists(Table(MigrationsController.SchemaMigration.tableName)) == false {
-            self.create(Table(MigrationsController.SchemaMigration.tableName)) { (table) -> (Void) in
+            try self.create(Table(MigrationsController.SchemaMigration.tableName)) { (table) -> (Void) in
                 table.columns << Table.Column(name: "id", type: .String) { (column) in column.PK = true }
             }
         }
     }
     
-    func down() {
-        self.drop(Table(MigrationsController.SchemaMigration.tableName))
+    func down() throws {
+        try self.drop(Table(MigrationsController.SchemaMigration.tableName))
     }
     
 }

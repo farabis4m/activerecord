@@ -30,15 +30,26 @@ class InsertManager: ActionManager {
                     columns << key
                     values << rawValue.json(false).dbValue
                 }
-                
             } else if let activeRecord = value as? ActiveRecord {
                 let columnName = "\(key)_id"
-                if let _ = table.column(key) {
+                if let _ = table.column(columnName) {
                     // TODO: How to check that related object has id
                     // TODO: Use confirg for id objects
                     if let id = activeRecord.attributes["id"] as? DatabaseRepresentable {
                         columns << columnName
                         values << id.dbValue
+                    }
+                }
+            } else {
+                if let attributes = value as? [String: Any] {
+                    let columnName = "\(key)_id"
+                    if let _ = table.column(columnName) {
+                        // TODO: How to check that related object has id
+                        // TODO: Use confirg for id objects
+                        if let id = attributes["id"] as? DatabaseRepresentable {
+                            columns << columnName
+                            values << id.dbValue
+                        }
                     }
                 }
             }

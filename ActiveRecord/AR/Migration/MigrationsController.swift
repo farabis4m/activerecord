@@ -29,15 +29,14 @@ public class MigrationsController {
         required init?(_ map: Map) {}
         
         func mapping(map: Map) {
-            self.name <- map["name"]
+            self.name <- map["id"]
         }
     }
     
     public static var sharedInstance = MigrationsController()
     
     public var migrations = Array<Migration>()
-    
-    public var tables = Array<Table>()
+    var enabled = true
     
     //MARK: - Lifecycle
     
@@ -46,7 +45,7 @@ public class MigrationsController {
     //MARK: - Setup
     
     public func setup() {
-        SchemasMigration().up()
+        try? SchemasMigration().up()
     }
     
     //MARK: - Migration management
@@ -56,40 +55,30 @@ public class MigrationsController {
         let passed = try! SchemaMigration.all()
         let difference = Set(self.migrations.map({ $0.id })).subtract(Set(passed.map({ $0.name })))
         let pending = self.migrations.filter({ difference.contains($0.id) })
+        self.enabled = false
+        for migration in self.migrations.filter({ !pending.map{$0.id}.contains($0.id) }) {
+            try? migration.up()
+        }
+        self.enabled = true
         for migration in pending {
-            if self.isFailed == false {
-                migration.up()
-                if self.isFailed == false {
-                    let shemaMigration = SchemaMigration(attributes: ["name" : migration.id ])
-                    do {
-                        try shemaMigration.save()
-                    } catch {
-                        print("MIGRATION: \(migration) IS NOT SAVED: \(error)")
-                    }
-                }
+            do {
+                let shemaMigration = SchemaMigration(attributes: ["id" : migration.id ])
+                try migration.up()
+                try shemaMigration.save()
+            } catch {
+                print("Migrations")
             }
         }
+        
     }
     
-    public func up(migration: Migration) {
-        migration.up()
+    public func up(migration: Migration) throws {
+        try migration.up()
     }
     
-    public func down(migration: Migration) {
-        migration.down()
+    public func down(migration: Migration) throws {
+        try migration.down()
     }
-    
-    //MARK: - Utils
-    private var isFailed = false
-    func check(block: ((Void) throws -> (Void))) {
-        do {
-            try block()
-        } catch {
-            print("\(error)")
-            self.isFailed = true
-        }
-    }
-    
 }
 
 func ==(lhs: MigrationsController.SchemaMigration, rhs: MigrationsController.SchemaMigration) -> Bool {

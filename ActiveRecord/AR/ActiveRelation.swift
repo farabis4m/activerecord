@@ -17,10 +17,10 @@ enum SQLAction: String {
     func clause(tableName: String) -> String {
         switch self {
         // TODO: This is not pure swift solution
-        case .Select: return "\(self) %@ FROM \(tableName)"
-        case .Insert: return "\(self) INTO \(tableName)"
-        case .Update: return "\(self) \(tableName)"
-        case .Delete: return "\(self) FROM \(tableName)"
+        case .Select: return "\(self.rawValue) %@ FROM \(tableName)"
+        case .Insert: return "\(self.rawValue) INTO \(tableName)"
+        case .Update: return "\(self.rawValue) \(tableName)"
+        case .Delete: return "\(self.rawValue) FROM \(tableName)"
         }
     }
 }
@@ -42,10 +42,10 @@ public class ActiveRelation<T:ActiveRecord> {
     
     private var action = SQLAction.Select
     
-    private var chain = Array<ActiveRelationPart>()
+    private var chain: [ActiveRelationPart] = []
     
-    //    private var preload: [ActiveRecord.Type] = []
     private var include: [ActiveRecord.Type] = []
+    private var whereMerger = WhereMerger(separator: " AND ")
     
     
     //MARK: - Lifecycle
@@ -83,9 +83,9 @@ public class ActiveRelation<T:ActiveRecord> {
         self.attributes = statement
         for key in statement.keys {
             if let values = statement[key] as? [DatabaseRepresentable] {
-                chain.append(Where(field: key, values: values, negative: false))
+                whereMerger.parts << Where(field: key, values: values, negative: false)
             } else if let value = statement[key] as? DatabaseRepresentable {
-                chain.append(Where(field: key, values: [value], negative: false))
+                whereMerger.parts << Where(field: key, values: [value], negative: false)
             }
         }
         return self
@@ -95,9 +95,9 @@ public class ActiveRelation<T:ActiveRecord> {
         self.attributes = statement
         for key in statement.keys {
             if let values = statement[key] as? [DatabaseRepresentable] {
-                chain.append(Where(field: key, values: values, negative: true))
+                whereMerger.parts << Where(field: key, values: values, negative: true)
             } else if let value = statement[key] as? DatabaseRepresentable {
-                chain.append(Where(field: key, values: [value], negative: true))
+                whereMerger.parts << Where(field: key, values: [value], negative: true)
             }
         }
         return self
@@ -142,7 +142,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     public func execute(strict: Bool = false) throws -> Array<T> {
         self.chain.sortInPlace { $0.priority < $1.priority }
-        print(self.chain)
+        
         let pluck: Pluck!
         if let index = self.chain.indexOf({ $0 is Pluck }) {
             pluck = self.chain[index] as! Pluck
@@ -150,14 +150,26 @@ public class ActiveRelation<T:ActiveRecord> {
         } else {
             pluck = Pluck(fields: [])
         }
-        let SQLStatement = String(format: self.action.clause(self.tableName), pluck.description) + " " + self.chain.map({ "\($0)" }).joinWithSeparator(" ") + ";"
+        let chainClause = self.chain.map({ "\($0)" }).joinWithSeparator(" ")
+        let SQLStatement = String(format: self.action.clause(self.tableName), pluck.description) + " " +  self.whereMerger.description + " " + chainClause + ";"
         let result = try self.connection.execute_query(SQLStatement)
+        let table = Adapter.current.structure(T.tableName)
         var items = Array<T>()
         var includes: [Result] = []
         var relations: [String: [String: [RawRecord]]] = [:]
         for include in self.include {
+            let includeTable = Adapter.current.structure(include.tableName)
+            if result.hashes.isEmpty { continue }
             let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
-            let result = try self.connection.execute_query("SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));")
+            var relatedSQL = ""
+            if table.foreignColumns.contains({ $0.foreignColumn!.table!.name == include.tableName }) {
+                let includeIds = result.hashes.map({ $0["\(include.resourceName)_\(includeTable.PKColumn.name)"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
+                relatedSQL = "SELECT * FROM \(include.tableName) WHERE \("\(includeTable.PKColumn.name)") IN (\(includeIds));"
+            } else {
+                relatedSQL = "SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));"
+            }
+            try self.connection.execute_query(relatedSQL)
+            
             includes << result
             for hash in result.hashes {
                 if let id = hash["\(T.modelName)_id"] as? DatabaseRepresentable {

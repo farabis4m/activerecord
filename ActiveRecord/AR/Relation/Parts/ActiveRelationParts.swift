@@ -8,8 +8,23 @@
 
 import ApplicationSupport
 
-public protocol ActiveRelationPart {
+public protocol ActiveRelationPart: CustomStringConvertible {
     var priority: Int { get }
+}
+
+public struct WhereMerger: CustomStringConvertible {
+    public var parts: [ActiveRelationPart] = []
+    public var separator: String
+    public var description: String {
+        if !self.parts.isEmpty {
+            return "WHERE " + self.parts.map({ $0.description }).joinWithSeparator(self.separator)
+        }
+        return ""
+    }
+    
+    init(separator: String) {
+        self.separator = separator
+    }
 }
 
 public struct Where: ActiveRelationPart {
@@ -19,17 +34,17 @@ public struct Where: ActiveRelationPart {
     public var negative = false
 }
 
-extension Where: CustomStringConvertible {
+extension Where {
     public var description: String {
         if values.count == 1 {
             let expression = self.negative ? "!=" : "="
             if let record = values[0] as? ActiveRecord {
                 // TODO: Use PK
                 if let value = record.attributes["id"] as? DatabaseRepresentable {
-                    return "WHERE \(field) \(expression) \(value.dbValue)"
+                    return "\(field) \(expression) \(value.dbValue)"
                 }
             } else {
-                return "WHERE \(field) \(expression) \(values[0].dbValue)"
+                return "\(field) \(expression) \(values[0].dbValue)"
             }
         } else {
             var statement = ""
@@ -39,20 +54,18 @@ extension Where: CustomStringConvertible {
                 statement = values.map({ "\($0.dbValue)" }).joinWithSeparator(", ")
             }
             let expresssion = self.negative ? "NOT IN" : "IN"
-            return "WHERE \(field) \(expresssion) (\(statement))"
+            return "\(field) \(expresssion) (\(statement))"
         }
         return ""
     }
 }
 
-public struct Preload: ActiveRelationPart {
-    public var priority: Int { return -1 }
-    public var records: [ActiveRecord.Type] = []
-}
-
 public struct Includes: ActiveRelationPart {
     public var priority: Int { return -1 }
     public var records: [ActiveRecord.Type] = []
+    public var description: String {
+        return "Includes of \(self.records)"
+    }
 }
 
 public struct Offset: ActiveRelationPart {
@@ -60,7 +73,7 @@ public struct Offset: ActiveRelationPart {
     public var count: Int
 }
 
-extension Offset: CustomStringConvertible {
+extension Offset {
     public var description: String {
         return "OFFSET \(count)"
     }
@@ -71,7 +84,7 @@ public struct Limit: ActiveRelationPart {
     public var count: Int
 }
 
-extension Limit: CustomStringConvertible {
+extension Limit {
     public var description: String {
         return "LIMIT \(count)"
     }
@@ -89,7 +102,7 @@ public struct Order: ActiveRelationPart {
     public var direction: Direction
 }
 
-extension Order: CustomStringConvertible {
+extension Order {
     public var description: String {
         return "\(field) \(direction)"
     }
@@ -100,7 +113,7 @@ public struct Pluck: ActiveRelationPart {
     public var fields: Array<String>
 }
 
-extension Pluck: CustomStringConvertible {
+extension Pluck {
     public var description: String {
         return self.fields.isEmpty ? "*" : self.fields.joinWithSeparator(",")
     }

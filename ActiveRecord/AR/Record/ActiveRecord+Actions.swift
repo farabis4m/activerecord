@@ -86,7 +86,7 @@ extension ActiveRecord {
         try Transaction.perform {
             ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
             try record.before(.Create)
-            try record.save(true)
+            try record._save(true)
             ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
             try record.after(.Create)
         }
@@ -98,7 +98,7 @@ extension ActiveRecord {
         try Transaction.perform {
             ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
             try record.before(.Create)
-            try record.save(true)
+            try record._save(true)
             ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
             try record.after(.Create)
         }
@@ -135,22 +135,26 @@ extension ActiveRecord {
     
     public func save(validate: Bool) throws {
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
-            try self.before(.Save)
-            let errors = self.errors
-            if validate && !errors.isEmpty {
-                SQLLog.error("RecordNotValid not found \(self) \(errors)")
-                throw ActiveRecordError.RecordNotValid(record: self)
-            }
-            if self.isNewRecord {
-                try InsertManager(record: self).execute()
-            } else {
-                try UpdateManager(record: self).execute()
-            }
-            self.timeline.reset(self.attributes)
-            ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
-            try self.after(.Save)
+            try self._save(validate)
         }
+    }
+    
+    private func _save(validate: Bool) throws {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
+        try self.before(.Save)
+        let errors = self.errors
+        if validate && !errors.isEmpty {
+            SQLLog.error("RecordNotValid not found \(self) \(errors)")
+            throw ActiveRecordError.RecordNotValid(record: self)
+        }
+        if self.isNewRecord {
+            try InsertManager(record: self).execute()
+        } else {
+            try UpdateManager(record: self).execute()
+        }
+        self.timeline.reset(self.attributes)
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
+        try self.after(.Save)
     }
     
     var isNewRecord: Bool {

@@ -10,8 +10,8 @@ import ApplicationSupport
 
 public protocol Migration {
     var timestamp: Int { get }
-    func up()
-    func down()
+    func up() throws
+    func down() throws
 }
 
 extension Migration {
@@ -20,32 +20,84 @@ extension Migration {
     
     var adapter: Adapter { return Adapter.current }
     
-    func up() {}
-    func down() {}
+    func up() throws {}
+    func down() throws {}
 }
 
 public let foreignKey = "foreignKey"
 public let column = "column"
 
 extension Migration {
-    public func create<T: DBObject>(object: T, block: ((T) -> (Void))? = nil) {
+    public func create<T: DBObject>(object: T, block: ((T) -> (Void))? = nil) throws {
         block?(object)
-        MigrationsController.sharedInstance.check({ try self.adapter.create(object) })
+        if MigrationsController.sharedInstance.enabled {
+            try self.adapter.create(object)
+        } else {
+            _create(object)
+        }
     }
     
-    public func rename<T: DBObject>(object: T, name: String) {
-        MigrationsController.sharedInstance.check({ try self.adapter.rename(object, name: name) })
+    public func rename<T: DBObject>(object: T, name: String) throws {
+        if MigrationsController.sharedInstance.enabled {
+            try self.adapter.rename(object, name: name)
+        } else {
+            _rename(object, name: name)
+        }
     }
     
-    public func drop<T: DBObject>(object: T) {
-        MigrationsController.sharedInstance.check({ try self.adapter.drop(object) })
+    public func drop<T: DBObject>(object: T) throws {
+        if MigrationsController.sharedInstance.enabled {
+            try self.adapter.drop(object)
+        } else {
+            _drop(object)
+        }
     }
     
     public func exists<T: DBObject>(object: T) -> Bool {
         return (try? self.adapter.exists(object)) ?? false
     }
     
-    public func reference(to: String, on: String, options: [String: Any]? = nil) {
-        MigrationsController.sharedInstance.check({ try self.adapter.reference(to, on: on, options: options) })
+    public func reference(to: String, on: String, options: [String: Any]? = nil) throws {
+        if MigrationsController.sharedInstance.enabled {
+            try self.adapter.reference(to, on: on, options: options)
+        } else {
+            _reference(to, on: on, options: options)
+        }
+        
+    }
+    
+    func _create<T: DBObject>(object: T) {
+        if let table = object as? Table {
+            Adapter.current.tables << table
+        } else if let column = object as? Column {
+            column.table!.columns << column
+        }
+    }
+    
+    func _rename<T: DBObject>(object: T, name: String) {
+        if let table = object as? Table {
+            table.name = name
+        } else if let column = object as? Column {
+            column.name = name
+        }
+    }
+    
+    func _drop<T: DBObject>(object: T) {
+        if let table = object as? Table {
+            if let index = Adapter.current.tables.indexOf({ $0.name == table.name }) {
+                Adapter.current.tables.removeAtIndex(index)
+            }
+        } else if let column = object as? Column {
+            if let index = column.table?.columns.indexOf({ $0.name == column.name }) {
+                column.table?.columns.removeAtIndex(index)
+            }
+        }
+    }
+    
+    func _reference(to: String, on: String, options: [String: Any]? = nil) {
+        let columnName = options?["column"] as? String ?? "\(on.singularized)_id"
+        let table = Adapter.current.tables.find({ $0.name == to })!
+        let column = Table.Column(name: columnName, type: .Int, table: table)
+        _create(column)
     }
 }

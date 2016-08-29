@@ -13,7 +13,7 @@ class DeleteManager: ActionManager {
         let klass = self.record.dynamicType
         let table = Adapter.current.structure(klass.tableName)
         if let value = self.record.attributes[table.PKColumn.name] as? DatabaseRepresentable {
-            try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(table.name) = \(value.dbValue)")
+            try Adapter.current.connection.execute("DELETE FROM \(klass.tableName) WHERE \(table.PKColumn.name) = \(value.dbValue);")
         }
     }
 }
