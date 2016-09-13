@@ -31,7 +31,6 @@ extension ActiveRecord {
         return false
     }
     
-    @warn_unused_result
     public func update(attribute: String, value: Any) throws -> Bool {
         try Transaction.perform {
             ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
@@ -44,7 +43,6 @@ extension ActiveRecord {
         return false
     }
     
-    @warn_unused_result
     public func destroy() throws {
         try Transaction.perform {
             ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Destroy).execute(self)
@@ -55,7 +53,6 @@ extension ActiveRecord {
         }
     }
     
-    @warn_unused_result
     public static func destroy(scope identifier: DatabaseRepresentable) throws {
         // Destroy an item without callbacks
     }
