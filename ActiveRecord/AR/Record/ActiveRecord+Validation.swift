@@ -22,9 +22,11 @@ extension ActiveRecord {
     public func validate(action: Action) -> Errors {
         var errors = Errors(model: self)
         let validators = self.validators(action)
-        for (attribute, value) in self.attributes {
-            if let validator = validators[attribute] {
-                validator.validate(self, attribute: attribute, value: value, errors: &errors)
+        if !validators.isEmpty {
+            for (attribute, value) in self.attributes {
+                if let validator = validators[attribute] {
+                    validator.validate(self, attribute: attribute, value: value, errors: &errors)
+                }
             }
         }
         return errors
