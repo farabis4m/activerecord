@@ -13,7 +13,7 @@ import SwiftyBeaver
 public extension Array where Element: ActiveRecord {
     func destroyAll() throws {
         if let first = self.first {
-            try first.dynamicType.destroy(self.map({ $0 as! ActiveRecord }))
+            try first.dynamicType.destroy(self.map({ $0 as ActiveRecord }))
         }
     }
 }

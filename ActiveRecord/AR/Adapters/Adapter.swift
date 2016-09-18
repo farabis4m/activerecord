@@ -54,7 +54,7 @@ public class Adapter {
         self.connection = self.connect()
 
         let console = ConsoleDestination()
-        console.colored = true
+//        console.colored = true
         SQLLog.addDestination(console)
     }
     
