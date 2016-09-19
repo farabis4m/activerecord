@@ -10,7 +10,7 @@
 import ApplicationSupport
 import ObjectMapper
 
-public class MigrationsController {
+open class MigrationsController {
     
     class SchemaMigration: ActiveRecord {
         var timeline: Timeline = Timeline()
@@ -28,14 +28,14 @@ public class MigrationsController {
         required init() {}
         required init?(_ map: Map) {}
         
-        func mapping(map: Map) {
+        func mapping(_ map: Map) {
             self.name <- map["id"]
         }
     }
     
-    public static var sharedInstance = MigrationsController()
+    open static var sharedInstance = MigrationsController()
     
-    public var migrations = Array<Migration>()
+    open var migrations = Array<Migration>()
     var enabled = true
     
     //MARK: - Lifecycle
@@ -44,16 +44,16 @@ public class MigrationsController {
     
     //MARK: - Setup
     
-    public func setup() {
+    open func setup() {
         try? SchemasMigration().up()
     }
     
     //MARK: - Migration management
     
-    public func migrate() {
-        self.migrations.sortInPlace({ $0.timestamp < $1.timestamp })
+    open func migrate() {
+        self.migrations.sort(by: { $0.timestamp < $1.timestamp })
         let passed = try! SchemaMigration.all()
-        let difference = Set(self.migrations.map({ $0.id })).subtract(Set(passed.map({ $0.name })))
+        let difference = Set(self.migrations.map({ $0.id })).subtracting(Set(passed.map({ $0.name })))
         let pending = self.migrations.filter({ difference.contains($0.id) })
         self.enabled = false
         for migration in self.migrations.filter({ !pending.map{$0.id}.contains($0.id) }) {
@@ -72,11 +72,11 @@ public class MigrationsController {
         
     }
     
-    public func up(migration: Migration) throws {
+    open func up(_ migration: Migration) throws {
         try migration.up()
     }
     
-    public func down(migration: Migration) throws {
+    open func down(_ migration: Migration) throws {
         try migration.down()
     }
 }

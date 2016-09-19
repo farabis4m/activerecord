@@ -11,11 +11,11 @@ import Foundation
 extension ActiveRecord {
     public static var tableName: String {
         let reflect = _reflect(self)
-        let projectPackageName = NSBundle.mainBundle() .objectForInfoDictionaryKey("CFBundleExecutable") as! String
-        let components = reflect.summary.characters.split(".").map({ String($0) }).filter({ $0 != projectPackageName })
+        let projectPackageName = Bundle.main .object(forInfoDictionaryKey: "CFBundleExecutable") as! String
+        let components = reflect.summary.characters.split(separator: ".").map({ String($0) }).filter({ $0 != projectPackageName })
         if let first = components.first {
-            if let last = components.last where components.count > 1 {
-                return "\(first.lowercaseString)_\(last.lowercaseString.pluralized)"
+            if let last = components.last , components.count > 1 {
+                return "\(first.lowercased())_\(last.lowercaseString.pluralized)"
             }
             return first.lowercaseString.pluralized
         }
@@ -23,10 +23,10 @@ extension ActiveRecord {
     }
     
     public final static var modelName: String {
-        var className = "\(self.dynamicType)"
-        if let typeRange = className.rangeOfString(".Type") {
-            className.replaceRange(typeRange, with: "")
+        var className = "\(type(of: self))"
+        if let typeRange = className.range(of: ".Type") {
+            className.replaceSubrange(typeRange, with: "")
         }
-        return className.lowercaseString
+        return className.lowercased()
     }
 }

@@ -7,11 +7,11 @@
 //
 
 public protocol Validator {
-    func validate(record: ActiveRecord, attribute: String, value: Any?, inout errors: Errors) -> Bool
+    func validate(_ record: ActiveRecord, attribute: String, value: Any?, errors: inout Errors) -> Bool
 }
 
 extension Validator {
-    public func validate(record: ActiveRecord, attribute: String, value: Any?, inout errors: Errors) -> Bool {
+    public func validate(_ record: ActiveRecord, attribute: String, value: Any?, errors: inout Errors) -> Bool {
         return false
     }
 }
@@ -21,7 +21,7 @@ public struct LengthValidator: Validator {
     public var max = Int.max
     
     // TOOD: Add implementation for strict. Make type independent
-    public func validate(record: ActiveRecord, attribute: String, value: Any?, inout errors: Errors) -> Bool {
+    public func validate(_ record: ActiveRecord, attribute: String, value: Any?, errors: inout Errors) -> Bool {
         if let countable = value as? [Any] {
             return countable.count >= self.min && countable.count <= self.max
         } else if let countable = value as? Dictionary<String, Any> {

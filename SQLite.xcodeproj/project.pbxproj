@@ -14,34 +14,40 @@
 		EE9180901C46E8980038162A /* usr/include/sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = EE91808B1C46E34A0038162A /* usr/include/sqlite3.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE9180941C46EA210038162A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE9180931C46EA210038162A /* libsqlite3.tbd */; };
 		EE9180951C46EBCC0038162A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE9180911C46E9D30038162A /* libsqlite3.tbd */; };
-		F51BE6941CE4B1A000605652 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51BE6931CE4B1A000605652 /* Validator.swift */; };
-		F51BE6961CE4B48400605652 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51BE6951CE4B48400605652 /* Errors.swift */; };
-		F540F5AB1CE8A01E00564DAA /* DeleteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */; };
 		F543B1F91CE2F8AD000BE1AE /* ActiveRecord.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */; };
-		F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */; };
-		F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */; };
-		F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2001CE2F954000BE1AE /* ActiveSerializer.swift */; };
-		F543B2211CE2F954000BE1AE /* ActiveSnapshotStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */; };
-		F543B2221CE2F954000BE1AE /* Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2031CE2F954000BE1AE /* Adapter.swift */; };
-		F543B2231CE2F954000BE1AE /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2041CE2F954000BE1AE /* Connection.swift */; };
-		F543B2241CE2F954000BE1AE /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2051CE2F954000BE1AE /* Result.swift */; };
-		F543B2251CE2F954000BE1AE /* SQLiteAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2061CE2F954000BE1AE /* SQLiteAdapter.swift */; };
-		F543B2261CE2F954000BE1AE /* Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2091CE2F954000BE1AE /* Migration.swift */; };
-		F543B2271CE2F954000BE1AE /* MigrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B20A1CE2F954000BE1AE /* MigrationsController.swift */; };
-		F543B2281CE2F954000BE1AE /* SchemaMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B20B1CE2F954000BE1AE /* SchemaMigration.swift */; };
-		F543B2291CE2F954000BE1AE /* InsertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B20E1CE2F954000BE1AE /* InsertManager.swift */; };
-		F543B22A1CE2F954000BE1AE /* ActiveRelationParts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2101CE2F954000BE1AE /* ActiveRelationParts.swift */; };
-		F543B22B1CE2F954000BE1AE /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2121CE2F954000BE1AE /* Table.swift */; };
-		F543B22C1CE2F954000BE1AE /* String+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543B2141CE2F954000BE1AE /* String+Helpers.swift */; };
 		F543B22D1CE2F954000BE1AE /* fts3_tokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B2161CE2F954000BE1AE /* fts3_tokenizer.h */; };
 		F543B22E1CE2F954000BE1AE /* SQLite-Bridging.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B2171CE2F954000BE1AE /* SQLite-Bridging.h */; };
 		F543B22F1CE2F954000BE1AE /* SQLite-Bridging.m in Sources */ = {isa = PBXBuildFile; fileRef = F543B2181CE2F954000BE1AE /* SQLite-Bridging.m */; };
 		F543B2311CE2F954000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
 		F543B2321CE2FA1C000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
 		F543B2331CE2FA1D000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
-		F55E0C721D1121C500FCDF77 /* ActiveCallbackStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55E0C711D1121C500FCDF77 /* ActiveCallbackStorage.swift */; };
-		F5C4AC7A1CEAE2A90017F1B6 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */; };
-		F5C4AC7C1CEAE2C90017F1B6 /* ActionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */; };
+		F57A87B41D9051E200972CB9 /* ActiveCallbackStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A878F1D9051E200972CB9 /* ActiveCallbackStorage.swift */; };
+		F57A87B51D9051E200972CB9 /* ActiveRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87901D9051E200972CB9 /* ActiveRelation.swift */; };
+		F57A87B61D9051E200972CB9 /* ActiveSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87921D9051E200972CB9 /* ActiveSerializer.swift */; };
+		F57A87B71D9051E200972CB9 /* Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87941D9051E200972CB9 /* Adapter.swift */; };
+		F57A87B81D9051E200972CB9 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87951D9051E200972CB9 /* Connection.swift */; };
+		F57A87B91D9051E200972CB9 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87961D9051E200972CB9 /* Result.swift */; };
+		F57A87BA1D9051E200972CB9 /* SQLiteAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87971D9051E200972CB9 /* SQLiteAdapter.swift */; };
+		F57A87BB1D9051E200972CB9 /* Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87991D9051E200972CB9 /* Migration.swift */; };
+		F57A87BC1D9051E200972CB9 /* MigrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A879A1D9051E200972CB9 /* MigrationsController.swift */; };
+		F57A87BD1D9051E200972CB9 /* SchemaMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A879B1D9051E200972CB9 /* SchemaMigration.swift */; };
+		F57A87BE1D9051E200972CB9 /* ActiveRecord+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A879D1D9051E200972CB9 /* ActiveRecord+Actions.swift */; };
+		F57A87BF1D9051E200972CB9 /* ActiveRecord+Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A879E1D9051E200972CB9 /* ActiveRecord+Attributes.swift */; };
+		F57A87C01D9051E200972CB9 /* ActiveRecord+Callbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A879F1D9051E200972CB9 /* ActiveRecord+Callbacks.swift */; };
+		F57A87C11D9051E200972CB9 /* ActiveRecord+Naming.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A01D9051E200972CB9 /* ActiveRecord+Naming.swift */; };
+		F57A87C21D9051E200972CB9 /* ActiveRecord+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A11D9051E200972CB9 /* ActiveRecord+Transaction.swift */; };
+		F57A87C31D9051E200972CB9 /* ActiveRecord+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A21D9051E200972CB9 /* ActiveRecord+Validation.swift */; };
+		F57A87C41D9051E200972CB9 /* ActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A31D9051E200972CB9 /* ActiveRecord.swift */; };
+		F57A87C51D9051E200972CB9 /* ActionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A61D9051E200972CB9 /* ActionManager.swift */; };
+		F57A87C61D9051E200972CB9 /* DeleteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A71D9051E200972CB9 /* DeleteManager.swift */; };
+		F57A87C71D9051E200972CB9 /* InsertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A81D9051E200972CB9 /* InsertManager.swift */; };
+		F57A87C81D9051E200972CB9 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87A91D9051E200972CB9 /* UpdateManager.swift */; };
+		F57A87C91D9051E200972CB9 /* ActiveRelationParts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87AB1D9051E200972CB9 /* ActiveRelationParts.swift */; };
+		F57A87CA1D9051E200972CB9 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87AD1D9051E200972CB9 /* Table.swift */; };
+		F57A87CB1D9051E200972CB9 /* Transformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87AE1D9051E200972CB9 /* Transformable.swift */; };
+		F57A87CC1D9051E200972CB9 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87B01D9051E200972CB9 /* Wrapping.swift */; };
+		F57A87CD1D9051E200972CB9 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87B21D9051E200972CB9 /* Errors.swift */; };
+		F57A87CE1D9051E200972CB9 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A87B31D9051E200972CB9 /* Validator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,33 +74,39 @@
 		EE91808B1C46E34A0038162A /* usr/include/sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usr/include/sqlite3.h; sourceTree = SDKROOT; };
 		EE9180911C46E9D30038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		EE9180931C46EA210038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		F51BE6931CE4B1A000605652 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
-		F51BE6951CE4B48400605652 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
-		F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteManager.swift; sourceTree = "<group>"; };
 		F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ActiveRecord.podspec; sourceTree = "<group>"; };
-		F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRecord.swift; sourceTree = "<group>"; };
-		F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelation.swift; sourceTree = "<group>"; };
-		F543B2001CE2F954000BE1AE /* ActiveSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveSerializer.swift; sourceTree = "<group>"; };
-		F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveSnapshotStorage.swift; sourceTree = "<group>"; };
-		F543B2031CE2F954000BE1AE /* Adapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Adapter.swift; sourceTree = "<group>"; };
-		F543B2041CE2F954000BE1AE /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		F543B2051CE2F954000BE1AE /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
-		F543B2061CE2F954000BE1AE /* SQLiteAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteAdapter.swift; sourceTree = "<group>"; };
-		F543B2091CE2F954000BE1AE /* Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Migration.swift; sourceTree = "<group>"; };
-		F543B20A1CE2F954000BE1AE /* MigrationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationsController.swift; sourceTree = "<group>"; };
-		F543B20B1CE2F954000BE1AE /* SchemaMigration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchemaMigration.swift; sourceTree = "<group>"; };
-		F543B20E1CE2F954000BE1AE /* InsertManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertManager.swift; sourceTree = "<group>"; };
-		F543B2101CE2F954000BE1AE /* ActiveRelationParts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelationParts.swift; sourceTree = "<group>"; };
-		F543B2121CE2F954000BE1AE /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
-		F543B2141CE2F954000BE1AE /* String+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Helpers.swift"; sourceTree = "<group>"; };
 		F543B2161CE2F954000BE1AE /* fts3_tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fts3_tokenizer.h; sourceTree = "<group>"; };
 		F543B2171CE2F954000BE1AE /* SQLite-Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SQLite-Bridging.h"; sourceTree = "<group>"; };
 		F543B2181CE2F954000BE1AE /* SQLite-Bridging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SQLite-Bridging.m"; sourceTree = "<group>"; };
 		F543B21A1CE2F954000BE1AE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F543B21B1CE2F954000BE1AE /* SQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLite.h; sourceTree = "<group>"; };
-		F55E0C711D1121C500FCDF77 /* ActiveCallbackStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveCallbackStorage.swift; sourceTree = "<group>"; };
-		F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
-		F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionManager.swift; sourceTree = "<group>"; };
+		F57A878F1D9051E200972CB9 /* ActiveCallbackStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveCallbackStorage.swift; sourceTree = "<group>"; };
+		F57A87901D9051E200972CB9 /* ActiveRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelation.swift; sourceTree = "<group>"; };
+		F57A87921D9051E200972CB9 /* ActiveSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveSerializer.swift; sourceTree = "<group>"; };
+		F57A87941D9051E200972CB9 /* Adapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Adapter.swift; sourceTree = "<group>"; };
+		F57A87951D9051E200972CB9 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		F57A87961D9051E200972CB9 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		F57A87971D9051E200972CB9 /* SQLiteAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteAdapter.swift; sourceTree = "<group>"; };
+		F57A87991D9051E200972CB9 /* Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Migration.swift; sourceTree = "<group>"; };
+		F57A879A1D9051E200972CB9 /* MigrationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationsController.swift; sourceTree = "<group>"; };
+		F57A879B1D9051E200972CB9 /* SchemaMigration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchemaMigration.swift; sourceTree = "<group>"; };
+		F57A879D1D9051E200972CB9 /* ActiveRecord+Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ActiveRecord+Actions.swift"; sourceTree = "<group>"; };
+		F57A879E1D9051E200972CB9 /* ActiveRecord+Attributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ActiveRecord+Attributes.swift"; sourceTree = "<group>"; };
+		F57A879F1D9051E200972CB9 /* ActiveRecord+Callbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ActiveRecord+Callbacks.swift"; sourceTree = "<group>"; };
+		F57A87A01D9051E200972CB9 /* ActiveRecord+Naming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ActiveRecord+Naming.swift"; sourceTree = "<group>"; };
+		F57A87A11D9051E200972CB9 /* ActiveRecord+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ActiveRecord+Transaction.swift"; sourceTree = "<group>"; };
+		F57A87A21D9051E200972CB9 /* ActiveRecord+Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ActiveRecord+Validation.swift"; sourceTree = "<group>"; };
+		F57A87A31D9051E200972CB9 /* ActiveRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRecord.swift; sourceTree = "<group>"; };
+		F57A87A61D9051E200972CB9 /* ActionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionManager.swift; sourceTree = "<group>"; };
+		F57A87A71D9051E200972CB9 /* DeleteManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteManager.swift; sourceTree = "<group>"; };
+		F57A87A81D9051E200972CB9 /* InsertManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertManager.swift; sourceTree = "<group>"; };
+		F57A87A91D9051E200972CB9 /* UpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
+		F57A87AB1D9051E200972CB9 /* ActiveRelationParts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRelationParts.swift; sourceTree = "<group>"; };
+		F57A87AD1D9051E200972CB9 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		F57A87AE1D9051E200972CB9 /* Transformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformable.swift; sourceTree = "<group>"; };
+		F57A87B01D9051E200972CB9 /* Wrapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapping.swift; sourceTree = "<group>"; };
+		F57A87B21D9051E200972CB9 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		F57A87B31D9051E200972CB9 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		FD0E985B9DD79C218F2167DC /* Pods-SQLite iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SQLite iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SQLite iOS/Pods-SQLite iOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -279,116 +291,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		F51BE6921CE4B19900605652 /* Validation */ = {
-			isa = PBXGroup;
-			children = (
-				F51BE6931CE4B1A000605652 /* Validator.swift */,
-				F51BE6951CE4B48400605652 /* Errors.swift */,
-			);
-			path = Validation;
-			sourceTree = "<group>";
-		};
 		F543B1FA1CE2F954000BE1AE /* ActiveRecord */ = {
 			isa = PBXGroup;
 			children = (
+				F57A878E1D9051E200972CB9 /* AR */,
 				EE91808B1C46E34A0038162A /* usr/include/sqlite3.h */,
-				F543B1FB1CE2F954000BE1AE /* AR */,
 				F543B2151CE2F954000BE1AE /* Core */,
 				F543B21A1CE2F954000BE1AE /* Info.plist */,
 				F543B21B1CE2F954000BE1AE /* SQLite.h */,
 			);
 			path = ActiveRecord;
-			sourceTree = "<group>";
-		};
-		F543B1FB1CE2F954000BE1AE /* AR */ = {
-			isa = PBXGroup;
-			children = (
-				F55E0C711D1121C500FCDF77 /* ActiveCallbackStorage.swift */,
-				F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */,
-				F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */,
-				F543B1FF1CE2F954000BE1AE /* ActiveSerializer */,
-				F543B2011CE2F954000BE1AE /* ActiveSnapshotStorage.swift */,
-				F543B2021CE2F954000BE1AE /* Adapters */,
-				F543B2081CE2F954000BE1AE /* Migration */,
-				F543B20C1CE2F954000BE1AE /* Relation */,
-				F543B2111CE2F954000BE1AE /* Table */,
-				F543B2131CE2F954000BE1AE /* Utils */,
-				F51BE6921CE4B19900605652 /* Validation */,
-			);
-			path = AR;
-			sourceTree = "<group>";
-		};
-		F543B1FF1CE2F954000BE1AE /* ActiveSerializer */ = {
-			isa = PBXGroup;
-			children = (
-				F543B2001CE2F954000BE1AE /* ActiveSerializer.swift */,
-			);
-			path = ActiveSerializer;
-			sourceTree = "<group>";
-		};
-		F543B2021CE2F954000BE1AE /* Adapters */ = {
-			isa = PBXGroup;
-			children = (
-				F543B2031CE2F954000BE1AE /* Adapter.swift */,
-				F543B2041CE2F954000BE1AE /* Connection.swift */,
-				F543B2051CE2F954000BE1AE /* Result.swift */,
-				F543B2061CE2F954000BE1AE /* SQLiteAdapter.swift */,
-			);
-			path = Adapters;
-			sourceTree = "<group>";
-		};
-		F543B2081CE2F954000BE1AE /* Migration */ = {
-			isa = PBXGroup;
-			children = (
-				F543B2091CE2F954000BE1AE /* Migration.swift */,
-				F543B20A1CE2F954000BE1AE /* MigrationsController.swift */,
-				F543B20B1CE2F954000BE1AE /* SchemaMigration.swift */,
-			);
-			path = Migration;
-			sourceTree = "<group>";
-		};
-		F543B20C1CE2F954000BE1AE /* Relation */ = {
-			isa = PBXGroup;
-			children = (
-				F543B20D1CE2F954000BE1AE /* Managers */,
-				F543B20F1CE2F954000BE1AE /* Parts */,
-			);
-			path = Relation;
-			sourceTree = "<group>";
-		};
-		F543B20D1CE2F954000BE1AE /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-				F543B20E1CE2F954000BE1AE /* InsertManager.swift */,
-				F540F5AA1CE8A01E00564DAA /* DeleteManager.swift */,
-				F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */,
-				F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */,
-			);
-			path = Managers;
-			sourceTree = "<group>";
-		};
-		F543B20F1CE2F954000BE1AE /* Parts */ = {
-			isa = PBXGroup;
-			children = (
-				F543B2101CE2F954000BE1AE /* ActiveRelationParts.swift */,
-			);
-			path = Parts;
-			sourceTree = "<group>";
-		};
-		F543B2111CE2F954000BE1AE /* Table */ = {
-			isa = PBXGroup;
-			children = (
-				F543B2121CE2F954000BE1AE /* Table.swift */,
-			);
-			path = Table;
-			sourceTree = "<group>";
-		};
-		F543B2131CE2F954000BE1AE /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				F543B2141CE2F954000BE1AE /* String+Helpers.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		F543B2151CE2F954000BE1AE /* Core */ = {
@@ -399,6 +311,120 @@
 				F543B2181CE2F954000BE1AE /* SQLite-Bridging.m */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		F57A878E1D9051E200972CB9 /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				F57A878F1D9051E200972CB9 /* ActiveCallbackStorage.swift */,
+				F57A87901D9051E200972CB9 /* ActiveRelation.swift */,
+				F57A87911D9051E200972CB9 /* ActiveSerializer */,
+				F57A87931D9051E200972CB9 /* Adapters */,
+				F57A87981D9051E200972CB9 /* Migration */,
+				F57A879C1D9051E200972CB9 /* Record */,
+				F57A87A41D9051E200972CB9 /* Relation */,
+				F57A87AC1D9051E200972CB9 /* Table */,
+				F57A87AE1D9051E200972CB9 /* Transformable.swift */,
+				F57A87AF1D9051E200972CB9 /* Utils */,
+				F57A87B11D9051E200972CB9 /* Validation */,
+			);
+			path = AR;
+			sourceTree = "<group>";
+		};
+		F57A87911D9051E200972CB9 /* ActiveSerializer */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87921D9051E200972CB9 /* ActiveSerializer.swift */,
+			);
+			path = ActiveSerializer;
+			sourceTree = "<group>";
+		};
+		F57A87931D9051E200972CB9 /* Adapters */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87941D9051E200972CB9 /* Adapter.swift */,
+				F57A87951D9051E200972CB9 /* Connection.swift */,
+				F57A87961D9051E200972CB9 /* Result.swift */,
+				F57A87971D9051E200972CB9 /* SQLiteAdapter.swift */,
+			);
+			path = Adapters;
+			sourceTree = "<group>";
+		};
+		F57A87981D9051E200972CB9 /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87991D9051E200972CB9 /* Migration.swift */,
+				F57A879A1D9051E200972CB9 /* MigrationsController.swift */,
+				F57A879B1D9051E200972CB9 /* SchemaMigration.swift */,
+			);
+			path = Migration;
+			sourceTree = "<group>";
+		};
+		F57A879C1D9051E200972CB9 /* Record */ = {
+			isa = PBXGroup;
+			children = (
+				F57A879D1D9051E200972CB9 /* ActiveRecord+Actions.swift */,
+				F57A879E1D9051E200972CB9 /* ActiveRecord+Attributes.swift */,
+				F57A879F1D9051E200972CB9 /* ActiveRecord+Callbacks.swift */,
+				F57A87A01D9051E200972CB9 /* ActiveRecord+Naming.swift */,
+				F57A87A11D9051E200972CB9 /* ActiveRecord+Transaction.swift */,
+				F57A87A21D9051E200972CB9 /* ActiveRecord+Validation.swift */,
+				F57A87A31D9051E200972CB9 /* ActiveRecord.swift */,
+			);
+			path = Record;
+			sourceTree = "<group>";
+		};
+		F57A87A41D9051E200972CB9 /* Relation */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87A51D9051E200972CB9 /* Managers */,
+				F57A87AA1D9051E200972CB9 /* Parts */,
+			);
+			path = Relation;
+			sourceTree = "<group>";
+		};
+		F57A87A51D9051E200972CB9 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87A61D9051E200972CB9 /* ActionManager.swift */,
+				F57A87A71D9051E200972CB9 /* DeleteManager.swift */,
+				F57A87A81D9051E200972CB9 /* InsertManager.swift */,
+				F57A87A91D9051E200972CB9 /* UpdateManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		F57A87AA1D9051E200972CB9 /* Parts */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87AB1D9051E200972CB9 /* ActiveRelationParts.swift */,
+			);
+			path = Parts;
+			sourceTree = "<group>";
+		};
+		F57A87AC1D9051E200972CB9 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87AD1D9051E200972CB9 /* Table.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		F57A87AF1D9051E200972CB9 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87B01D9051E200972CB9 /* Wrapping.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		F57A87B11D9051E200972CB9 /* Validation */ = {
+			isa = PBXGroup;
+			children = (
+				F57A87B21D9051E200972CB9 /* Errors.swift */,
+				F57A87B31D9051E200972CB9 /* Validator.swift */,
+			);
+			path = Validation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -534,6 +560,7 @@
 					};
 					EE247AD21C3F04ED00AE3E12 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 					};
 					EE247B3B1C3F3ED000AE3E12 = {
 						CreatedOnToolsVersion = 7.2;
@@ -644,28 +671,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F543B22A1CE2F954000BE1AE /* ActiveRelationParts.swift in Sources */,
-				F543B2281CE2F954000BE1AE /* SchemaMigration.swift in Sources */,
-				F5C4AC7C1CEAE2C90017F1B6 /* ActionManager.swift in Sources */,
+				F57A87C71D9051E200972CB9 /* InsertManager.swift in Sources */,
+				F57A87BE1D9051E200972CB9 /* ActiveRecord+Actions.swift in Sources */,
+				F57A87B41D9051E200972CB9 /* ActiveCallbackStorage.swift in Sources */,
+				F57A87C91D9051E200972CB9 /* ActiveRelationParts.swift in Sources */,
+				F57A87CE1D9051E200972CB9 /* Validator.swift in Sources */,
+				F57A87BA1D9051E200972CB9 /* SQLiteAdapter.swift in Sources */,
+				F57A87C81D9051E200972CB9 /* UpdateManager.swift in Sources */,
+				F57A87CA1D9051E200972CB9 /* Table.swift in Sources */,
+				F57A87CD1D9051E200972CB9 /* Errors.swift in Sources */,
+				F57A87CC1D9051E200972CB9 /* Wrapping.swift in Sources */,
+				F57A87C31D9051E200972CB9 /* ActiveRecord+Validation.swift in Sources */,
+				F57A87C61D9051E200972CB9 /* DeleteManager.swift in Sources */,
+				F57A87C51D9051E200972CB9 /* ActionManager.swift in Sources */,
+				F57A87B81D9051E200972CB9 /* Connection.swift in Sources */,
 				F543B22F1CE2F954000BE1AE /* SQLite-Bridging.m in Sources */,
-				F543B2291CE2F954000BE1AE /* InsertManager.swift in Sources */,
-				F543B2241CE2F954000BE1AE /* Result.swift in Sources */,
-				F543B2211CE2F954000BE1AE /* ActiveSnapshotStorage.swift in Sources */,
-				F540F5AB1CE8A01E00564DAA /* DeleteManager.swift in Sources */,
-				F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */,
-				F5C4AC7A1CEAE2A90017F1B6 /* UpdateManager.swift in Sources */,
-				F55E0C721D1121C500FCDF77 /* ActiveCallbackStorage.swift in Sources */,
-				F543B22B1CE2F954000BE1AE /* Table.swift in Sources */,
-				F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */,
-				F543B2221CE2F954000BE1AE /* Adapter.swift in Sources */,
-				F543B21F1CE2F954000BE1AE /* ActiveRelation.swift in Sources */,
-				F543B22C1CE2F954000BE1AE /* String+Helpers.swift in Sources */,
-				F51BE6941CE4B1A000605652 /* Validator.swift in Sources */,
-				F543B2231CE2F954000BE1AE /* Connection.swift in Sources */,
-				F543B2251CE2F954000BE1AE /* SQLiteAdapter.swift in Sources */,
-				F543B2271CE2F954000BE1AE /* MigrationsController.swift in Sources */,
-				F51BE6961CE4B48400605652 /* Errors.swift in Sources */,
-				F543B2261CE2F954000BE1AE /* Migration.swift in Sources */,
+				F57A87C21D9051E200972CB9 /* ActiveRecord+Transaction.swift in Sources */,
+				F57A87C11D9051E200972CB9 /* ActiveRecord+Naming.swift in Sources */,
+				F57A87C41D9051E200972CB9 /* ActiveRecord.swift in Sources */,
+				F57A87BD1D9051E200972CB9 /* SchemaMigration.swift in Sources */,
+				F57A87B51D9051E200972CB9 /* ActiveRelation.swift in Sources */,
+				F57A87BF1D9051E200972CB9 /* ActiveRecord+Attributes.swift in Sources */,
+				F57A87CB1D9051E200972CB9 /* Transformable.swift in Sources */,
+				F57A87B91D9051E200972CB9 /* Result.swift in Sources */,
+				F57A87BC1D9051E200972CB9 /* MigrationsController.swift in Sources */,
+				F57A87B71D9051E200972CB9 /* Adapter.swift in Sources */,
+				F57A87C01D9051E200972CB9 /* ActiveRecord+Callbacks.swift in Sources */,
+				F57A87B61D9051E200972CB9 /* ActiveSerializer.swift in Sources */,
+				F57A87BB1D9051E200972CB9 /* Migration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -874,6 +907,7 @@
 				"SWIFT_INCLUDE_PATHS[sdk=iphoneos*]" = "$(SRCROOT)/CocoaPods/iphoneos";
 				"SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]" = "$(SRCROOT)/CocoaPods/iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -896,6 +930,7 @@
 				SKIP_INSTALL = YES;
 				"SWIFT_INCLUDE_PATHS[sdk=iphoneos*]" = "$(SRCROOT)/CocoaPods/iphoneos";
 				"SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]" = "$(SRCROOT)/CocoaPods/iphonesimulator";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

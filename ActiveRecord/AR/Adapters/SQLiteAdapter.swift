@@ -8,7 +8,7 @@
 
 import ApplicationSupport
 
-public class SQLiteAdapter: Adapter {
+open class SQLiteAdapter: Adapter {
     
     override var columnTypes: [String : Table.Column.DBType] {
         return ["text" : .String,
@@ -29,7 +29,7 @@ public class SQLiteAdapter: Adapter {
                 .Double : "DOUBLE"]
     }
     
-    private var reversedColumnTypes: [String: Table.Column.DBType] {
+    fileprivate var reversedColumnTypes: [String: Table.Column.DBType] {
         return ["INTEGER": .Int,
                 "REAL": .Decimal,
                 "DATE": .Date,
@@ -43,18 +43,18 @@ public class SQLiteAdapter: Adapter {
     enum SQLite {
         enum Table {
             enum Action: SQLConvertible {
-                case Create(DB.Table)
-                case Drop(DB.Table)
-                case Alter(DB.Table)
-                case Rename(DB.Table, String)
+                case create(DB.Table)
+                case drop(DB.Table)
+                case alter(DB.Table)
+                case rename(DB.Table, String)
                 
                 var clause: String {
                     switch self {
-                    case .Create(let table):
+                    case .create(let table):
                         return "CREATE TABLE"
-                    case .Drop(let table):
+                    case .drop(let table):
                         return "DROP TABLE"
-                    case .Alter, .Rename:
+                    case .alter, .rename:
                         return "ALTER TABLE"
                     default: return ""
                     }
@@ -62,14 +62,14 @@ public class SQLiteAdapter: Adapter {
                 
                 var SQL: String {
                     switch self {
-                    case .Create(let table):
-                        let columns = table.columns.map({ $0.description }).joinWithSeparator(", ")
+                    case .create(let table):
+                        let columns = table.columns.map({ $0.description }).joined(separator: ", ")
                         return self.clause + " " + table.name.untrim + columns.embrace
-                    case .Rename(let table, let name):
+                    case .rename(let table, let name):
                         return self.clause + " " + table.name.untrim + "RENAME TO \(name)"
-                    case .Alter(let table):
+                    case .alter(let table):
                         return self.clause + " " + table.name
-                    case .Drop(let table):
+                    case .drop(let table):
                         return self.clause + " " + table.name
                     default:
                         return ""
@@ -79,19 +79,19 @@ public class SQLiteAdapter: Adapter {
             
             enum Column {
                 enum Action: SQLConvertible {
-                    case Create(DB.Table.Column)
-                    case Drop(DB.Table.Column)
-                    case Alter(DB.Table)
-                    case Rename(DB.Table.Column, String)
+                    case create(DB.Table.Column)
+                    case drop(DB.Table.Column)
+                    case alter(DB.Table)
+                    case rename(DB.Table.Column, String)
                     
                     var SQL: String {
                         switch self {
-                        case .Create(let column):
-                            return  Table.Action.Alter(column.table!).SQL + " ADD COLUMN " + column.description + ";"
-                        case .Drop(let column):
-                            return  Table.Action.Alter(column.table!).SQL + " DROP COLUMN " + column.name + ";"
-                        case .Rename(let column, let name):
-                            return  Table.Action.Alter(column.table!).SQL + " RENAME COLUMN " + name + ";"
+                        case .create(let column):
+                            return  Table.Action.alter(column.table!).SQL + " ADD COLUMN " + column.description + ";"
+                        case .drop(let column):
+                            return  Table.Action.alter(column.table!).SQL + " DROP COLUMN " + column.name + ";"
+                        case .rename(let column, let name):
+                            return  Table.Action.alter(column.table!).SQL + " RENAME COLUMN " + name + ";"
                         default:
                             return ""
                         }
@@ -111,7 +111,7 @@ public class SQLiteAdapter: Adapter {
 //        return super.tables()
 //    }
     
-    override public func structure(tableName: String) -> Table {
+    override open func structure(_ tableName: String) -> Table {
         guard let table = self.tables.find({ $0.name == tableName }) else {
             let table = super.structure(tableName)
             do {
@@ -138,40 +138,40 @@ public class SQLiteAdapter: Adapter {
     
     //MARK: -
     
-    public override func create<T: DBObject>(object: T) throws {
+    open override func create<T: DBObject>(_ object: T) throws {
         if let table = object as? Table {
-            try self.connection.execute(SQLite.Table.Action.Create(table).SQL)
+            try self.connection.execute(SQLite.Table.Action.create(table).SQL)
             self.tables << table
         } else if let column = object as? Column {
-            try self.connection.execute(SQLite.Table.Column.Action.Create(column).SQL)
+            try self.connection.execute(SQLite.Table.Column.Action.create(column).SQL)
         }
     }
     
-    public override func rename<T: DBObject>(object: T, name: String) throws {
+    open override func rename<T: DBObject>(_ object: T, name: String) throws {
         if let table = object as? Table {
-            try self.connection.execute(SQLite.Table.Action.Rename(table, name).SQL)
+            try self.connection.execute(SQLite.Table.Action.rename(table, name).SQL)
             table.name = name
         } else if let column = object as? Column {
-            try self.connection.execute(SQLite.Table.Column.Action.Rename(column, name).SQL)
+            try self.connection.execute(SQLite.Table.Column.Action.rename(column, name).SQL)
             column.name = name
         }
     }
     
-    public override func drop<T: DBObject>(object: T) throws {
+    open override func drop<T: DBObject>(_ object: T) throws {
         if let table = object as? Table {
-            try self.connection.execute(SQLite.Table.Action.Drop(table).SQL)
-            if let index = self.tables.indexOf({ $0.name == table.name }) {
-                self.tables.removeAtIndex(index)
+            try self.connection.execute(SQLite.Table.Action.drop(table).SQL)
+            if let index = self.tables.index(where: { $0.name == table.name }) {
+                self.tables.remove(at: index)
             }
         } else if let column = object as? Column {
-            try self.connection.execute(SQLite.Table.Column.Action.Drop(column).SQL)
-            if let index = column.table?.columns.indexOf({ $0.name == column.name }) {
-                column.table?.columns.removeAtIndex(index)
+            try self.connection.execute(SQLite.Table.Column.Action.drop(column).SQL)
+            if let index = column.table?.columns.index(where: { $0.name == column.name }) {
+                column.table?.columns.remove(at: index)
             }
         }
     }
     
-    public override func exists<T: DBObject>(object: T) -> Bool {
+    open override func exists<T: DBObject>(_ object: T) -> Bool {
         if let table = object as? Table {
             if let localTable = self.tables.find({ $0.name == table.name }) {
                 return true
@@ -187,7 +187,7 @@ public class SQLiteAdapter: Adapter {
         return false
     }
     
-    public override func reference(to: String, on: String, options: [String: Any]? = nil) throws {
+    open override func reference(_ to: String, on: String, options: [String: Any]? = nil) throws {
         let columnName = options?["column"] as? String ?? "\(on.singularized)_id"
         let table = Adapter.current.tables.find({ $0.name == to })!
         let column = Table.Column(name: columnName, type: .Int, table: table)

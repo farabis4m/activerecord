@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Result {
+open class Result {
     
     var columns: Array<String>
     var rows: Array<Array<Any?>>
@@ -27,13 +27,13 @@ public class Result {
         var names = Array<String>()
         for column in self.columns {
             var name = String(column)
-            while let range = name.rangeOfString("_") {
-                let subRange = Range(range.startIndex.advancedBy(1)..<range.endIndex.advancedBy(1))
-                let nextChar = column.substringWithRange(subRange)
-                let replaceRange = Range(range.startIndex..<range.endIndex.advancedBy(1))
-                name.replaceRange(replaceRange, with: nextChar.capitalizedString)
+            while let range = name?.range(of: "_") {
+                let subRange = Range(<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.lowerBound, offsetBy: 1)..<<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.upperBound, offsetBy: 1))
+                let nextChar = column.substring(with: subRange)
+                let replaceRange = Range(range.lowerBound..<<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.upperBound, offsetBy: 1))
+                name.replaceSubrange(replaceRange, with: nextChar.capitalized)
             }
-            names.append(name)
+            names.append(name!)
         }
         return names
     }()

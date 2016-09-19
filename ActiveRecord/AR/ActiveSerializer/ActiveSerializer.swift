@@ -7,12 +7,12 @@
 //
 
 class ActiveSerializerCache {
-    private static var cache = Dictionary<String, Mirror>()
+    fileprivate static var cache = Dictionary<String, Mirror>()
     
-    class func reflect(model:Any) -> Mirror {
-        guard let mirror = self.cache["\(model.dynamicType)"] else {
+    class func reflect(_ model:Any) -> Mirror {
+        guard let mirror = self.cache["\(type(of: (model) as AnyObject))"] else {
             let mirror = Mirror(reflecting: model)
-            self.cache["\(model.dynamicType)"] = mirror
+            self.cache["\(type(of: (model) as AnyObject))"] = mirror
             return mirror
         }
         return mirror
@@ -21,7 +21,7 @@ class ActiveSerializerCache {
 
 class ActiveSerializer<T: ActiveRecord> {
     
-    private var mirror: Mirror
+    fileprivate var mirror: Mirror
     lazy var fields: [String:Any?] = {
         let mirror = Mirror(reflecting: T())
         var fields = [String: Any?]()
@@ -43,7 +43,7 @@ class ActiveSerializer<T: ActiveRecord> {
     
     //MARK: - Serialization
     
-    func serialize(attributes: [String: Any?]) -> T {
+    func serialize(_ attributes: [String: Any?]) -> T {
         return T()
     }
     

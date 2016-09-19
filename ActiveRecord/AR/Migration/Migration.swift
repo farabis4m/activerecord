@@ -15,7 +15,7 @@ public protocol Migration {
 }
 
 extension Migration {
-    var id: String { return "\(self.dynamicType)" }
+    var id: String { return "\(type(of: self))" }
     var timestamp: Int { return 0 }
     
     var adapter: Adapter { return Adapter.current }
@@ -28,7 +28,7 @@ public let foreignKey = "foreignKey"
 public let column = "column"
 
 extension Migration {
-    public func create<T: DBObject>(object: T, block: ((T) -> (Void))? = nil) throws {
+    public func create<T: DBObject>(_ object: T, block: ((T) -> (Void))? = nil) throws {
         block?(object)
         if MigrationsController.sharedInstance.enabled {
             try self.adapter.create(object)
@@ -37,7 +37,7 @@ extension Migration {
         }
     }
     
-    public func rename<T: DBObject>(object: T, name: String) throws {
+    public func rename<T: DBObject>(_ object: T, name: String) throws {
         if MigrationsController.sharedInstance.enabled {
             try self.adapter.rename(object, name: name)
         } else {
@@ -45,7 +45,7 @@ extension Migration {
         }
     }
     
-    public func drop<T: DBObject>(object: T) throws {
+    public func drop<T: DBObject>(_ object: T) throws {
         if MigrationsController.sharedInstance.enabled {
             try self.adapter.drop(object)
         } else {
@@ -53,11 +53,11 @@ extension Migration {
         }
     }
     
-    public func exists<T: DBObject>(object: T) -> Bool {
+    public func exists<T: DBObject>(_ object: T) -> Bool {
         return (try? self.adapter.exists(object)) ?? false
     }
     
-    public func reference(to: String, on: String, options: [String: Any]? = nil) throws {
+    public func reference(_ to: String, on: String, options: [String: Any]? = nil) throws {
         if MigrationsController.sharedInstance.enabled {
             try self.adapter.reference(to, on: on, options: options)
         } else {
@@ -66,7 +66,7 @@ extension Migration {
         
     }
     
-    func _create<T: DBObject>(object: T) {
+    func _create<T: DBObject>(_ object: T) {
         if let table = object as? Table {
             Adapter.current.tables << table
         } else if let column = object as? Column {
@@ -74,7 +74,7 @@ extension Migration {
         }
     }
     
-    func _rename<T: DBObject>(object: T, name: String) {
+    func _rename<T: DBObject>(_ object: T, name: String) {
         if let table = object as? Table {
             table.name = name
         } else if let column = object as? Column {
@@ -82,19 +82,19 @@ extension Migration {
         }
     }
     
-    func _drop<T: DBObject>(object: T) {
+    func _drop<T: DBObject>(_ object: T) {
         if let table = object as? Table {
-            if let index = Adapter.current.tables.indexOf({ $0.name == table.name }) {
-                Adapter.current.tables.removeAtIndex(index)
+            if let index = Adapter.current.tables.index(where: { $0.name == table.name }) {
+                Adapter.current.tables.remove(at: index)
             }
         } else if let column = object as? Column {
-            if let index = column.table?.columns.indexOf({ $0.name == column.name }) {
-                column.table?.columns.removeAtIndex(index)
+            if let index = column.table?.columns.index(where: { $0.name == column.name }) {
+                column.table?.columns.remove(at: index)
             }
         }
     }
     
-    func _reference(to: String, on: String, options: [String: Any]? = nil) {
+    func _reference(_ to: String, on: String, options: [String: Any]? = nil) {
         let columnName = options?["column"] as? String ?? "\(on.singularized)_id"
         let table = Adapter.current.tables.find({ $0.name == to })!
         let column = Table.Column(name: columnName, type: .Int, table: table)

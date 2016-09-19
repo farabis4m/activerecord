@@ -10,9 +10,9 @@ import Foundation
 import CSQLite
 import SwiftyBeaver
 
-public class Connection {
-    private var _handle: COpaquePointer = nil
-    var handle: COpaquePointer { return _handle }
+open class Connection {
+    fileprivate var _handle: OpaquePointer? = nil
+    var handle: OpaquePointer { return _handle! }
     
     /// The location of a SQLite database.
     enum Location {
@@ -20,46 +20,46 @@ public class Connection {
         /// An in-memory database (equivalent to `.URI(":memory:")`).
         ///
         /// See: <https://www.sqlite.org/inmemorydb.html#sharedmemdb>
-        case InMemory
+        case inMemory
         
         /// A temporary, file-backed database (equivalent to `.URI("")`).
         ///
         /// See: <https://www.sqlite.org/inmemorydb.html#temp_db>
-        case Temporary
+        case temporary
         
         /// A database located at the given URI filename (or path).
         ///
         /// See: <https://www.sqlite.org/uri.html>
         ///
         /// - Parameter filename: A URI filename
-        case URI(String)
+        case uri(String)
     }
     
-    private let location: Location
-    private let isReadOnly: Bool
+    fileprivate let location: Location
+    fileprivate let isReadOnly: Bool
     
-    init(_ location: Location = .InMemory, readonly: Bool = false) throws {
+    init(_ location: Location = .inMemory, readonly: Bool = false) throws {
         self.location = location
         self.isReadOnly = readonly
         try self.open()
     }
     
     convenience init(_ filename: String, readonly: Bool = false) throws {
-        try self.init(.URI(filename), readonly: readonly)
+        try self.init(.uri(filename), readonly: readonly)
     }
     
     deinit {
         self.close()
     }
     
-    public func open() throws {
+    open func open() throws {
         let flags = self.isReadOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
         try check(sqlite3_open_v2(location.description, &_handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
-        dispatch_queue_set_specific(queue, Connection.queueKey, queueContext, nil)
+        queue.setSpecific(key: /*Migrator FIXME: Use a variable of type DispatchSpecificKey*/ Connection.queueKey, value: queueContext)
         try self.execute("PRAGMA foreign_keys = ON;")
     }
     
-    public func close() {
+    open func close() {
         sqlite3_close(handle)
     }
     
@@ -91,12 +91,12 @@ public class Connection {
     ///   statements.
     ///
     /// - Throws: `Result.Error` if query execution fails.
-    public func execute(SQL: String) throws {
+    open func execute(_ SQL: String) throws {
         SQLLog.info(SQL)
         try self.check(sqlite3_exec(self.handle, SQL, nil, nil, nil))
     }
     
-    func execute_query(SQL: String) throws -> Result {
+    func execute_query(_ SQL: String) throws -> Result {
         SQLLog.info(SQL)
         let statement = try self.prepare(SQL)
         var columnTypes = Array<Int32>()
@@ -115,7 +115,7 @@ public class Connection {
                 
                 var value: Any? = nil
                 let pointer = UnsafePointer<CChar>(sqlite3_column_text(statement, i))
-                if let string = String.fromCString(pointer) {
+                if let string = String.fromCString(pointer!) {
                     switch columnType {
                     case SQLITE_INTEGER: value = Int(string)
                     case SQLITE_FLOAT: value = Float(string)
@@ -130,20 +130,20 @@ public class Connection {
         return Result(columns: columns, rows: rows)
     }
     
-    func prepare(SQL: String) throws -> COpaquePointer {
-        var statement: COpaquePointer = nil
+    func prepare(_ SQL: String) throws -> OpaquePointer {
+        var statement: OpaquePointer? = nil
         guard sqlite3_prepare(self.handle, SQL, -1, &statement, nil) == SQLITE_OK else {
             SQLLog.error("\(self.errorMessage) in \(SQL)")
-            throw DBError.Prepare(message: self.errorMessage)
+            throw DBError.prepare(message: self.errorMessage)
         }
-        return statement
+        return statement!
     }
     
     // MARK: - Error Handling
     
-    func sync<T>(block: () throws -> T) rethrows -> T {
+    func sync<T>(_ block: @escaping () throws -> T) rethrows -> T {
         var success: T?
-        var failure: ErrorType?
+        var failure: Error?
         
         let box: () -> Void = {
             do {
@@ -153,10 +153,10 @@ public class Connection {
             }
         }
         
-        if dispatch_get_specific(Connection.queueKey) == queueContext {
+        if DispatchQueue.getSpecific(Connection.queueKey) == queueContext {
             box()
         } else {
-            dispatch_sync(queue, box) // FIXME: rdar://problem/21389236
+            queue.sync(execute: box) // FIXME: rdar://problem/21389236
         }
         
         if let failure = failure {
@@ -166,7 +166,7 @@ public class Connection {
         return success!
     }
     
-    private var errorMessage: String {
+    fileprivate var errorMessage: String {
         if let errorMessage = String.fromCString(sqlite3_errmsg(self.handle)) {
             return errorMessage
         } else {
@@ -174,20 +174,20 @@ public class Connection {
         }
     }
     
-    func check(resultCode: Int32, statement: String? = nil) throws -> Int32 {
+    func check(_ resultCode: Int32, statement: String? = nil) throws -> Int32 {
         let successCodes: Set = [SQLITE_OK, SQLITE_ROW, SQLITE_DONE]
         if !successCodes.contains(resultCode) {
             SQLLog.info(self.errorMessage)
-            throw DBError.Statement(message: self.errorMessage)
+            throw DBError.statement(message: self.errorMessage)
         }
         return resultCode
     }
     
-    private var queue = dispatch_queue_create("SQLite.Database", DISPATCH_QUEUE_SERIAL)
+    fileprivate var queue = DispatchQueue(label: "SQLite.Database", attributes: [])
     
-    private static let queueKey = unsafeBitCast(Connection.self, UnsafePointer<Void>.self)
+    fileprivate static let queueKey = unsafeBitCast(Connection.self, to: UnsafeRawPointer.self)
     
-    private lazy var queueContext: UnsafeMutablePointer<Void> = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+    fileprivate lazy var queueContext: UnsafeMutableRawPointer = unsafeBitCast(self, to: UnsafeMutableRawPointer.self)
     
     //    private enum Result : ErrorType {
     //
@@ -209,11 +209,11 @@ extension Connection.Location : CustomStringConvertible {
     
     var description: String {
         switch self {
-        case .InMemory:
+        case .inMemory:
             return ":memory:"
-        case .Temporary:
+        case .temporary:
             return ""
-        case .URI(let URI):
+        case .uri(let URI):
             return URI
         }
     }

@@ -25,11 +25,11 @@ public struct Transformer {
 
 let NSURLTransformer = Transformer(forward: { (value) -> Any? in
     if let url = value as? String {
-        return NSURL(string: url)
+        return URL(string: url)
     }
     return value
     }, backward: { (value) -> Any? in
-        if let url = value as? NSURL {
+        if let url = value as? URL {
             return url.absoluteString
         }
         return value as? Any

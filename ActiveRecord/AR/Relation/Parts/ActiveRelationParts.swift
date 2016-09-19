@@ -17,7 +17,7 @@ public struct WhereMerger: CustomStringConvertible {
     public var separator: String
     public var description: String {
         if !self.parts.isEmpty {
-            return "WHERE " + self.parts.map({ $0.description }).joinWithSeparator(self.separator)
+            return "WHERE " + self.parts.map({ $0.description }).joined(separator: self.separator)
         }
         return ""
     }
@@ -115,6 +115,6 @@ public struct Pluck: ActiveRelationPart {
 
 extension Pluck {
     public var description: String {
-        return self.fields.isEmpty ? "*" : self.fields.joinWithSeparator(",")
+        return self.fields.isEmpty ? "*" : self.fields.joined(separator: ",")
     }
 }
