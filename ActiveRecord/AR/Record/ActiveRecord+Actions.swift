@@ -61,7 +61,7 @@ extension ActiveRecord {
         if let first = records.first {
             let tableName = type(of: first).tableName
             let structure = Adapter.current.structure(tableName)
-            let values = records.map({ "\(($0.attributes[structure.PKColumn.name] as! DatabaseRepresentable).dbValue)" }).joinWithSeparator(", ")
+            let values = records.map({ "\(($0.attributes[structure.PKColumn.name] as! DatabaseRepresentable).dbValue)" }).joined(separator: ", ")
             try Adapter.current.connection.execute("DELETE FROM \(tableName) WHERE \(structure.PKColumn.name) IN (\(values));")
         }
     }
@@ -93,11 +93,11 @@ extension ActiveRecord {
     public static func create() throws -> Self {
         let record = self.init()
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
-            try record.before(.Create)
+            ActiveCallbackStorage.beforeStorage.get(self, action: .create).execute(record)
+            try record.before(.create)
             try record._save(true)
-            ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
-            try record.after(.Create)
+            ActiveCallbackStorage.afterStorage.get(self, action: .create).execute(record)
+            try record.after(.create)
         }
         return record
     }

@@ -103,10 +103,10 @@ open class Adapter {
             switch type {
             case .Bool: return value as? Bool as? DatabaseRepresentable
             case .Int: return value as? Int as? DatabaseRepresentable
-            case .Date: return (value as? String as? DatabaseRepresentable) ?? (value as? NSDate as? DatabaseRepresentable)
+            case .Date: return (value as? String as? DatabaseRepresentable) ?? (value as? Foundation.Date as? DatabaseRepresentable)
             case .Decimal: return value as? Float as? DatabaseRepresentable
             case .String: return value as? String as? DatabaseRepresentable
-            case .Raw: return value as? NSData as? DatabaseRepresentable
+            case .Raw: return value as? Data as? DatabaseRepresentable
             case .Double: return value as? Double as? DatabaseRepresentable
             }
         }

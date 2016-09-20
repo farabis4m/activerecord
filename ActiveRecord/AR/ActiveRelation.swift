@@ -141,7 +141,7 @@ open class ActiveRelation<T:ActiveRecord> {
     //MARK: -
     
     open func execute(_ strict: Bool = false) throws -> Array<T> {
-        self.chain.sort { $0.priority < $1.priority }
+        self.chain.sorted { $0.priority < $1.priority }
         
         let pluck: Pluck!
         if let index = self.chain.index(where: { $0 is Pluck }) {
@@ -160,10 +160,10 @@ open class ActiveRelation<T:ActiveRecord> {
         for include in self.include {
             let includeTable = Adapter.current.structure(include.tableName)
             if result.hashes.isEmpty { continue }
-            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joined(separator: ", ")
+            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String(describing: $0) }).joined(separator: ", ")
             var relatedSQL = ""
             if table.foreignColumns.contains(where: { $0.foreignColumn!.table!.name == include.tableName }) {
-                let includeIds = result.hashes.map({ $0["\(include.resourceName)_\(includeTable.PKColumn.name)"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
+                let includeIds = result.hashes.map({ $0["\(include.resourceName)_\(includeTable.PKColumn.name)"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String(describing: $0) }).joined(separator: ", ")
                 relatedSQL = "SELECT * FROM \(include.tableName) WHERE \("\(includeTable.PKColumn.name)") IN (\(includeIds));"
             } else {
                 relatedSQL = "SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));"
@@ -173,7 +173,7 @@ open class ActiveRelation<T:ActiveRecord> {
             includes << result
             for hash in result.hashes {
                 if let id = hash["\(T.modelName)_id"] as? DatabaseRepresentable {
-                    let key = String(id)
+                    let key = String(describing: id)
                     var items: Array<RawRecord> = []
                     if var bindings = relations[key] {
                         if let rows = bindings["\(include.tableName)"] {
@@ -193,7 +193,7 @@ open class ActiveRelation<T:ActiveRecord> {
         }
         for hash in result.hashes {
             var attrbiutes = hash
-            if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(id)] {
+            if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(describing: id)] {
                 attrbiutes.merge(relation)
             }
             let item = T.init(attributes: attrbiutes)

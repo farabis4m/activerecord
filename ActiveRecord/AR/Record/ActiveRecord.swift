@@ -60,6 +60,7 @@ extension ActiveRecord {
     var identifier: Any {
 //        return self.id ?? Optional<Int>()
         // TODO: Compare PK values
+//        Optional(
         return Optional<Int>()
     }
 }
@@ -82,7 +83,7 @@ extension ActiveRecord {
 extension ActiveRecord {
     public init(attributes: RawRecord) {
         self.init()
-        let map = Map(mappingType: .FromJSON, JSONDictionary: attributes, toObject: true, context: nil)
+        let map = Map(mappingType: .fromJSON, JSONDictionary: attributes, toObject: true, context: nil)
         self.mapping(map)
         self.timeline.enqueue(attributes)
         try? self.after(.initialize)

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CSQLite
+import ActiveRecord.SQLite
 import SwiftyBeaver
 
 open class Connection {

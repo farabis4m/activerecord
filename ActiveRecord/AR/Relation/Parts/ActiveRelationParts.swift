@@ -49,9 +49,9 @@ extension Where {
         } else {
             var statement = ""
             if let records = values as? [ActiveRecord] {
-                statement = records.map({ ($0.attributes["id"] as! DatabaseRepresentable).dbValue }).flatMap({$0}).map({ "\($0)" }).joinWithSeparator(", ")
+                statement = records.map({ ($0.attributes["id"] as! DatabaseRepresentable).dbValue }).flatMap({$0}).map({ "\($0)" }).joined(separator: ", ")
             } else {
-                statement = values.map({ "\($0.dbValue)" }).joinWithSeparator(", ")
+                statement = values.map({ "\($0.dbValue)" }).joined(separator: ", ")
             }
             let expresssion = self.negative ? "NOT IN" : "IN"
             return "\(field) \(expresssion) (\(statement))"

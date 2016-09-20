@@ -1,4 +1,9 @@
+// module CSQLite [system] {
+//    header "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/sqlite3.h"
+//    export *
+//}
+
 module CSQLite [system] {
-    header "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/sqlite3.h"
+    header "/Users/vlad/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/sqlite3.h"
     export *
 }

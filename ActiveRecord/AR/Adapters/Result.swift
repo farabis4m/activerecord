@@ -28,10 +28,17 @@ open class Result {
         for column in self.columns {
             var name = String(column)
             while let range = name?.range(of: "_") {
-                let subRange = Range(<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.lowerBound, offsetBy: 1)..<<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.upperBound, offsetBy: 1))
-                let nextChar = column.substring(with: subRange)
-                let replaceRange = Range(range.lowerBound..<<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.upperBound, offsetBy: 1))
-                name.replaceSubrange(replaceRange, with: nextChar.capitalized)
+//                 let subRange = Range(range.startIndex.advancedBy(1)..<range.endIndex.advancedBy(1))
+//                 let nextChar = column.substringWithRange(subRange)
+//                 let replaceRange = Range(range.startIndex..<range.endIndex.advancedBy(1))
+//                 name.replaceRange(replaceRange, with: nextChar.capitalizedString)
+                
+                
+//                    range.index
+                // let subRange = Range(<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.lowerBound, offsetBy: 1)..<<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.upperBound, offsetBy: 1))
+                // let nextChar = column.substring(with: subRange)
+                // let replaceRange = Range(range.lowerBound..<<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(range.upperBound, offsetBy: 1))
+                // name.replaceSubrange(replaceRange, with: nextChar.capitalized)
             }
             names.append(name!)
         }

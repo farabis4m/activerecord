@@ -46,8 +46,8 @@ public enum DB {
                     case .Int: return BaseInt.self
                     case .Decimal: return BaseFloat.self
                     case .String: return BaseString.self
-                    case .Date: return NSDate.self
-                    case .Raw: return NSData.self
+                    case .Date: return Foundation.Date.self
+                    case .Raw: return Data.self
                     case .Bool: return BaseBool.self
                     case .Double: return BaseDouble.self
                     }
