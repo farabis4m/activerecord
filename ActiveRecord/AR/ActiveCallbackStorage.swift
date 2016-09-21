@@ -15,20 +15,21 @@ class ActiveCallbackStorage {
     static let afterStorage = ActiveCallbackStorage()
     static let beforeStorage = ActiveCallbackStorage()
     
-    private var items: [String: [ActiveRecrodAction: [ActiveRecordCallback]]] = [:]
+    fileprivate var items: [String: [ActiveRecrodAction: [ActiveRecordCallback]]] = [:]
     
-    func set(klass: Any, action: ActiveRecrodAction, callback: ActiveRecordCallback) {
+    func set(_ klass: Any, action: ActiveRecrodAction, callback: @escaping ActiveRecordCallback) {
         let key = "\(klass)"
         var actions = items[key] ?? [:]
         var callbacks = actions[action] ?? []
-        callbacks << callback
+//        callbacks << callback
+        callbacks.append(callback)
         actions[action] = callbacks
         items[key] = actions
     }
     
-    func get(klass: Any.Type, action: ActiveRecrodAction) -> Bucket {
+    func get(_ klass: Any.Type, action: ActiveRecrodAction) -> Bucket {
         let key = "\(klass)"
-        if let actions = items[key], callbacks = actions[action] {
+        if let actions = items[key], let callbacks = actions[action] {
             return Bucket(action: action, callbacks: callbacks)
         }
         return Bucket(action: action,callbacks: [])
@@ -38,7 +39,7 @@ class ActiveCallbackStorage {
         var action: ActiveRecrodAction
         var callbacks: [ActiveRecordCallback]
         
-        func execute(record: ActiveRecord) {
+        func execute(_ record: ActiveRecord) {
             for callback in self.callbacks {
                 callback(record, self.action)
             }

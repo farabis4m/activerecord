@@ -11,7 +11,7 @@ import ApplicationSupport
 class UpdateManager: ActionManager {
     
     override func execute() throws {
-        let klass = self.record.dynamicType
+        let klass = type(of: self.record)
         let attributes = self.record.dirty
         let table = Adapter.current.structure(klass.tableName)
         var values = Dictionary<String, Any>()
@@ -24,14 +24,14 @@ class UpdateManager: ActionManager {
                     values[columnName] = (activeRecord.attributes["id"] as! DatabaseRepresentable).dbValue
                 }
             } else {
-                if let _ = table.column(key), dbValue = value as? DatabaseRepresentable {
+                if let _ = table.column(key), let dbValue = value as? DatabaseRepresentable {
                     values[key] = dbValue.dbValue
                 }
             }
         }
         if !values.isEmpty {
             if let value = self.record.attributes[table.PKColumn.name] as? DatabaseRepresentable {
-                try Adapter.current.connection.execute_query("UPDATE \(klass.tableName) SET \(values.map({ "\($0) = \($1)" }).joinWithSeparator(", ")) WHERE \(table.PKColumn.name) = \(value.dbValue)")
+                try Adapter.current.connection.execute_query("UPDATE \(klass.tableName) SET \(values.map({ "\($0) = \($1)" }).joined(separator: ", ")) WHERE \(table.PKColumn.name) = \(value.dbValue)")
             }
         }
     }

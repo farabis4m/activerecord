@@ -9,12 +9,12 @@
 import ApplicationSupport
 import ObjectMapper
 
-public enum ActiveRecordError: ErrorType {
-    case RecordNotValid(record: ActiveRecord)
-    case RecordNotFound(attributes: [String: Any])
-    case AttributeMissing(record: ActiveRecord, name: String)
-    case InvalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
-    case ParametersMissing(record: ActiveRecord)
+public enum ActiveRecordError: Error {
+    case recordNotValid(record: ActiveRecord)
+    case recordNotFound(attributes: [String: Any])
+    case attributeMissing(record: ActiveRecord, name: String)
+    case invalidAttributeType(record: ActiveRecord, name: String, expectedType: String)
+    case parametersMissing(record: ActiveRecord)
 }
 
 func ==(lhs: ActiveRecord?, rhs: ActiveRecord?) -> Bool {
@@ -25,8 +25,8 @@ func ==(lhs: ActiveRecord?, rhs: ActiveRecord?) -> Bool {
 }
 
 func ==(lhs: ActiveRecord, rhs: ActiveRecord) -> Bool {
-    let leftPK = Adapter.current.structure(lhs.dynamicType.tableName).PKColumn
-    let rightPK = Adapter.current.structure(rhs.dynamicType.tableName).PKColumn
+    let leftPK = Adapter.current.structure(type(of: lhs).tableName).PKColumn
+    let rightPK = Adapter.current.structure(type(of: rhs).tableName).PKColumn
     if let right = rhs.getAttributes()[rightPK.name] as? DatabaseRepresentable {
         let left = lhs.getAttributes()[leftPK.name] as? DatabaseRepresentable
         return left?.equals(right) ?? false
@@ -39,29 +39,19 @@ public protocol ActiveRecord: Record, DatabaseRepresentable {
     static func acceptedNestedAttributes() -> [String]
     
     // Validators
-    func validate(action: Action) -> Errors
-    func validators(action: Action) -> [String: Validator]
+    func validate(_ action: Action) -> Errors
+    func validators(_ action: Action) -> [String: Validator]
     
     // Callbackcs
-    func before(action: ActiveRecrodAction) throws
-    func after(action: ActiveRecrodAction) throws
+    func before(_ action: ActiveRecrodAction) throws
+    func after(_ action: ActiveRecrodAction) throws
     
-    static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) throws
-    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) throws
+    static func before(_ action: ActiveRecrodAction, callback: @escaping ActiveRecordCallback) throws
+    static func after(_ action: ActiveRecrodAction, callback: @escaping ActiveRecordCallback) throws
 }
 
 extension ActiveRecord {
     var rawType: String { return "ActiveRecord" }
-}
-
-extension ActiveRecord {
-    // Returns sanitized id
-    // DB will not allow to insert a record with nil PK
-    var identifier: Any {
-//        return self.id ?? Optional<Int>()
-        // TODO: Compare PK values
-        return Optional<Int>()
-    }
 }
 
 extension ActiveRecord {
@@ -82,19 +72,19 @@ extension ActiveRecord {
 extension ActiveRecord {
     public init(attributes: RawRecord) {
         self.init()
-        let map = Map(mappingType: .FromJSON, JSONDictionary: attributes, toObject: true, context: nil)
+        let map = Map(mappingType: .fromJSON, JSONDictionary: attributes, toObject: true, context: nil)
         self.mapping(map)
         self.timeline.enqueue(attributes)
-        try? self.after(.Initialize)
+        try? self.after(.initialize)
     }
 }
 
 public enum ActiveRecrodAction: Int, Hashable {
-    case Initialize
-    case Create
-    case Update
-    case Destroy
-    case Save
+    case initialize
+    case create
+    case update
+    case destroy
+    case save
     
     public var hashValue: Int {
         return self.rawValue
@@ -102,7 +92,7 @@ public enum ActiveRecrodAction: Int, Hashable {
 }
 
 public enum Action {
-    case Create
-    case Update
-    case Delete
+    case create
+    case update
+    case delete
 }

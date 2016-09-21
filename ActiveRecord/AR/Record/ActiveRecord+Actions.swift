@@ -13,43 +13,43 @@ import SwiftyBeaver
 public extension Array where Element: ActiveRecord {
     func destroyAll() throws {
         if let first = self.first {
-            try first.dynamicType.destroy(self.map({ $0 as ActiveRecord }))
+            try type(of: first).destroy(self.map({ $0 as ActiveRecord }))
         }
     }
 }
 
 extension ActiveRecord {
-    public func update(attributes: [String: Any]? = nil) throws -> Bool {
+    public func update(_ attributes: [String: Any]? = nil) throws -> Bool {
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
-            try self.before(.Update)
+            ActiveCallbackStorage.beforeStorage.get(type(of: self), action: .update).execute(self)
+            try self.before(.update)
             // TODO: Add updatable specific attributes
             try UpdateManager(record: self).execute()
-            ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Update).execute(self)
-            try self.after(.Update)
+            ActiveCallbackStorage.afterStorage.get(type(of: self), action: .update).execute(self)
+            try self.after(.update)
         }
         return false
     }
     
-    public func update(attribute: String, value: Any) throws -> Bool {
+    public func update(_ attribute: String, value: Any) throws -> Bool {
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
-            try self.before(.Update)
+            ActiveCallbackStorage.beforeStorage.get(type(of: self), action: .update).execute(self)
+            try self.before(.update)
             // TODO: Add updatable specific attributes
             try UpdateManager(record: self).execute()
-            ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Update).execute(self)
-            try self.after(.Update)
+            ActiveCallbackStorage.afterStorage.get(type(of: self), action: .update).execute(self)
+            try self.after(.update)
         }
         return false
     }
     
     public func destroy() throws {
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Destroy).execute(self)
-            try self.before(.Destroy)
-            let deleteManager = try DeleteManager(record: self).execute()
-            ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Destroy).execute(self)
-            try self.after(.Destroy)
+            ActiveCallbackStorage.beforeStorage.get(type(of: self), action: .destroy).execute(self)
+            try self.before(.destroy)
+            try DeleteManager(record: self).execute()
+            ActiveCallbackStorage.afterStorage.get(type(of: self), action: .destroy).execute(self)
+            try self.after(.destroy)
         }
     }
     
@@ -57,20 +57,20 @@ extension ActiveRecord {
         // Destroy an item without callbacks
     }
     
-    public static func destroy(records: [ActiveRecord]) throws {
+    public static func destroy(_ records: [ActiveRecord]) throws {
         if let first = records.first {
-            let tableName = first.dynamicType.tableName
+            let tableName = type(of: first).tableName
             let structure = Adapter.current.structure(tableName)
-            let values = records.map({ "\(($0.attributes[structure.PKColumn.name] as! DatabaseRepresentable).dbValue)" }).joinWithSeparator(", ")
+            let values = records.map({ "\(($0.attributes[structure.PKColumn.name] as! DatabaseRepresentable).dbValue)" }).joined(separator: ", ")
             try Adapter.current.connection.execute("DELETE FROM \(tableName) WHERE \(structure.PKColumn.name) IN (\(values));")
         }
     }
     
-    public static func destroy(record: ActiveRecord) throws {
+    public static func destroy(_ record: ActiveRecord) throws {
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
+            ActiveCallbackStorage.beforeStorage.get(self, action: .destroy).execute(record)
             try self.destroy([record])
-            ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
+            ActiveCallbackStorage.afterStorage.get(self, action: .destroy).execute(record)
         }
     }
     
@@ -78,14 +78,14 @@ extension ActiveRecord {
         return try self.save(false)
     }
     
-    public static func create(attributes: [String : Any], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
+    public static func create(_ attributes: [String : Any], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
         let record = self.init(attributes: attributes)
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
-            try record.before(.Create)
+            ActiveCallbackStorage.beforeStorage.get(self, action: .create).execute(record)
+            try record.before(.create)
             try record._save(true)
-            ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
-            try record.after(.Create)
+            ActiveCallbackStorage.afterStorage.get(self, action: .create).execute(record)
+            try record.after(.create)
         }
         return record
     }
@@ -93,24 +93,24 @@ extension ActiveRecord {
     public static func create() throws -> Self {
         let record = self.init()
         try Transaction.perform {
-            ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
-            try record.before(.Create)
+            ActiveCallbackStorage.beforeStorage.get(self, action: .create).execute(record)
+            try record.before(.create)
             try record._save(true)
-            ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
-            try record.after(.Create)
+            ActiveCallbackStorage.afterStorage.get(self, action: .create).execute(record)
+            try record.after(.create)
         }
         return record
     }
     
-    public static func find(identifier: Any) throws -> Self {
+    public static func find(_ identifier: Any) throws -> Self {
         return try self.find(["id" : identifier])
     }
     
-    public static func find(attributes:[String: Any]) throws -> Self {
+    public static func find(_ attributes:[String: Any]) throws -> Self {
         return try ActiveRelation().`where`(attributes).limit(1).execute(true).first!
     }
     
-    public static func take(count: Int = 1) throws -> [Self] {
+    public static func take(_ count: Int = 1) throws -> [Self] {
         return try ActiveRelation().limit(count).execute()
     }
     
@@ -118,11 +118,11 @@ extension ActiveRecord {
         return (try? self.take())?.first
     }
     
-    public static func `where`(attributes: [String: Any]) -> ActiveRelation<Self> {
+    public static func `where`(_ attributes: [String: Any]) -> ActiveRelation<Self> {
         return ActiveRelation().`where`(attributes)
     }
     
-    public static func includes(records: ActiveRecord.Type...) -> ActiveRelation<Self> {
+    public static func includes(_ records: ActiveRecord.Type...) -> ActiveRelation<Self> {
         return ActiveRelation().includes(records)
     }
     
@@ -130,19 +130,19 @@ extension ActiveRecord {
         return try ActiveRelation().execute()
     }
     
-    public func save(validate: Bool) throws {
+    public func save(_ validate: Bool) throws {
         try Transaction.perform {
             try self._save(validate)
         }
     }
     
-    private func _save(validate: Bool) throws {
-        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
-        try self.before(.Save)
+    fileprivate func _save(_ validate: Bool) throws {
+        ActiveCallbackStorage.beforeStorage.get(type(of: self), action: .save).execute(self)
+        try self.before(.save)
         let errors = self.errors
         if validate && !errors.isEmpty {
             SQLLog.error("RecordNotValid not found \(self) \(errors)")
-            throw ActiveRecordError.RecordNotValid(record: self)
+            throw ActiveRecordError.recordNotValid(record: self)
         }
         if self.isNewRecord {
             try InsertManager(record: self).execute()
@@ -150,12 +150,12 @@ extension ActiveRecord {
             try UpdateManager(record: self).execute()
         }
         self.timeline.reset(self.attributes)
-        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
-        try self.after(.Save)
+        ActiveCallbackStorage.afterStorage.get(type(of: self), action: .save).execute(self)
+        try self.after(.save)
     }
     
     var isNewRecord: Bool {
-        if let id = self.attributes["id"], let record = try? self.dynamicType.find(["id" : id]) {
+        if let id = self.attributes["id"], let _ = try? type(of: self).find(["id" : id]) {
             return false
         }
         return true

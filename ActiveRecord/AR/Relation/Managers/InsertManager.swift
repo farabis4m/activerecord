@@ -9,7 +9,7 @@
 import ApplicationSupport
 import ObjectMapper
 
-extension Dictionary where Key: StringLiteralConvertible, Value: Any {
+extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     
 }
 
@@ -17,7 +17,7 @@ class InsertManager: ActionManager {
     
     override func execute() throws {
         let attributes = self.record.dirty
-        let table = Adapter.current.structure(self.record.dynamicType.tableName)
+        let table = Adapter.current.structure(type(of: self.record).tableName)
         var columns = Array<String>()
         var values = Array<Any>()
         for key in attributes.keys {
@@ -60,12 +60,13 @@ class InsertManager: ActionManager {
         if !columns.isEmpty && !values.isEmpty {
             if columns.count != values.count {
                 SQLLog.error("ParametersMissing \(self.record).")
-                throw ActiveRecordError.ParametersMissing(record: self.record)
+                throw ActiveRecordError.parametersMissing(record: self.record)
             }
-            let result = try Adapter.current.connection.execute_query("INSERT INTO \(table.name) (\(columns.joinWithSeparator(", "))) VALUES (\(values.map({"\($0)"}).joinWithSeparator(", ")));")
-            if let id = Adapter.current.connection.lastInsertRowid where table.PKColumn.type == .Int {
+            let result = try Adapter.current.connection.execute_query("INSERT INTO \(table.name) (\(columns.joined(separator: ", "))) VALUES (\(values.map({"\($0)"}).joined(separator: ", ")));")
+            let _ = result // Just to keep this variable visible when debug
+            if let id = Adapter.current.connection.lastInsertRowid , table.PKColumn.type == .Int {
                 // TODO: To do user confirg
-                let map = Map(mappingType: .FromJSON, JSONDictionary: ["id" : Int(id)], toObject: true, context: nil)
+                let map = Map(mappingType: .fromJSON, JSONDictionary: ["id" : Int(id)], toObject: true, context: nil)
                 self.record.mapping(map)
             }
         } else {

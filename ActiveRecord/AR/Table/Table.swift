@@ -23,8 +23,8 @@ public func << (table: Table, column: Column) -> Void {
 }
 
 public enum DB {
-    public class Table: DBObject {
-        public class Column: DBObject, CustomDebugStringConvertible {
+    open class Table: DBObject {
+        open class Column: DBObject, CustomDebugStringConvertible {
             
             typealias DBType = Type
             typealias BaseInt = Int
@@ -32,7 +32,7 @@ public enum DB {
             typealias BaseString = String
             typealias BaseBool = Bool
             typealias BaseDouble = Double
-            public enum Type: String {
+            public enum `Type`: String {
                 case Bool = "bool"
                 case String = "text"
                 case Int = "int"
@@ -46,8 +46,8 @@ public enum DB {
                     case .Int: return BaseInt.self
                     case .Decimal: return BaseFloat.self
                     case .String: return BaseString.self
-                    case .Date: return NSDate.self
-                    case .Raw: return NSData.self
+                    case .Date: return Foundation.Date.self
+                    case .Raw: return Data.self
                     case .Bool: return BaseBool.self
                     case .Double: return BaseDouble.self
                     }
@@ -59,7 +59,7 @@ public enum DB {
                 case Drop = "DROP"
                 case Rename = "RENAME COLUMN"
                 
-                func clause(value: String) -> String {
+                func clause(_ value: String) -> String {
                     switch self {
                     case .Add: return self.rawValue
                     case .Drop: return self.rawValue
@@ -68,16 +68,16 @@ public enum DB {
                 }
             }
             
-            public var `default`: Any?
-            public var name: String
-            public var type: Type?
-            public var PK = false
-            public var autoIncrement = true
-            public var unique = false
-            public var nullable = true
-            public var length: Int?
-            public var table: Table?
-            public var foreignColumn: Column?
+            open var `default`: Any?
+            open var name: String
+            open var type: Type?
+            open var PK = false
+            open var autoIncrement = true
+            open var unique = false
+            open var nullable = true
+            open var length: Int?
+            open var table: Table?
+            open var foreignColumn: Column?
             
             
             
@@ -102,28 +102,28 @@ public enum DB {
                 self.type = references.type
             }
             
-            public var debugDescription: String {
+            open var debugDescription: String {
                 return "Column(name: \(self.name), type: \(self.type?.rawValue), primary: \(self.PK), nullable: \(self.nullable))"
             }
         }
         
-        public var name: String
-        public var columns: [Column] = []
-        public var foreignColumns: [Column] = []
-        public var PKColumn: Column {
-            return self.columns.find({ $0.PK })!
+        open var name: String
+        open var columns: [Column] = []
+        open var foreignColumns: [Column] = []
+        open var PKColumn: Column {
+            return self.columns.find(predicate: { $0.PK })!
         }
         
         public init(_ name: String) {
             self.name = name
         }
         
-        func column(name: String) -> Column? {
-            return self.columns.find({ $0.name == name })
+        func column(_ name: String) -> Column? {
+            return self.columns.find(predicate: { $0.name == name })
         }
     }
     
-    public class Function: DBObject {
+    open class Function: DBObject {
         //TODO: Future
     }
 }

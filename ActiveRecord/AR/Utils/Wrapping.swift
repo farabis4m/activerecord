@@ -8,10 +8,10 @@
 
 import Foundation
 
-func unwrap(any:Any) -> Any {
+func unwrap(_ any:Any) -> Any {
     
     let mi = Mirror(reflecting: any)
-    if mi.displayStyle != .Optional {
+    if mi.displayStyle != .optional {
         return any
     }
     

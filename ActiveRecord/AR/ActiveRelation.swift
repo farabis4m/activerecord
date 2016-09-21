@@ -14,7 +14,7 @@ enum SQLAction: String {
     case Update = "UPDATE"
     case Delete = "DELETE"
     
-    func clause(tableName: String) -> String {
+    func clause(_ tableName: String) -> String {
         switch self {
         // TODO: This is not pure swift solution
         case .Select: return "\(self.rawValue) %@ FROM \(tableName)"
@@ -28,24 +28,24 @@ enum SQLAction: String {
 public typealias RawRecord = [String: Any]
 public typealias RawRecords = [RawRecord]
 
-public class ActiveRelation<T:ActiveRecord> {
+open class ActiveRelation<T:ActiveRecord> {
     
-    private var klass: T.Type?
-    private var model: T?
-    private var connection: Connection { return Adapter.current.connection }
+    fileprivate var klass: T.Type?
+    fileprivate var model: T?
+    fileprivate var connection: Connection { return Adapter.current.connection }
     
-    private var attributes: [String: Any]?
+    fileprivate var attributes: [String: Any]?
     
-    public var tableName: String {
+    open var tableName: String {
         return T.tableName
     }
     
-    private var action = SQLAction.Select
+    fileprivate var action = SQLAction.Select
     
-    private var chain: [ActiveRelationPart] = []
+    fileprivate var chain: [ActiveRelationPart] = []
     
-    private var include: [ActiveRecord.Type] = []
-    private var whereMerger = WhereMerger(separator: " AND ")
+    fileprivate var include: [ActiveRecord.Type] = []
+    fileprivate var whereMerger = WhereMerger(separator: " AND ")
     
     
     //MARK: - Lifecycle
@@ -58,13 +58,13 @@ public class ActiveRelation<T:ActiveRecord> {
     }
     
     public init(model: T) {
-        self.klass = model.dynamicType
+        self.klass = type(of: model)
         self.model = model
     }
     
     //MARK: - Chaining
     
-    public func includes(records: [ActiveRecord.Type]) -> Self {
+    open func includes(_ records: [ActiveRecord.Type]) -> Self {
         self.include << records
         return self
     }
@@ -74,12 +74,12 @@ public class ActiveRelation<T:ActiveRecord> {
     //        return self
     //    }
     
-    public func pluck(fields: Array<String>) -> Self {
+    open func pluck(_ fields: Array<String>) -> Self {
         self.chain.append(Pluck(fields: fields))
         return self
     }
     
-    public func `where`(statement: [String: Any]) -> Self {
+    open func `where`(_ statement: [String: Any]) -> Self {
         self.attributes = statement
         for key in statement.keys {
             if let values = statement[key] as? [DatabaseRepresentable] {
@@ -91,7 +91,7 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func `whereNot`(statement: [String: Any]) -> Self {
+    open func `whereNot`(_ statement: [String: Any]) -> Self {
         self.attributes = statement
         for key in statement.keys {
             if let values = statement[key] as? [DatabaseRepresentable] {
@@ -103,36 +103,36 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func whereIs(statement: [String: Any]) -> Self {
+    open func whereIs(_ statement: [String: Any]) -> Self {
         return self.`where`(statement)
     }
     
-    public func order(attributes: [String : String]) -> Self {
+    open func order(_ attributes: [String : String]) -> Self {
         if let field = attributes.keys.first, let order = attributes[field], let direction = Order.Direction(rawValue: order) {
             chain.append(Order(field: field, direction: direction))
         }
         return self
     }
     
-    public func limit(value: Int) -> Self {
+    open func limit(_ value: Int) -> Self {
         chain.append(Limit(count: value))
         return self
     }
     
-    public func offset(value: Int) -> Self {
+    open func offset(_ value: Int) -> Self {
         chain.append(Offset(count: value))
         return self
     }
     
     //MARK: - ActiveRecordRelationProtocol
     
-    public func updateAll(attrbiutes: [String : Any]) throws -> Bool {
+    open func updateAll(_ attrbiutes: [String : Any]) throws -> Bool {
         self.action = .Update
         let _ = try self.execute()
         return false
     }
     
-    public func destroyAll() throws -> Bool {
+    open func destroyAll() throws -> Bool {
         self.action = .Delete
         let _ = try self.execute()
         return false
@@ -140,17 +140,17 @@ public class ActiveRelation<T:ActiveRecord> {
     
     //MARK: -
     
-    public func execute(strict: Bool = false) throws -> Array<T> {
-        self.chain.sortInPlace { $0.priority < $1.priority }
+    open func execute(_ strict: Bool = false) throws -> Array<T> {
+        self.chain.sort { $0.priority < $1.priority }
         
         let pluck: Pluck!
-        if let index = self.chain.indexOf({ $0 is Pluck }) {
+        if let index = self.chain.index(where: { $0 is Pluck }) {
             pluck = self.chain[index] as! Pluck
-            self.chain.removeAtIndex(index)
+            self.chain.remove(at: index)
         } else {
             pluck = Pluck(fields: [])
         }
-        let chainClause = self.chain.map({ "\($0)" }).joinWithSeparator(" ")
+        let chainClause = self.chain.map({ "\($0)" }).joined(separator: " ")
         let SQLStatement = String(format: self.action.clause(self.tableName), pluck.description) + " " +  self.whereMerger.description + " " + chainClause + ";"
         let result = try self.connection.execute_query(SQLStatement)
         let table = Adapter.current.structure(T.tableName)
@@ -160,10 +160,10 @@ public class ActiveRelation<T:ActiveRecord> {
         for include in self.include {
             let includeTable = Adapter.current.structure(include.tableName)
             if result.hashes.isEmpty { continue }
-            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
+            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String(describing: $0) }).joined(separator: ", ")
             var relatedSQL = ""
-            if table.foreignColumns.contains({ $0.foreignColumn!.table!.name == include.tableName }) {
-                let includeIds = result.hashes.map({ $0["\(include.resourceName)_\(includeTable.PKColumn.name)"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
+            if table.foreignColumns.contains(where: { $0.foreignColumn!.table!.name == include.tableName }) {
+                let includeIds = result.hashes.map({ $0["\(include.resourceName)_\(includeTable.PKColumn.name)"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String(describing: $0) }).joined(separator: ", ")
                 relatedSQL = "SELECT * FROM \(include.tableName) WHERE \("\(includeTable.PKColumn.name)") IN (\(includeIds));"
             } else {
                 relatedSQL = "SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));"
@@ -173,7 +173,7 @@ public class ActiveRelation<T:ActiveRecord> {
             includes << result
             for hash in result.hashes {
                 if let id = hash["\(T.modelName)_id"] as? DatabaseRepresentable {
-                    let key = String(id)
+                    let key = String(describing: id)
                     var items: Array<RawRecord> = []
                     if var bindings = relations[key] {
                         if let rows = bindings["\(include.tableName)"] {
@@ -193,14 +193,14 @@ public class ActiveRelation<T:ActiveRecord> {
         }
         for hash in result.hashes {
             var attrbiutes = hash
-            if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(id)] {
+            if let id = hash["id"] as? DatabaseRepresentable, let relation = relations[String(describing: id)] {
                 attrbiutes.merge(relation)
             }
             let item = T.init(attributes: attrbiutes)
             items.append(item)
         }
         if strict && items.isEmpty {
-            throw ActiveRecordError.RecordNotFound(attributes: self.attributes ?? [:])
+            throw ActiveRecordError.recordNotFound(attributes: self.attributes ?? [:])
         }
         return items
     }

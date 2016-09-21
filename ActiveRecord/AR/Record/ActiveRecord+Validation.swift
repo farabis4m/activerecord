@@ -11,15 +11,15 @@ import Foundation
 extension ActiveRecord {
     public var errors: Errors {
         if self.isNewRecord {
-            return self.validate(.Create)
+            return self.validate(.create)
         } else if self.isDirty {
-            return self.validate(.Update)
+            return self.validate(.update)
         }
         return Errors(model: self)
     }
     public var isValid: Bool { return self.errors.isEmpty }
     
-    public func validate(action: Action) -> Errors {
+    public func validate(_ action: Action) -> Errors {
         var errors = Errors(model: self)
         let validators = self.validators(action)
         if !validators.isEmpty {
@@ -31,7 +31,7 @@ extension ActiveRecord {
         }
         return errors
     }
-    public func validators(action: Action) -> [String: Validator] {
+    public func validators(_ action: Action) -> [String: Validator] {
         return [:]
     }
 }

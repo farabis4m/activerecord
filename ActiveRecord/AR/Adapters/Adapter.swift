@@ -12,22 +12,26 @@ import SwiftyBeaver
 
 let SQLLog = SwiftyBeaver.self
 
-public enum DBError: ErrorType {
-    case OpenDatabase(message: String)
-    case Prepare(message: String)
-    case Step(message: String)
-    case Bind(message: String)
-    case Statement(message: String)
+public enum DBError: Error {
+    case openDatabase(message: String)
+    case prepare(message: String)
+    case step(message: String)
+    case bind(message: String)
+    case statement(message: String)
+    
+    public var rawValue: String {
+        return ""
+    }
 }
 
-public class Adapter {
+open class Adapter {
     
-    public enum Type: String {
+    public enum Kind: String {
         case SQLite = "SQLite"
     }
-    public static var current: Adapter!
-    public static func adapter(settings: [String: Any]) -> Adapter {
-        let type = Type(rawValue: settings["adapter"] as! String)!
+    open static var current: Adapter!
+    open static func adapter(_ settings: [String: Any]) -> Adapter {
+        let type = Kind(rawValue: settings["adapter"] as! String)!
         switch type {
         case .SQLite: Adapter.current = SQLiteAdapter(settings: settings)
         }
@@ -44,11 +48,11 @@ public class Adapter {
     
     var persistedColumnTypes: [Table.Column.DBType : String] { return [:] }
     
-    public var tables: [Table] = []
+    open var tables: [Table] = []
     
-    public var connection: Connection!
+    open var connection: Connection!
     
-    private var settings: [String: Any]?
+    fileprivate var settings: [String: Any]?
     init(settings: [String: Any]) {
         self.settings = settings
         self.connection = self.connect()
@@ -58,23 +62,23 @@ public class Adapter {
         SQLLog.addDestination(console)
     }
     
-    public func indexes() -> Array<String> {
+    open func indexes() -> Array<String> {
         return Array<String>()
     }
     
     //MARK: - Tables
     
-    public func structure(tableName: String) -> Table {
+    open func structure(_ tableName: String) -> Table {
         return Table(tableName)
     }
     
     //MARK: - 
     
-    public func create<T: DBObject>(object: T) throws {}
-    public func rename<T: DBObject>(object: T, name: String) throws {}
-    public func drop<T: DBObject>(object: T) throws {}
-    public func exists<T: DBObject>(object: T) throws -> Bool { return false }
-    public func reference(to: String, on: String, options: [String: Any]? = nil) throws {
+    open func create<T: DBObject>(_ object: T) throws {}
+    open func rename<T: DBObject>(_ object: T, name: String) throws {}
+    open func drop<T: DBObject>(_ object: T) throws {}
+    open func exists<T: DBObject>(_ object: T) throws -> Bool { return false }
+    open func reference(_ to: String, on: String, options: [String: Any]? = nil) throws {
 //        if let foreignKey = options?["foreignKey"] as? Bool where foreignKey == true {
 //            let SQL = "\(Table.Action.Alter.clause(to)) ADD CONSTRAINT \(to)_\(columnName) FOREIGN KEY (\(columnName)) REFERENCES \(on)(id);"
 //            MigrationsController.sharedInstance.check({ try self.adapter.connection.execute(SQL) })
@@ -83,7 +87,7 @@ public class Adapter {
     
     //MARK: - Utils
     
-    public func connect() -> Connection {
+    open func connect() -> Connection {
         do {
             let dbName = self.settings?["name"] as! String
             return try Connection(dbName)
@@ -93,20 +97,20 @@ public class Adapter {
         }
     }
     
-    public func disconnect() {
+    open func disconnect() {
         self.connection.close()
     }
     
     
-    public func cast(value: Any, column: Table.Column) -> DatabaseRepresentable? {
+    open func cast(_ value: Any, column: Table.Column) -> DatabaseRepresentable? {
         if let type = column.type {
             switch type {
             case .Bool: return value as? Bool as? DatabaseRepresentable
             case .Int: return value as? Int as? DatabaseRepresentable
-            case .Date: return (value as? String as? DatabaseRepresentable) ?? (value as? NSDate as? DatabaseRepresentable)
+            case .Date: return (value as? String as? DatabaseRepresentable) ?? (value as? Foundation.Date as? DatabaseRepresentable)
             case .Decimal: return value as? Float as? DatabaseRepresentable
             case .String: return value as? String as? DatabaseRepresentable
-            case .Raw: return value as? NSData as? DatabaseRepresentable
+            case .Raw: return value as? Data as? DatabaseRepresentable
             case .Double: return value as? Double as? DatabaseRepresentable
             }
         }

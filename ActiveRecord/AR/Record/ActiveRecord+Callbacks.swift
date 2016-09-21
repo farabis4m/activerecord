@@ -10,16 +10,16 @@ import Foundation
 
 // Global callbacks
 extension ActiveRecord {
-    public static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) throws {
+    public static func before(_ action: ActiveRecrodAction, callback: @escaping ActiveRecordCallback) throws {
         ActiveCallbackStorage.beforeStorage.set(self, action: action, callback: callback)
     }
-    public static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) throws {
+    public static func after(_ action: ActiveRecrodAction, callback: @escaping ActiveRecordCallback) throws {
         ActiveCallbackStorage.afterStorage.set(self, action: action, callback: callback)
     }
 }
 
 // Instance callbacks
 extension ActiveRecord {
-    public func after(action: ActiveRecrodAction) throws { }
-    public func before(action: ActiveRecrodAction) throws { }
+    public func after(_ action: ActiveRecrodAction) throws { }
+    public func before(_ action: ActiveRecrodAction) throws { }
 }
