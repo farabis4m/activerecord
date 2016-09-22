@@ -53,9 +53,7 @@ class InsertManager: ActionManager {
                     }
                 }
             }
-//          else {
-//              // TODO: Update to nil value
-//          }
+            // TODO: Add else and update to nil value
         }
         if !columns.isEmpty && !values.isEmpty {
             if columns.count != values.count {

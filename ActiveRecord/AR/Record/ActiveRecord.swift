@@ -54,15 +54,6 @@ extension ActiveRecord {
     var rawType: String { return "ActiveRecord" }
 }
 
-extension ActiveRecord {
-    // TODO: Don't have any other opportunities to compare hashes
-    var hashValue: DatabaseRepresentable? {
-        // TODO: Compare PK values
-        return 0
-//        return self.id as? DatabaseRepresentable
-    }
-}
-
 // Defaults
 extension ActiveRecord {
     // Nested attributes
