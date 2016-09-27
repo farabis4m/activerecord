@@ -38,6 +38,7 @@
 		F543B2311CE2F954000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
 		F543B2321CE2FA1C000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
 		F543B2331CE2FA1D000BE1AE /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = F543B21B1CE2F954000BE1AE /* SQLite.h */; };
+		F55E0C721D1121C500FCDF77 /* ActiveCallbackStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55E0C711D1121C500FCDF77 /* ActiveCallbackStorage.swift */; };
 		F5C4AC7A1CEAE2A90017F1B6 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */; };
 		F5C4AC7C1CEAE2C90017F1B6 /* ActionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */; };
 /* End PBXBuildFile section */
@@ -45,13 +46,6 @@
 /* Begin PBXFileReference section */
 		03A65E5A1C6BB0F50062603F /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A65E961C6BB3210062603F /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		39548A631CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		39548A651CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		39548A671CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		39548A691CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		39548A6B1CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		39548A6D1CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		39548A6F1CA63C740003E3B5 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		A121AC451CA35C79005A31D1 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE247AD31C3F04ED00AE3E12 /* ActiveRecord.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActiveRecord.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE247B3C1C3F3ED000AE3E12 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,10 +82,16 @@
 		F543B2181CE2F954000BE1AE /* SQLite-Bridging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SQLite-Bridging.m"; sourceTree = "<group>"; };
 		F543B21A1CE2F954000BE1AE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F543B21B1CE2F954000BE1AE /* SQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLite.h; sourceTree = "<group>"; };
+		F55E0C711D1121C500FCDF77 /* ActiveCallbackStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveCallbackStorage.swift; sourceTree = "<group>"; };
 		F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
 		F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionManager.swift; sourceTree = "<group>"; };
-		FACBA5051D9A7A5C00775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		FACBA5071D9A7A7C00775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA50A1D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA50C1D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA50E1D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA5121D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA5161D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA51C1D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA51E1D9A7B9100775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,78 +129,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		39548A611CA63C740003E3B5 /* CocoaPods */ = {
-			isa = PBXGroup;
-			children = (
-				FACBA5061D9A7A7100775C80 /* iphoneios-10.0 */,
-				FACBA5041D9A7A4E00775C80 /* iphonesimulator-10.0 */,
-				39548A621CA63C740003E3B5 /* appletvos */,
-				39548A641CA63C740003E3B5 /* appletvsimulator */,
-				39548A661CA63C740003E3B5 /* iphoneos */,
-				39548A681CA63C740003E3B5 /* iphonesimulator */,
-				39548A6A1CA63C740003E3B5 /* macosx */,
-				39548A6C1CA63C740003E3B5 /* watchos */,
-				39548A6E1CA63C740003E3B5 /* watchsimulator */,
-			);
-			path = CocoaPods;
-			sourceTree = "<group>";
-		};
-		39548A621CA63C740003E3B5 /* appletvos */ = {
-			isa = PBXGroup;
-			children = (
-				39548A631CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = appletvos;
-			sourceTree = "<group>";
-		};
-		39548A641CA63C740003E3B5 /* appletvsimulator */ = {
-			isa = PBXGroup;
-			children = (
-				39548A651CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = appletvsimulator;
-			sourceTree = "<group>";
-		};
-		39548A661CA63C740003E3B5 /* iphoneos */ = {
-			isa = PBXGroup;
-			children = (
-				39548A671CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = iphoneos;
-			sourceTree = "<group>";
-		};
-		39548A681CA63C740003E3B5 /* iphonesimulator */ = {
-			isa = PBXGroup;
-			children = (
-				39548A691CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = iphonesimulator;
-			sourceTree = "<group>";
-		};
-		39548A6A1CA63C740003E3B5 /* macosx */ = {
-			isa = PBXGroup;
-			children = (
-				39548A6B1CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = macosx;
-			sourceTree = "<group>";
-		};
-		39548A6C1CA63C740003E3B5 /* watchos */ = {
-			isa = PBXGroup;
-			children = (
-				39548A6D1CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = watchos;
-			sourceTree = "<group>";
-		};
-		39548A6E1CA63C740003E3B5 /* watchsimulator */ = {
-			isa = PBXGroup;
-			children = (
-				39548A6F1CA63C740003E3B5 /* module.modulemap */,
-			);
-			path = watchsimulator;
-			sourceTree = "<group>";
-		};
 		EE247AC91C3F04ED00AE3E12 = {
 			isa = PBXGroup;
 			children = (
@@ -226,8 +154,8 @@
 		EE247B8A1C3F81D000AE3E12 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				FACBA5081D9A7B9100775C80 /* CocoaPods */,
 				F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */,
-				39548A611CA63C740003E3B5 /* CocoaPods */,
 				EE247B771C3F40D700AE3E12 /* README.md */,
 				EE247B8B1C3F820300AE3E12 /* CONTRIBUTING.md */,
 				EE247B8D1C3F821200AE3E12 /* Makefile */,
@@ -281,7 +209,7 @@
 		F543B1FB1CE2F954000BE1AE /* AR */ = {
 			isa = PBXGroup;
 			children = (
-				F51BE6921CE4B19900605652 /* Validation */,
+				F55E0C711D1121C500FCDF77 /* ActiveCallbackStorage.swift */,
 				F543B1FC1CE2F954000BE1AE /* ActiveRecord.swift */,
 				F543B1FE1CE2F954000BE1AE /* ActiveRelation.swift */,
 				F543B1FF1CE2F954000BE1AE /* ActiveSerializer */,
@@ -291,6 +219,7 @@
 				F543B20C1CE2F954000BE1AE /* Relation */,
 				F543B2111CE2F954000BE1AE /* Table */,
 				F543B2131CE2F954000BE1AE /* Utils */,
+				F51BE6921CE4B19900605652 /* Validation */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -378,20 +307,74 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
-		FACBA5041D9A7A4E00775C80 /* iphonesimulator-10.0 */ = {
+		FACBA5081D9A7B9100775C80 /* CocoaPods */ = {
 			isa = PBXGroup;
 			children = (
-				FACBA5051D9A7A5C00775C80 /* module.modulemap */,
+				FACBA5091D9A7B9100775C80 /* appletvos */,
+				FACBA50B1D9A7B9100775C80 /* appletvsimulator */,
+				FACBA50D1D9A7B9100775C80 /* iphoneos */,
+				FACBA5111D9A7B9100775C80 /* iphonesimulator */,
+				FACBA5151D9A7B9100775C80 /* macosx */,
+				FACBA51B1D9A7B9100775C80 /* watchos */,
+				FACBA51D1D9A7B9100775C80 /* watchsimulator */,
 			);
-			path = "iphonesimulator-10.0";
+			path = CocoaPods;
 			sourceTree = "<group>";
 		};
-		FACBA5061D9A7A7100775C80 /* iphoneios-10.0 */ = {
+		FACBA5091D9A7B9100775C80 /* appletvos */ = {
 			isa = PBXGroup;
 			children = (
-				FACBA5071D9A7A7C00775C80 /* module.modulemap */,
+				FACBA50A1D9A7B9100775C80 /* module.modulemap */,
 			);
-			path = "iphoneios-10.0";
+			path = appletvos;
+			sourceTree = "<group>";
+		};
+		FACBA50B1D9A7B9100775C80 /* appletvsimulator */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA50C1D9A7B9100775C80 /* module.modulemap */,
+			);
+			path = appletvsimulator;
+			sourceTree = "<group>";
+		};
+		FACBA50D1D9A7B9100775C80 /* iphoneos */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA50E1D9A7B9100775C80 /* module.modulemap */,
+			);
+			path = iphoneos;
+			sourceTree = "<group>";
+		};
+		FACBA5111D9A7B9100775C80 /* iphonesimulator */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA5121D9A7B9100775C80 /* module.modulemap */,
+			);
+			path = iphonesimulator;
+			sourceTree = "<group>";
+		};
+		FACBA5151D9A7B9100775C80 /* macosx */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA5161D9A7B9100775C80 /* module.modulemap */,
+			);
+			path = macosx;
+			sourceTree = "<group>";
+		};
+		FACBA51B1D9A7B9100775C80 /* watchos */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA51C1D9A7B9100775C80 /* module.modulemap */,
+			);
+			path = watchos;
+			sourceTree = "<group>";
+		};
+		FACBA51D1D9A7B9100775C80 /* watchsimulator */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA51E1D9A7B9100775C80 /* module.modulemap */,
+			);
+			path = watchsimulator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -612,6 +595,7 @@
 				F540F5AB1CE8A01E00564DAA /* DeleteManager.swift in Sources */,
 				F543B21D1CE2F954000BE1AE /* ActiveRecord.swift in Sources */,
 				F5C4AC7A1CEAE2A90017F1B6 /* UpdateManager.swift in Sources */,
+				F55E0C721D1121C500FCDF77 /* ActiveCallbackStorage.swift in Sources */,
 				F543B22B1CE2F954000BE1AE /* Table.swift in Sources */,
 				F543B2201CE2F954000BE1AE /* ActiveSerializer.swift in Sources */,
 				F543B2221CE2F954000BE1AE /* Adapter.swift in Sources */,

@@ -48,12 +48,12 @@ let NSURLTransformer = Transformer(forward: { (value) -> Any? in
     if let url = value as? String {
         return NSURL(string: url)
     }
-    return nil
+    return value
     }, backward: { (value) -> AnyType? in
         if let url = value as? NSURL {
             return url.absoluteString
         }
-        return nil
+        return value as? AnyType
 })
 
 public protocol Transformable {
@@ -125,12 +125,16 @@ extension Date: AnyType {
     public var dbValue: AnyType { return "'\(self)'" }
 }
 
-public enum ActiveRecrodAction {
+public enum ActiveRecrodAction: Int, Hashable {
     case Initialize
     case Create
     case Update
     case Destroy
     case Save
+    
+    public var hashValue: Int {
+        return self.rawValue
+    }
 }
 
 public enum Action {
@@ -156,8 +160,20 @@ public protocol ActiveRecord: class, AnyType, Transformable {
     func validators(action: Action) -> [String: Validator]
     
     // Callbackcs
-    func after(action: ActiveRecrodAction)
     func before(action: ActiveRecrodAction)
+    func after(action: ActiveRecrodAction)
+    
+    static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback)
+    static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback)
+}
+
+extension ActiveRecord {
+    public static func before(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
+        ActiveCallbackStorage.beforeStorage.set(self, action: action, callback: callback)
+    }
+    public static func after(action: ActiveRecrodAction, callback: ActiveRecordCallback) {
+        ActiveCallbackStorage.afterStorage.set(self, action: action, callback: callback)
+    }
 }
 
 extension ActiveRecord {
@@ -240,26 +256,41 @@ extension ActiveRecord {
 
 extension ActiveRecord {
     public func update(attributes: [String: AnyType?]? = nil) throws -> Bool {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
         self.before(.Update)
         // TODO: Add updatable specific attributes
         try UpdateManager(record: self).execute()
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Update).execute(self)
         self.after(.Update)
         return false
     }
     
     public func update(attribute: String, value: AnyType) throws -> Bool {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Update).execute(self)
         self.before(.Update)
         // TODO: Add updatable specific attributes
         try UpdateManager(record: self).execute()
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Update).execute(self)
         self.after(.Update)
         return false
     }
     
-    public func destroy() throws -> Bool {
+    public func destroy() throws {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.before(.Destroy)
         let deleteManager = try DeleteManager(record: self).execute()
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Destroy).execute(self)
         self.after(.Destroy)
-        return true
+    }
+    
+    public static func destroy(scope identifier: AnyType?) throws {
+        if let id = identifier {
+            let record = self.init()
+            record.id = identifier
+            ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
+            try self.destroy(record)
+            ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
+        }
     }
     
     public static func destroy(records: [ActiveRecord]) throws {
@@ -274,35 +305,33 @@ extension ActiveRecord {
     }
     
     public static func destroy(record: ActiveRecord) throws {
+        ActiveCallbackStorage.beforeStorage.get(self, action: .Destroy).execute(record)
         try self.destroy([record])
+        ActiveCallbackStorage.afterStorage.get(self, action: .Destroy).execute(record)
     }
     
-    public static func destroy(identifier: AnyType?) throws {
-        if let id = identifier {
-            let record = self.init()
-            record.id = identifier
-            try self.destroy(record)
-        }
-    }
-    
-    public func save() throws -> Bool {
+    public func save() throws {
         return try self.save(false)
     }
     
     public static func create(attributes: [String : AnyType?], block: ((AnyObject) -> (Void))? = nil) throws -> Self {
         let record = self.init(attributes: attributes)
+        ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
         record.before(.Create)
         try record.save(true)
+        ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
         record.after(.Create)
-        return record;
+        return record
     }
     
     public static func create() throws -> Self {
         let record = self.init()
+        ActiveCallbackStorage.beforeStorage.get(self, action: .Create).execute(record)
         record.before(.Create)
         try record.save(true)
+        ActiveCallbackStorage.afterStorage.get(self, action: .Create).execute(record)
         record.after(.Create)
-        return record;
+        return record
     }
     
     public static func find(identifier:AnyType) throws -> Self {
@@ -325,11 +354,16 @@ extension ActiveRecord {
         return ActiveRelation().`where`(attributes)
     }
     
+    public static func includes(records: ActiveRecord.Type...) -> ActiveRelation<Self> {
+        return ActiveRelation().includes(records)
+    }
+    
     public static func all() throws -> [Self] {
         return try ActiveRelation().execute()
     }
     
-    public func save(validate: Bool) throws -> Bool {
+    public func save(validate: Bool) throws {
+        ActiveCallbackStorage.beforeStorage.get(self.dynamicType, action: .Save).execute(self)
         self.before(.Save)
         if validate && !self.isValid {
             throw ActiveRecordError.RecordNotValid(record: self)
@@ -340,8 +374,8 @@ extension ActiveRecord {
             try UpdateManager(record: self).execute()
         }
         ActiveSnapshotStorage.sharedInstance.set(self)
+        ActiveCallbackStorage.afterStorage.get(self.dynamicType, action: .Save).execute(self)
         self.after(.Save)
-        return true
     }
     
     var isNewRecord: Bool {
@@ -419,17 +453,15 @@ extension ActiveRecord {
         return dirty
     }
     public func setAttrbiutes(attributes: [String: AnyType?]) {}
-    public func getAttributes() -> [String: AnyType?] {
+    public func getAttributes() -> [String: AnyType?] { return self.transformedAttributes() }
+    public func transformedAttributes() -> [String: AnyType?] {
         let reflections = _reflect(self)
         var fields = [String: AnyType?]()
         let transformers = self.dynamicType.transformers()
-        print(transformers)
         for index in 0.stride(to: reflections.count, by: 1) {
             let reflection = reflections[index]
             var result: AnyType?
-            
             var value = unwrap(reflection.1.value)
-            print(reflection.0 + " value: \(value)")
             if let url = value as? NSURL {
                 result = NSURLTransformer.backward?(value)
             } else {

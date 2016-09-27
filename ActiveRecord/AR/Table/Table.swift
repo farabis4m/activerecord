@@ -16,11 +16,13 @@ public class Table: DBObject {
         typealias BaseFloat = Float
         typealias BaseString = String
         typealias BaseBool = Bool
+        typealias BaseDouble = Double
         public enum Type: String {
             case Bool = "bool"
             case String = "text"
             case Int = "int"
             case Decimal = "decimal"
+            case Double = "double"
             case Date = "date"
             case Raw = "blob"
             
@@ -32,6 +34,7 @@ public class Table: DBObject {
                 case .Date: return NSDate.self
                 case .Raw: return NSData.self
                 case .Bool: return BaseBool.self
+                case .Double: return BaseDouble.self
                 }
             }
         }

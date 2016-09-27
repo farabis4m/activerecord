@@ -22,6 +22,7 @@ public class SQLiteAdapter: Adapter {
                 .Date : "DATE",
                 .String : "TEXT",
                 .Bool : "INT",
+                .Double : "DOUBLE",
                 .Raw : "BLOB"]
     }
     
@@ -31,7 +32,8 @@ public class SQLiteAdapter: Adapter {
                 "DATE": .Date,
                 "TEXT": .String,
                 "INT": .Bool,
-                "BLOB": .Raw]
+                "BLOB": .Raw,
+                "DOUBLE" : .Double]
     }
     
     override public func tables() -> Array<String> {

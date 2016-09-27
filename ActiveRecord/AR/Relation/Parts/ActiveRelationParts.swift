@@ -39,6 +39,16 @@ extension Where: CustomStringConvertible {
     }
 }
 
+public struct Preload: ActiveRelationPart {
+    public var priority: Int { return -1 }
+    public var records: [ActiveRecord.Type] = []
+}
+
+public struct Includes: ActiveRelationPart {
+    public var priority: Int { return -1 }
+    public var records: [ActiveRecord.Type] = []
+}
+
 public struct Offset: ActiveRelationPart {
     public var priority: Int { return 2 }
     public var count: Int

@@ -23,6 +23,8 @@ enum SQLAction: String {
     }
 }
 
+public typealias RawRecord = Dictionary<String, AnyType?>
+
 public class ActiveRelation<T:ActiveRecord> {
     
     private var klass: T.Type?
@@ -31,7 +33,7 @@ public class ActiveRelation<T:ActiveRecord> {
     
     private var attributes: [String: AnyType]?
     
-    private var tableName: String {
+    public var tableName: String {
         return T.tableName
     }
     
@@ -39,7 +41,9 @@ public class ActiveRelation<T:ActiveRecord> {
     
     private var chain = Array<ActiveRelationPart>()
     
-    private var preload: [ActiveRecord.Type]?
+    //    private var preload: [ActiveRecord.Type] = []
+    private var include: [ActiveRecord.Type] = []
+    
     
     //MARK: - Lifecycle
     
@@ -56,6 +60,16 @@ public class ActiveRelation<T:ActiveRecord> {
     }
     
     //MARK: - Chaining
+    
+    public func includes(records: [ActiveRecord.Type]) -> Self {
+        self.include << records
+        return self
+    }
+    
+    //    public func preload(record: ActiveRecord.Type) -> Self {
+    //        self.preload << record
+    //        return self
+    //    }
     
     public func pluck(fields: Array<String>) -> Self {
         self.chain.append(Pluck(fields: fields))
@@ -95,11 +109,6 @@ public class ActiveRelation<T:ActiveRecord> {
         return self
     }
     
-    public func preload(models: [ActiveRecord.Type]) -> Self {
-        self.preload = models
-        return self
-    }
-    
     //MARK: - ActiveRecordRelationProtocol
     
     public func updateAll(attrbiutes: [String : AnyType?]) throws -> Bool {
@@ -129,9 +138,45 @@ public class ActiveRelation<T:ActiveRecord> {
         let SQLStatement = String(format: self.action.clause(self.tableName), pluck.description) + " " + self.chain.map({ "\($0)" }).joinWithSeparator(" ") + ";"
         let result = try self.connection.execute_query(SQLStatement)
         var items = Array<T>()
+        var includes: [Result] = []
+        var relations: [String: [String: [RawRecord]]] = [:]
+        for include in self.include {
+            let ids = result.hashes.map({ $0["id"] }).flatMap({ $0 }).flatMap({ $0 }).map({ String($0) }).joinWithSeparator(", ")
+            let result = try self.connection.execute_query("SELECT * FROM \(include.tableName) WHERE \("\(T.modelName)_id") IN (\(ids));")
+            includes << result
+            for hash in result.hashes {
+                print("\(T.modelName)_id")
+                print(hash)
+                if case let id?? = hash["\(T.modelName)_id"] {
+                    let key = String(id)
+                    var items: Array<RawRecord> = []
+                    if var bindings = relations[key] {
+                        if let rows = bindings["\(include.tableName)"] {
+                            items = rows
+                        } else {
+                            items = Array<RawRecord>()
+                            bindings["\(include.tableName)"] = items
+                        }
+                    } else {
+                        items = Array<RawRecord>()
+                        relations[key] = ["\(include.tableName)" : items]
+                    }
+                    items.append(hash)
+                    relations[key] = ["\(include.tableName)" : items]
+                }
+                print(relations)
+                
+            }
+        }
         for hash in result.hashes {
-            print(hash)
-            let item = T.init(attributes: hash)
+            var attrbiutes = hash
+            print(relations)
+            print(hash["id"])
+            if case let id?? = hash["id"], let relation = relations[String(id)] {
+                print(relation)
+                attrbiutes.merge(relation)
+            }
+            let item = T.init(attributes: attrbiutes)
             items.append(item)
             ActiveSnapshotStorage.sharedInstance.set(item)
         }
@@ -142,3 +187,14 @@ public class ActiveRelation<T:ActiveRecord> {
     }
     
 }
+
+extension Dictionary {
+    mutating func merge<K, V>(dict: [K: V]){
+        for (k, v) in dict {
+            self.updateValue(v as! Value, forKey: k as! Key)
+        }
+    }
+}
+
+extension Array: AnyType {}
+extension Dictionary: AnyType {}
