@@ -90,6 +90,8 @@
 		F543B21B1CE2F954000BE1AE /* SQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLite.h; sourceTree = "<group>"; };
 		F5C4AC791CEAE2A90017F1B6 /* UpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
 		F5C4AC7B1CEAE2C90017F1B6 /* ActionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionManager.swift; sourceTree = "<group>"; };
+		FACBA5051D9A7A5C00775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		FACBA5071D9A7A7C00775C80 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,8 @@
 		39548A611CA63C740003E3B5 /* CocoaPods */ = {
 			isa = PBXGroup;
 			children = (
+				FACBA5061D9A7A7100775C80 /* iphoneios-10.0 */,
+				FACBA5041D9A7A4E00775C80 /* iphonesimulator-10.0 */,
 				39548A621CA63C740003E3B5 /* appletvos */,
 				39548A641CA63C740003E3B5 /* appletvsimulator */,
 				39548A661CA63C740003E3B5 /* iphoneos */,
@@ -372,6 +376,22 @@
 				F543B2181CE2F954000BE1AE /* SQLite-Bridging.m */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		FACBA5041D9A7A4E00775C80 /* iphonesimulator-10.0 */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA5051D9A7A5C00775C80 /* module.modulemap */,
+			);
+			path = "iphonesimulator-10.0";
+			sourceTree = "<group>";
+		};
+		FACBA5061D9A7A7100775C80 /* iphoneios-10.0 */ = {
+			isa = PBXGroup;
+			children = (
+				FACBA5071D9A7A7C00775C80 /* module.modulemap */,
+			);
+			path = "iphoneios-10.0";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

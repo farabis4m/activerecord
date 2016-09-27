@@ -28,7 +28,9 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     'SWIFT_INCLUDE_PATHS[sdk=macosx*]'           => '$(SRCROOT)/ActiveRecord/CocoaPods/macosx',
     'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'         => '$(SRCROOT)/ActiveRecord/CocoaPods/iphoneos',
-    'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]'  => '$(SRCROOT)/ActiveRecord/CocoaPods/iphonesimulator',
+'SWIFT_INCLUDE_PATHS[sdk=iphoneos10.0]'        => '$(SRCROOT)/SQLite.swift/CocoaPods/iphoneos-10.0',
+'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]'    => '$(SRCROOT)/SQLite.swift/CocoaPods/iphonesimulator',
+'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator10.0]' => '$(SRCROOT)/SQLite.swift/CocoaPods/iphonesimulator-10.0',
     'SWIFT_INCLUDE_PATHS[sdk=appletvos*]'        => '$(SRCROOT)/ActiveRecord/CocoaPods/appletvos',
     'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]' => '$(SRCROOT)/ActiveRecord/CocoaPods/appletvsimulator',
     'SWIFT_INCLUDE_PATHS[sdk=watchos*]'          => '$(SRCROOT)/ActiveRecord/CocoaPods/watchos',
