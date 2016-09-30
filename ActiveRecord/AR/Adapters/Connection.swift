@@ -115,8 +115,9 @@ open class Connection {
                 }
                 
                 var value: Any? = nil
-                let pointer = UnsafeRawPointer(sqlite3_column_text(statement, i)).assumingMemoryBound(to: CChar.self)
-                if let string = String(validatingUTF8: pointer) {
+                let text = sqlite3_column_text(statement, i)
+                if let pointer = sqlite3_column_text(statement, i) {
+                    let string = String(cString: pointer)
                     switch columnType {
                     case SQLITE_INTEGER: value = Int(string)
                     case SQLITE_FLOAT: value = Float(string)
