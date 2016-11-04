@@ -26,6 +26,8 @@ class UpdateManager: ActionManager {
             } else {
                 if let _ = table.column(key), let dbValue = value as? DatabaseRepresentable {
                     values[key] = dbValue.dbValue
+                } else if let _ = table.column(key), let rawValue = value as? [String: Any] {
+                    values[key] = rawValue.json(false).dbValue
                 }
             }
         }
