@@ -7,6 +7,7 @@
 //
 
 import ApplicationSupport
+import ObjectMapper
 
 class UpdateManager: ActionManager {
     
@@ -28,6 +29,13 @@ class UpdateManager: ActionManager {
                     values[key] = dbValue.dbValue
                 } else if let _ = table.column(key), let rawValue = value as? [String: Any] {
                     values[key] = rawValue.json(false).dbValue
+                } else if let _ = table.column(key), let rawValue = value as? [Any] {
+                    if let data = try? Jay(formatting: .minified, parsing: .none).dataFromJson(any: rawValue) {
+                        if let dbValue = String(data: (Data)(data), encoding: .utf8) {
+                            values[key] = "'\(dbValue)'"
+                        }
+                    }
+                    
                 }
             }
         }
