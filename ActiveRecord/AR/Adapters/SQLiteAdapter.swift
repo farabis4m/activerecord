@@ -39,7 +39,6 @@ open class SQLiteAdapter: Adapter {
                 "DOUBLE" : .Double]
     }
     
-
     enum SQLite {
         enum Table {
             enum Action: SQLConvertible {
@@ -98,15 +97,15 @@ open class SQLiteAdapter: Adapter {
         }
     }
     
-//    override public func tables() -> Array<String> {
-//        do {
-//            let result = try self.connection.execute_query("SELECT name FROM sqlite_master WHERE (type = 'table' OR type == 'view' AND NOT name = 'sqlite_sequence')")
-//            return result.hashes.map({ $0["name"] as! String })
-//        } catch {
-//            print("\(error)")
-//        }
-//        return super.tables()
-//    }
+    //    override public func tables() -> Array<String> {
+    //        do {
+    //            let result = try self.connection.execute_query("SELECT name FROM sqlite_master WHERE (type = 'table' OR type == 'view' AND NOT name = 'sqlite_sequence')")
+    //            return result.hashes.map({ $0["name"] as! String })
+    //        } catch {
+    //            print("\(error)")
+    //        }
+    //        return super.tables()
+    //    }
     
     override open func structure(_ tableName: String) -> Table {
         guard let table = self.tables.find(predicate: { $0.name == tableName }) else {
@@ -141,6 +140,7 @@ open class SQLiteAdapter: Adapter {
             self.tables << table
         } else if let column = object as? Column {
             try self.connection.execute(SQLite.Table.Column.Action.create(column).SQL)
+            column.table?.columns.append(column)
         }
     }
     
