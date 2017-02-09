@@ -1,5 +1,5 @@
 #
-# `pod lib lint SQLite.swift.podspec' fails - see
+# `pod lib lint ActiveRecord.podspec' fails - see
 #    https://github.com/CocoaPods/CocoaPods/issues/4607
 #
 
@@ -23,6 +23,9 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = "9.0"
   s.osx.deployment_target = "10.9"
   s.watchos.deployment_target = "2.0"
+  s.pod_target_xcconfig = {
+    'SWIFT_VERSION' => '3.0',
+  }
 
   s.preserve_paths = 'CocoaPods/**/*'
   s.pod_target_xcconfig = {
@@ -31,18 +34,12 @@ Pod::Spec.new do |s|
     'SWIFT_INCLUDE_PATHS[sdk=macosx10.12]'         => '$(SRCROOT)/ActiveRecord/CocoaPods/macosx-10.12',
     'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'           => '$(SRCROOT)/ActiveRecord/CocoaPods/iphoneos',
     'SWIFT_INCLUDE_PATHS[sdk=iphoneos10.0]'        => '$(SRCROOT)/ActiveRecord/CocoaPods/iphoneos-10.0',
-    'SWIFT_INCLUDE_PATHS[sdk=iphoneos10.2]'        => '$(SRCROOT)/ActiveRecord/CocoaPods/iphoneos-10.2',
     'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]'    => '$(SRCROOT)/ActiveRecord/CocoaPods/iphonesimulator',
     'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator10.0]' => '$(SRCROOT)/ActiveRecord/CocoaPods/iphonesimulator-10.0',
-    'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator10.2]' => '$(SRCROOT)/ActiveRecord/CocoaPods/iphonesimulator-10.2',
     'SWIFT_INCLUDE_PATHS[sdk=appletvos*]'          => '$(SRCROOT)/ActiveRecord/CocoaPods/appletvos',
-    'SWIFT_INCLUDE_PATHS[sdk=appletvos10.1]'       => '$(SRCROOT)/ActiveRecord/CocoaPods/appletvos-10.1',
     'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]'   => '$(SRCROOT)/ActiveRecord/CocoaPods/appletvsimulator',
-    'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator10.1]'=> '$(SRCROOT)/ActiveRecord/CocoaPods/appletvsimulator-10.1',
     'SWIFT_INCLUDE_PATHS[sdk=watchos*]'            => '$(SRCROOT)/ActiveRecord/CocoaPods/watchos',
-    'SWIFT_INCLUDE_PATHS[sdk=watchos3.1]'          => '$(SRCROOT)/ActiveRecord/CocoaPods/watchos-3.1',
-    'SWIFT_INCLUDE_PATHS[sdk=watchsimulator*]'     => '$(SRCROOT)/ActiveRecord/CocoaPods/watchsimulator',
-    'SWIFT_INCLUDE_PATHS[sdk=watchsimulator3.1]'   => '$(SRCROOT)/ActiveRecord/CocoaPods/watchsimulator-3.1'
+    'SWIFT_INCLUDE_PATHS[sdk=watchsimulator*]'     => '$(SRCROOT)/ActiveRecord/CocoaPods/watchsimulator'
   }
 
   s.libraries = 'sqlite3'
