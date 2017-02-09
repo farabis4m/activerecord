@@ -58,6 +58,12 @@
 		EE247B921C3F822600AE3E12 /* playground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playground@2x.png"; sourceTree = "<group>"; };
 		EE91808B1C46E34A0038162A /* usr/include/sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usr/include/sqlite3.h; sourceTree = SDKROOT; };
 		EE9180931C46EA210038162A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		F528E9041E4D1EAA00F18D24 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		F528E9061E4D1F1700F18D24 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		F528E9081E4D20D400F18D24 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		F528E90A1E4D20D400F18D24 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		F528E90C1E4D223700F18D24 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		F528E90E1E4D225B00F18D24 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		F543B1F81CE2F8AD000BE1AE /* ActiveRecord.podspec */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = ActiveRecord.podspec; sourceTree = "<group>"; };
 		F543B2161CE2F954000BE1AE /* fts3_tokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fts3_tokenizer.h; sourceTree = "<group>"; };
 		F543B2171CE2F954000BE1AE /* SQLite-Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SQLite-Bridging.h"; sourceTree = "<group>"; };
@@ -192,6 +198,54 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		F528E9031E4D1EAA00F18D24 /* iphonesimulator-10.2 */ = {
+			isa = PBXGroup;
+			children = (
+				F528E9041E4D1EAA00F18D24 /* module.modulemap */,
+			);
+			path = "iphonesimulator-10.2";
+			sourceTree = "<group>";
+		};
+		F528E9051E4D1F1700F18D24 /* iphoneos-10.2 */ = {
+			isa = PBXGroup;
+			children = (
+				F528E9061E4D1F1700F18D24 /* module.modulemap */,
+			);
+			path = "iphoneos-10.2";
+			sourceTree = "<group>";
+		};
+		F528E9071E4D20D400F18D24 /* watchos-3.1 */ = {
+			isa = PBXGroup;
+			children = (
+				F528E9081E4D20D400F18D24 /* module.modulemap */,
+			);
+			path = "watchos-3.1";
+			sourceTree = "<group>";
+		};
+		F528E9091E4D20D400F18D24 /* watchsimulator-3.1 */ = {
+			isa = PBXGroup;
+			children = (
+				F528E90A1E4D20D400F18D24 /* module.modulemap */,
+			);
+			path = "watchsimulator-3.1";
+			sourceTree = "<group>";
+		};
+		F528E90B1E4D223700F18D24 /* appletvsimulator-10.1 */ = {
+			isa = PBXGroup;
+			children = (
+				F528E90C1E4D223700F18D24 /* module.modulemap */,
+			);
+			path = "appletvsimulator-10.1";
+			sourceTree = "<group>";
+		};
+		F528E90D1E4D225B00F18D24 /* appletvos-10.1 */ = {
+			isa = PBXGroup;
+			children = (
+				F528E90E1E4D225B00F18D24 /* module.modulemap */,
+			);
+			path = "appletvos-10.1";
+			sourceTree = "<group>";
+		};
 		F543B1FA1CE2F954000BE1AE /* ActiveRecord */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,16 +272,22 @@
 			isa = PBXGroup;
 			children = (
 				F57E23581D92A7C400F0DA0C /* appletvos */,
+				F528E90D1E4D225B00F18D24 /* appletvos-10.1 */,
 				F57E235A1D92A7C400F0DA0C /* appletvsimulator */,
+				F528E90B1E4D223700F18D24 /* appletvsimulator-10.1 */,
 				F57E235C1D92A7C400F0DA0C /* iphoneos */,
 				F57E235E1D92A7C400F0DA0C /* iphoneos-10.0 */,
+				F528E9051E4D1F1700F18D24 /* iphoneos-10.2 */,
 				F57E23601D92A7C400F0DA0C /* iphonesimulator */,
 				F57E23621D92A7C400F0DA0C /* iphonesimulator-10.0 */,
+				F528E9031E4D1EAA00F18D24 /* iphonesimulator-10.2 */,
 				F57E23641D92A7C400F0DA0C /* macosx */,
 				F57E23661D92A7C400F0DA0C /* macosx-10.11 */,
 				F57E23681D92A7C400F0DA0C /* macosx-10.12 */,
 				F57E236A1D92A7C400F0DA0C /* watchos */,
+				F528E9071E4D20D400F18D24 /* watchos-3.1 */,
 				F57E236C1D92A7C400F0DA0C /* watchsimulator */,
+				F528E9091E4D20D400F18D24 /* watchsimulator-3.1 */,
 			);
 			path = CocoaPods;
 			sourceTree = "<group>";
