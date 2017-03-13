@@ -28,7 +28,7 @@ open class MigrationsController {
         required init() {}
         required init?(_ map: Map) {}
         
-        func mapping(map: Map) {
+        func mapping(_ map: Map) {
             self.name <- map["id"]
         }
         
