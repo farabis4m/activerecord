@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CSQLite
+import SQLite3
 import SwiftyBeaver
 
 open class Connection {
